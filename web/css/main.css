@@ -1,0 +1,41 @@
+table#tooltip th, table#tooltip td {
+padding:2px;
+}
+
+tr.trchico, tr.trchico td{
+    background-color: #9999ff;
+    padding: 2px 2px 2px 5px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bolder;
+}
+
+.pagination
+{
+  margin-top: 10px;
+  float: right;
+  margin-right: 10px;
+  color: #176f94;
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.pagination a
+{
+  margin: 0 1px;
+  text-decoration: none;
+  color: #828f95;
+  font-size: 100%;
+  vertical-align: 1px;
+  font-weight: normal;
+}
+
+.pagination a:hover
+{
+  text-decoration: underline;
+}
+
+.pagination img
+{
+  vertical-align: -2px;
+}
