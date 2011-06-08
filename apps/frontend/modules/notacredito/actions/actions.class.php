@@ -19,6 +19,7 @@ class notacreditoActions extends sfActions
       ->execute();
     $this->cb = new sfWidgetFormInputCheckbox();
     $this->it = new sfWidgetFormInputText();
+    $this->form = new NotaCreditoForm();
   }
   
   public function executeEmitir(sfWebRequest $request)

@@ -76,7 +76,7 @@
         
         
         <div id="dialog-form" title="Datos de Nota de Credito">
-            <p class="validateTips">Todos los campos son requeridos</p>
+            <p class="validateTips">Ingrese los datos de la Nota de Credito</p>
             
 <!--            <form>
                 <fieldset>
@@ -88,14 +88,7 @@
                     <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
                 </fieldset>
             </form>-->
-            <form>
-                <table>
-                    <tr>
-                        <td>Numero Factura</td>
-                        <td><?php echo $detalle_activo->getFactura()->get ?></td>
-                    </tr>
-                </table>
-            </form>
+            <?php include_partial('IngresoNCpopup', array('form' => $form)) ?>
         </div>
         
         
@@ -108,7 +101,6 @@
 <script type="text/javascript">
         function test(){
                     $( "#dialog-form" ).dialog( "open" );
-//                alert('hola');
         }
     
     
@@ -152,8 +144,8 @@
                         
             $( "#dialog-form" ).dialog({
 			autoOpen: false,
-			height: 300,
-			width: 350,
+			height: 600,
+			width: 650,
 			modal: true,
 			buttons: {
 				"Create an account": function() {
