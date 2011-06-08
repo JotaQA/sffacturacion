@@ -957,70 +957,6 @@ DetalleActivo:
       local: id_factura
       foreign: id_factura
       type: one
-DetalleReposicion:
-  connection: artelamp_1
-  tableName: detalle_reposicion
-  columns:
-    id_detalle_reposicion:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: true
-      autoincrement: true
-    id_ordenreposicion:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: true
-      autoincrement: false
-    cantidad_detalle_reposicion:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
-    fecha_detalle_reposicion:
-      type: timestamp(25)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
-    activa_detalle_reposicion:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
-    fecha_detalle_detalle_reposicion:
-      type: timestamp(25)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: true
-      autoincrement: false
-    costo_detalle_reposicion:
-      type: float()
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
-    codigo_detalle_reposicion:
-      type: string(32)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
-  relations:
-    OrdenReposicion:
-      local: id_ordenreposicion
-      foreign: id_ordenreposicion
-      type: one
 Division:
   connection: artelamp_1
   tableName: division
@@ -1154,6 +1090,46 @@ Empresa:
       primary: false
       notnull: true
       autoincrement: false
+Espacio:
+  connection: artelamp
+  tableName: espacio
+  columns:
+    id_espacio:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: true
+      autoincrement: true
+    id_pasillo:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: true
+      autoincrement: false
+    codigo_espacio:
+      type: string(15)
+      fixed: true
+      unsigned: false
+      primary: false
+      notnull: true
+      autoincrement: false
+    descripcion_espacio:
+      type: string(50)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+  relations:
+    Pasillo:
+      local: id_pasillo
+      foreign: id_pasillo
+      type: one
+    Existencia:
+      local: id_espacio
+      foreign: id_espacio
+      type: many
 Estado:
   connection: artelamp
   tableName: estado
@@ -1427,6 +1403,14 @@ Factura:
       primary: false
       notnull: false
       autoincrement: false
+    descuento_factura:
+      type: float()
+      fixed: false
+      unsigned: false
+      primary: false
+      default: '0'
+      notnull: true
+      autoincrement: false
     id_notapedido_factura:
       type: integer(4)
       fixed: false
@@ -1498,6 +1482,13 @@ Factura:
       notnull: false
       autoincrement: false
     responsable_factura:
+      type: string(512)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    responsable2_factura:
       type: string(512)
       fixed: false
       unsigned: false
@@ -2364,35 +2355,6 @@ Pasillo:
     Espacio:
       local: id_pasillo
       foreign: id_pasillo
-      type: many
-Proveedor:
-  connection: artelamp_1
-  tableName: proveedor
-  columns:
-    id_proveedor:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: true
-      autoincrement: true
-    nombre_proveedor:
-      type: string(100)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: true
-      autoincrement: false
-    giro_proveedor:
-      type: string(200)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
-  relations:
-    OrdenReposicion:
-      local: id_proveedor
-      foreign: id_proveedor
       type: many
 Provincias:
   connection: artelamp

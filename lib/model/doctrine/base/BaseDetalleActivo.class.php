@@ -24,7 +24,6 @@
  * @property string $descripcionexterna_detalle_activo
  * @property NotaCredito $NotaCredito
  * @property Guia $Guia
- * @property Boleta $Boleta
  * @property Factura $Factura
  * 
  * @method integer       getIdDetalleActivo()                   Returns the current record's "id_detalle_activo" value
@@ -37,7 +36,6 @@
  * @method string        getCodigointernoDetalleActivo()        Returns the current record's "codigointerno_detalle_activo" value
  * @method string        getCodigoexternoDetalleActivo()        Returns the current record's "codigoexterno_detalle_activo" value
  * @method integer       getCantidadDetalleActivo()             Returns the current record's "cantidad_detalle_activo" value
- * @method integer       getCantidadNotaCredito()               Returns the current record's "cantidad_nota_credito" value
  * @method integer       getPrecioDetalleActivo()               Returns the current record's "precio_detalle_activo" value
  * @method timestamp     getFechaingresoDetalleActivo()         Returns the current record's "fechaingreso_detalle_activo" value
  * @method string        getIdProducto()                        Returns the current record's "id_producto" value
@@ -45,7 +43,6 @@
  * @method string        getDescripcionexternaDetalleActivo()   Returns the current record's "descripcionexterna_detalle_activo" value
  * @method NotaCredito   getNotaCredito()                       Returns the current record's "NotaCredito" value
  * @method Guia          getGuia()                              Returns the current record's "Guia" value
- * @method Boleta        getBoleta()                            Returns the current record's "Boleta" value
  * @method Factura       getFactura()                           Returns the current record's "Factura" value
  * @method DetalleActivo setIdDetalleActivo()                   Sets the current record's "id_detalle_activo" value
  * @method DetalleActivo setIdBoleta()                          Sets the current record's "id_boleta" value
@@ -57,7 +54,6 @@
  * @method DetalleActivo setCodigointernoDetalleActivo()        Sets the current record's "codigointerno_detalle_activo" value
  * @method DetalleActivo setCodigoexternoDetalleActivo()        Sets the current record's "codigoexterno_detalle_activo" value
  * @method DetalleActivo setCantidadDetalleActivo()             Sets the current record's "cantidad_detalle_activo" value
- * @method DetalleActivo setCantidadNotaCredito()               Sets the current record's "cantidad_nota_credito" value
  * @method DetalleActivo setPrecioDetalleActivo()               Sets the current record's "precio_detalle_activo" value
  * @method DetalleActivo setFechaingresoDetalleActivo()         Sets the current record's "fechaingreso_detalle_activo" value
  * @method DetalleActivo setIdProducto()                        Sets the current record's "id_producto" value
@@ -65,13 +61,12 @@
  * @method DetalleActivo setDescripcionexternaDetalleActivo()   Sets the current record's "descripcionexterna_detalle_activo" value
  * @method DetalleActivo setNotaCredito()                       Sets the current record's "NotaCredito" value
  * @method DetalleActivo setGuia()                              Sets the current record's "Guia" value
- * @method DetalleActivo setBoleta()                            Sets the current record's "Boleta" value
  * @method DetalleActivo setFactura()                           Sets the current record's "Factura" value
  * 
  * @package    sffacturacion
  * @subpackage model
  * @author     Your name here
- * @version    SVN: $Id: Builder.php 7691 2011-02-04 15:43:29Z jwage $
+ * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class BaseDetalleActivo extends sfDoctrineRecord
 {
@@ -167,15 +162,6 @@ abstract class BaseDetalleActivo extends sfDoctrineRecord
              'autoincrement' => false,
              'length' => 4,
              ));
-        $this->hasColumn('cantidad_nota_credito', 'integer', 4, array(
-             'type' => 'integer',
-             'fixed' => 0,
-             'unsigned' => false,
-             'primary' => false,
-             'notnull' => false,
-             'autoincrement' => false,
-             'length' => 4,
-             ));
         $this->hasColumn('precio_detalle_activo', 'integer', 4, array(
              'type' => 'integer',
              'fixed' => 0,
@@ -233,10 +219,6 @@ abstract class BaseDetalleActivo extends sfDoctrineRecord
         $this->hasOne('Guia', array(
              'local' => 'id_guia',
              'foreign' => 'id_guia'));
-
-        $this->hasOne('Boleta', array(
-             'local' => 'id_boleta',
-             'foreign' => 'id_boleta'));
 
         $this->hasOne('Factura', array(
              'local' => 'id_factura',

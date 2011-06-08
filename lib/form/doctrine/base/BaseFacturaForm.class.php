@@ -23,6 +23,7 @@ abstract class BaseFacturaForm extends BaseFormDoctrine
       'fechaemision_factura'  => new sfWidgetFormDateTime(),
       'monto_factura'         => new sfWidgetFormInputText(),
       'saldo_factura'         => new sfWidgetFormInputText(),
+      'descuento_factura'     => new sfWidgetFormInputText(),
       'id_notapedido_factura' => new sfWidgetFormInputText(),
       'rut_factura'           => new sfWidgetFormInputText(),
       'telefono_factura'      => new sfWidgetFormInputText(),
@@ -34,6 +35,7 @@ abstract class BaseFacturaForm extends BaseFormDoctrine
       'oc_factura'            => new sfWidgetFormTextarea(),
       'condicionpago_factura' => new sfWidgetFormTextarea(),
       'responsable_factura'   => new sfWidgetFormTextarea(),
+      'responsable2_factura'  => new sfWidgetFormTextarea(),
       'comentario_factura'    => new sfWidgetFormTextarea(),
       'tipo_factura'          => new sfWidgetFormInputText(),
     ));
@@ -47,6 +49,7 @@ abstract class BaseFacturaForm extends BaseFormDoctrine
       'fechaemision_factura'  => new sfValidatorDateTime(array('required' => false)),
       'monto_factura'         => new sfValidatorInteger(array('required' => false)),
       'saldo_factura'         => new sfValidatorInteger(array('required' => false)),
+      'descuento_factura'     => new sfValidatorNumber(array('required' => false)),
       'id_notapedido_factura' => new sfValidatorInteger(array('required' => false)),
       'rut_factura'           => new sfValidatorString(array('max_length' => 15, 'required' => false)),
       'telefono_factura'      => new sfValidatorString(array('max_length' => 32, 'required' => false)),
@@ -58,6 +61,7 @@ abstract class BaseFacturaForm extends BaseFormDoctrine
       'oc_factura'            => new sfValidatorString(array('max_length' => 512, 'required' => false)),
       'condicionpago_factura' => new sfValidatorString(array('max_length' => 512, 'required' => false)),
       'responsable_factura'   => new sfValidatorString(array('max_length' => 512, 'required' => false)),
+      'responsable2_factura'  => new sfValidatorString(array('max_length' => 512, 'required' => false)),
       'comentario_factura'    => new sfValidatorString(array('max_length' => 512, 'required' => false)),
       'tipo_factura'          => new sfValidatorString(array('max_length' => 64, 'required' => false)),
     ));

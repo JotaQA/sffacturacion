@@ -15,6 +15,7 @@
  * @property timestamp $fechaemision_factura
  * @property integer $monto_factura
  * @property integer $saldo_factura
+ * @property float $descuento_factura
  * @property integer $id_notapedido_factura
  * @property string $rut_factura
  * @property string $telefono_factura
@@ -26,6 +27,7 @@
  * @property string $oc_factura
  * @property string $condicionpago_factura
  * @property string $responsable_factura
+ * @property string $responsable2_factura
  * @property string $comentario_factura
  * @property string $tipo_factura
  * @property Division $Division
@@ -44,6 +46,7 @@
  * @method timestamp           getFechaemisionFactura()   Returns the current record's "fechaemision_factura" value
  * @method integer             getMontoFactura()          Returns the current record's "monto_factura" value
  * @method integer             getSaldoFactura()          Returns the current record's "saldo_factura" value
+ * @method float               getDescuentoFactura()      Returns the current record's "descuento_factura" value
  * @method integer             getIdNotapedidoFactura()   Returns the current record's "id_notapedido_factura" value
  * @method string              getRutFactura()            Returns the current record's "rut_factura" value
  * @method string              getTelefonoFactura()       Returns the current record's "telefono_factura" value
@@ -55,6 +58,7 @@
  * @method string              getOcFactura()             Returns the current record's "oc_factura" value
  * @method string              getCondicionpagoFactura()  Returns the current record's "condicionpago_factura" value
  * @method string              getResponsableFactura()    Returns the current record's "responsable_factura" value
+ * @method string              getResponsable2Factura()   Returns the current record's "responsable2_factura" value
  * @method string              getComentarioFactura()     Returns the current record's "comentario_factura" value
  * @method string              getTipoFactura()           Returns the current record's "tipo_factura" value
  * @method Division            getDivision()              Returns the current record's "Division" value
@@ -72,6 +76,7 @@
  * @method Factura             setFechaemisionFactura()   Sets the current record's "fechaemision_factura" value
  * @method Factura             setMontoFactura()          Sets the current record's "monto_factura" value
  * @method Factura             setSaldoFactura()          Sets the current record's "saldo_factura" value
+ * @method Factura             setDescuentoFactura()      Sets the current record's "descuento_factura" value
  * @method Factura             setIdNotapedidoFactura()   Sets the current record's "id_notapedido_factura" value
  * @method Factura             setRutFactura()            Sets the current record's "rut_factura" value
  * @method Factura             setTelefonoFactura()       Sets the current record's "telefono_factura" value
@@ -83,6 +88,7 @@
  * @method Factura             setOcFactura()             Sets the current record's "oc_factura" value
  * @method Factura             setCondicionpagoFactura()  Sets the current record's "condicionpago_factura" value
  * @method Factura             setResponsableFactura()    Sets the current record's "responsable_factura" value
+ * @method Factura             setResponsable2Factura()   Sets the current record's "responsable2_factura" value
  * @method Factura             setComentarioFactura()     Sets the current record's "comentario_factura" value
  * @method Factura             setTipoFactura()           Sets the current record's "tipo_factura" value
  * @method Factura             setDivision()              Sets the current record's "Division" value
@@ -96,7 +102,7 @@
  * @package    sffacturacion
  * @subpackage model
  * @author     Your name here
- * @version    SVN: $Id: Builder.php 7691 2011-02-04 15:43:29Z jwage $
+ * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class BaseFactura extends sfDoctrineRecord
 {
@@ -173,6 +179,16 @@ abstract class BaseFactura extends sfDoctrineRecord
              'notnull' => false,
              'autoincrement' => false,
              'length' => 4,
+             ));
+        $this->hasColumn('descuento_factura', 'float', null, array(
+             'type' => 'float',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'default' => '0',
+             'notnull' => true,
+             'autoincrement' => false,
+             'length' => '',
              ));
         $this->hasColumn('id_notapedido_factura', 'integer', 4, array(
              'type' => 'integer',
@@ -265,6 +281,15 @@ abstract class BaseFactura extends sfDoctrineRecord
              'length' => 512,
              ));
         $this->hasColumn('responsable_factura', 'string', 512, array(
+             'type' => 'string',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => false,
+             'autoincrement' => false,
+             'length' => 512,
+             ));
+        $this->hasColumn('responsable2_factura', 'string', 512, array(
              'type' => 'string',
              'fixed' => 0,
              'unsigned' => false,

@@ -1,6 +1,6 @@
 <?php
 // Connection Component Binding
-Doctrine_Manager::getInstance()->bindComponent('Division', 'artelamp_1');
+//Doctrine_Manager::getInstance()->bindComponent('Division', 'artelamp_1');
 
 /**
  * BaseDivision
@@ -24,7 +24,7 @@ Doctrine_Manager::getInstance()->bindComponent('Division', 'artelamp_1');
  * @package    sffacturacion
  * @subpackage model
  * @author     Your name here
- * @version    SVN: $Id: Builder.php 7691 2011-02-04 15:43:29Z jwage $
+ * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class BaseDivision extends sfDoctrineRecord
 {

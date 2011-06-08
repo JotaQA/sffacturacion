@@ -16,7 +16,7 @@ abstract class BaseDetalleActivoForm extends BaseFormDoctrine
   {
     $this->setWidgets(array(
       'id_detalle_activo'                 => new sfWidgetFormInputHidden(),
-      'id_boleta'                         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Boleta'), 'add_empty' => true)),
+      'id_boleta'                         => new sfWidgetFormInputText(),
       'id_factura'                        => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Factura'), 'add_empty' => true)),
       'id_guia'                           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Guia'), 'add_empty' => true)),
       'id_nota_credito'                   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('NotaCredito'), 'add_empty' => true)),
@@ -34,7 +34,7 @@ abstract class BaseDetalleActivoForm extends BaseFormDoctrine
 
     $this->setValidators(array(
       'id_detalle_activo'                 => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id_detalle_activo')), 'empty_value' => $this->getObject()->get('id_detalle_activo'), 'required' => false)),
-      'id_boleta'                         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Boleta'), 'required' => false)),
+      'id_boleta'                         => new sfValidatorInteger(array('required' => false)),
       'id_factura'                        => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Factura'), 'required' => false)),
       'id_guia'                           => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Guia'), 'required' => false)),
       'id_nota_credito'                   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('NotaCredito'), 'required' => false)),

@@ -13,7 +13,7 @@ abstract class BaseDetalleActivoFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'id_boleta'                         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Boleta'), 'add_empty' => true)),
+      'id_boleta'                         => new sfWidgetFormFilterInput(),
       'id_factura'                        => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Factura'), 'add_empty' => true)),
       'id_guia'                           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Guia'), 'add_empty' => true)),
       'id_nota_credito'                   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('NotaCredito'), 'add_empty' => true)),
@@ -30,7 +30,7 @@ abstract class BaseDetalleActivoFormFilter extends BaseFormFilterDoctrine
     ));
 
     $this->setValidators(array(
-      'id_boleta'                         => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Boleta'), 'column' => 'id_boleta')),
+      'id_boleta'                         => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'id_factura'                        => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Factura'), 'column' => 'id_factura')),
       'id_guia'                           => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Guia'), 'column' => 'id_guia')),
       'id_nota_credito'                   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('NotaCredito'), 'column' => 'id_nota_credito')),
@@ -64,7 +64,7 @@ abstract class BaseDetalleActivoFormFilter extends BaseFormFilterDoctrine
   {
     return array(
       'id_detalle_activo'                 => 'Number',
-      'id_boleta'                         => 'ForeignKey',
+      'id_boleta'                         => 'Number',
       'id_factura'                        => 'ForeignKey',
       'id_guia'                           => 'ForeignKey',
       'id_nota_credito'                   => 'ForeignKey',

@@ -20,6 +20,7 @@ abstract class BaseFacturaFormFilter extends BaseFormFilterDoctrine
       'fechaemision_factura'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate())),
       'monto_factura'         => new sfWidgetFormFilterInput(),
       'saldo_factura'         => new sfWidgetFormFilterInput(),
+      'descuento_factura'     => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'id_notapedido_factura' => new sfWidgetFormFilterInput(),
       'rut_factura'           => new sfWidgetFormFilterInput(),
       'telefono_factura'      => new sfWidgetFormFilterInput(),
@@ -31,6 +32,7 @@ abstract class BaseFacturaFormFilter extends BaseFormFilterDoctrine
       'oc_factura'            => new sfWidgetFormFilterInput(),
       'condicionpago_factura' => new sfWidgetFormFilterInput(),
       'responsable_factura'   => new sfWidgetFormFilterInput(),
+      'responsable2_factura'  => new sfWidgetFormFilterInput(),
       'comentario_factura'    => new sfWidgetFormFilterInput(),
       'tipo_factura'          => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
@@ -43,6 +45,7 @@ abstract class BaseFacturaFormFilter extends BaseFormFilterDoctrine
       'fechaemision_factura'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
       'monto_factura'         => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'saldo_factura'         => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'descuento_factura'     => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
       'id_notapedido_factura' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'rut_factura'           => new sfValidatorPass(array('required' => false)),
       'telefono_factura'      => new sfValidatorPass(array('required' => false)),
@@ -54,6 +57,7 @@ abstract class BaseFacturaFormFilter extends BaseFormFilterDoctrine
       'oc_factura'            => new sfValidatorPass(array('required' => false)),
       'condicionpago_factura' => new sfValidatorPass(array('required' => false)),
       'responsable_factura'   => new sfValidatorPass(array('required' => false)),
+      'responsable2_factura'  => new sfValidatorPass(array('required' => false)),
       'comentario_factura'    => new sfValidatorPass(array('required' => false)),
       'tipo_factura'          => new sfValidatorPass(array('required' => false)),
     ));
@@ -83,6 +87,7 @@ abstract class BaseFacturaFormFilter extends BaseFormFilterDoctrine
       'fechaemision_factura'  => 'Date',
       'monto_factura'         => 'Number',
       'saldo_factura'         => 'Number',
+      'descuento_factura'     => 'Number',
       'id_notapedido_factura' => 'Number',
       'rut_factura'           => 'Text',
       'telefono_factura'      => 'Text',
@@ -94,6 +99,7 @@ abstract class BaseFacturaFormFilter extends BaseFormFilterDoctrine
       'oc_factura'            => 'Text',
       'condicionpago_factura' => 'Text',
       'responsable_factura'   => 'Text',
+      'responsable2_factura'  => 'Text',
       'comentario_factura'    => 'Text',
       'tipo_factura'          => 'Text',
     );

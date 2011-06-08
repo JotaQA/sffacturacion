@@ -18,7 +18,7 @@
  * @property integer $id_notapedido_nota_credito
  * @property string $rut_nota_credito
  * @property string $telefono_nota_credito
- * @property string $nombre_nota_credito
+ * @property string $nombre_estado_nota_credito
  * @property string $direccion_nota_credito
  * @property string $comuna_nota_credito
  * @property string $ciudad_nota_credito
@@ -42,7 +42,7 @@
  * @method integer             getIdNotapedidoNotaCredito()    Returns the current record's "id_notapedido_nota_credito" value
  * @method string              getRutNotaCredito()             Returns the current record's "rut_nota_credito" value
  * @method string              getTelefonoNotaCredito()        Returns the current record's "telefono_nota_credito" value
- * @method string              getNombreNotaCredito()          Returns the current record's "nombre_nota_credito" value
+ * @method string              getNombreEstadoNotaCredito()    Returns the current record's "nombre_estado_nota_credito" value
  * @method string              getDireccionNotaCredito()       Returns the current record's "direccion_nota_credito" value
  * @method string              getComunaNotaCredito()          Returns the current record's "comuna_nota_credito" value
  * @method string              getCiudadNotaCredito()          Returns the current record's "ciudad_nota_credito" value
@@ -65,7 +65,7 @@
  * @method NotaCredito         setIdNotapedidoNotaCredito()    Sets the current record's "id_notapedido_nota_credito" value
  * @method NotaCredito         setRutNotaCredito()             Sets the current record's "rut_nota_credito" value
  * @method NotaCredito         setTelefonoNotaCredito()        Sets the current record's "telefono_nota_credito" value
- * @method NotaCredito         setNombreNotaCredito()          Sets the current record's "nombre_nota_credito" value
+ * @method NotaCredito         setNombreEstadoNotaCredito()    Sets the current record's "nombre_estado_nota_credito" value
  * @method NotaCredito         setDireccionNotaCredito()       Sets the current record's "direccion_nota_credito" value
  * @method NotaCredito         setComunaNotaCredito()          Sets the current record's "comuna_nota_credito" value
  * @method NotaCredito         setCiudadNotaCredito()          Sets the current record's "ciudad_nota_credito" value
@@ -81,7 +81,7 @@
  * @package    sffacturacion
  * @subpackage model
  * @author     Your name here
- * @version    SVN: $Id: Builder.php 7691 2011-02-04 15:43:29Z jwage $
+ * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class BaseNotaCredito extends sfDoctrineRecord
 {
@@ -186,7 +186,7 @@ abstract class BaseNotaCredito extends sfDoctrineRecord
              'autoincrement' => false,
              'length' => 32,
              ));
-        $this->hasColumn('nombre_nota_credito', 'string', 200, array(
+        $this->hasColumn('nombre_estado_nota_credito', 'string', 200, array(
              'type' => 'string',
              'fixed' => 0,
              'unsigned' => false,
