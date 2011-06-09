@@ -13,11 +13,18 @@ class NotaCreditoForm extends BaseNotaCreditoForm
   public function configure()
   {
       $this->widgetSchema['comuna_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['direccion_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['ciudad_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['giro_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['condicionpago_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['oc_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['responsable_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['fechaingreso_nota_credito'] = new sfWidgetFormInputText();
 
       $this->widgetSchema->setLabels(array(
             'numero_nota_credito' => 'Numero NC',
             'rut_nota_credito' => 'RUT',
-            'nombre_estado_nota_credito' => 'Estado',
+            'nombre_nota_credito' => 'Nombre',
             'telefono_nota_credito' => 'Telefono',
             'direccion_nota_credito' => 'Dirección',
             'comuna_nota_credito' => 'Comuna',

@@ -1,5 +1,6 @@
 <form>
-    <table>
+    <fieldset>
+        <table class="popupform">
         <tr>
             <th><?php echo $form['numero_nota_credito']->renderLabel() ?></th>
             <td>
@@ -13,10 +14,10 @@
             </td>
         </tr>
         <tr>
-            <th><?php echo $form['nombre_estado_nota_credito']->renderLabel() ?></th>
+            <th><?php echo $form['nombre_nota_credito']->renderLabel() ?></th>
             <td>
-                <?php echo $form['nombre_estado_nota_credito']->renderError() ?>
-                <?php echo $form['nombre_estado_nota_credito'] ?>
+                <?php echo $form['nombre_nota_credito']->renderError() ?>
+                <?php echo $form['nombre_nota_credito'] ?>
             </td>
             <th><?php echo $form['telefono_nota_credito']->renderLabel() ?></th>
             <td>
@@ -66,30 +67,25 @@
                 <?php echo $form['responsable_nota_credito']->renderError() ?>
                 <?php echo $form['responsable_nota_credito'] ?>
             </td>
-            <th><?php echo $form['comentarior_nota_credito']->renderLabel() ?></th>
-            <td>
-                <?php echo $form['comentarior_nota_credito']->renderError() ?>
-                <?php echo $form['comentarior_nota_credito'] ?>
-            </td>
-        </tr>
-        <tr>
             <th><?php echo $form['numerofactura_nota_credito']->renderLabel() ?></th>
             <td>
                 <?php echo $form['numerofactura_nota_credito']->renderError() ?>
                 <?php echo $form['numerofactura_nota_credito'] ?>
             </td>
+        </tr>
+        <tr>
+            <th><?php echo $form['comentarior_nota_credito']->renderLabel() ?></th>
+            <td>
+                <?php echo $form['comentarior_nota_credito']->renderError() ?>
+                <?php echo $form['comentarior_nota_credito']->render(array('cols' => 25)) ?>
+            </td>            
             <th><?php echo $form['fechaingreso_nota_credito']->renderLabel() ?></th>
             <td>
                 <?php echo $form['fechaingreso_nota_credito']->renderError() ?>
                 <?php echo $form['fechaingreso_nota_credito'] ?>
+                <?php echo $form->renderHiddenFields(true) ?>
             </td>
         </tr>
-<!--        <tr>
-            <th><?php echo $form['id_notapedido_nota_credito']->renderLabel() ?></th>
-            <td>
-                <?php echo $form['id_notapedido_nota_credito']->renderError() ?>
-                <?php echo $form['id_notapedido_nota_credito'] ?>
-            </td>
-        </tr>-->
     </table>
+   </fieldset>
 </form>

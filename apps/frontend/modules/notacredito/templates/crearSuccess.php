@@ -24,7 +24,7 @@
     <div class="midcontent">
     <div class="divmiddle">
         
-<table width="100%">
+<table width="100%" class="detalle">
   <thead>
     <tr>
 <!--      <th>Id detalle activo</th>
@@ -71,8 +71,8 @@
     <?php endforeach; ?>
   </tbody>
 </table>
-        <button onclick="test()">prueba</button>
-        <button onclick="emitir(<?php echo $detalle_activo->getIdFactura() ?>)">Emitir</button>
+        <button onclick="crearNC()">Siguiente</button>
+<!--        <button onclick="emitir(<?php echo $detalle_activo->getIdFactura() ?>)">Emitir</button>-->
         
         
         <div id="dialog-form" title="Datos de Nota de Credito">
@@ -81,7 +81,7 @@
 <!--            <form>
                 <fieldset>
                     <label for="name">Name</label>
-                    <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" /><br />
+                    <input type="text" name="name" id="name" class="ui-widget-content ui-corner-all" /><br />
                     <label for="email">Email</label>
                     <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" /><br />
                     <label for="password">Password</label>
@@ -99,13 +99,29 @@
     </div>
 </div>
 <script type="text/javascript">
-        function test(){
-                    $( "#dialog-form" ).dialog( "open" );
-        }
-    
-    
-	$(function() {     
+        var id_detalle = new Array();
+//        var id_detalle_str = "";
+        
+        function crearNC(){
             
+            $('table.detalle input[type=checkbox]:checked').each(function() {
+                id_detalle.push($(this).attr("id").substring(11));
+//                id_detalle_str += $(this).attr("id").substring(11);
+            });            
+            $( "#dialog-form" ).dialog( "open" );
+//            alert(id_detalle[0]);
+        }
+        
+    
+    
+	$(document).ready(function(){            
+            $( "#nota_credito_fechaingreso_nota_credito" ).datepicker($.datepicker.regional[ "es" ]);
+            $('button').button();
+            $('input:text , textarea').addClass('ui-widget-content ui-corner-all');
+
+
+
+
             
             var name = $( "#name" ),
 		email = $( "#email" ),
@@ -144,33 +160,35 @@
                         
             $( "#dialog-form" ).dialog({
 			autoOpen: false,
-			height: 600,
-			width: 650,
+			height: 500,
+			width: 600,
 			modal: true,
 			buttons: {
-				"Create an account": function() {
+				"Emitir Nota": function() {
 					var bValid = true;
 					allFields.removeClass( "ui-state-error" );
+                                        
 
-					bValid = bValid && checkLength( name, "username", 3, 16 );
-					bValid = bValid && checkLength( email, "email", 6, 80 );
-					bValid = bValid && checkLength( password, "password", 5, 16 );
-
-					bValid = bValid && checkRegexp( name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter." );
-					// From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
-					bValid = bValid && checkRegexp( email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. ui@jquery.com" );
-					bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
-
+//					bValid = bValid && checkLength( name, "username", 3, 16 );
+//					bValid = bValid && checkLength( email, "email", 6, 80 );
+//					bValid = bValid && checkLength( password, "password", 5, 16 );
+//
+//					bValid = bValid && checkRegexp( name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter." );
+//					// From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
+//					bValid = bValid && checkRegexp( email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. ui@jquery.com" );
+//					bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+//
 					if ( bValid ) {
-						$( "#users tbody" ).append( "<tr>" +
-							"<td>" + name.val() + "</td>" + 
-							"<td>" + email.val() + "</td>" + 
-							"<td>" + password.val() + "</td>" +
-						"</tr>" ); 
-						$( this ).dialog( "close" );
+                                            var fields  = $("form").serialize();
+                                            fields += '&id_detalles='+array2json(id_detalle);
+                                            alert(fields);
+                                            $.post("<?php echo url_for('notacredito/ingresarNC') ?>", fields ,
+                                               function(data) {
+                                                 alert("Data Loaded: " + data);
+                                               });					
 					}
 				},
-				Cancel: function() {
+				'Cancelar': function() {
 					$( this ).dialog( "close" );
 				}
 			},

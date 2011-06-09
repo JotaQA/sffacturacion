@@ -2027,7 +2027,7 @@ NotaCredito:
       primary: false
       notnull: false
       autoincrement: false
-    nombre_estado_nota_credito:
+    nombre_nota_credito:
       type: string(200)
       fixed: false
       unsigned: false

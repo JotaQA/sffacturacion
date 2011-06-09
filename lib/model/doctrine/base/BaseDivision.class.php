@@ -1,6 +1,6 @@
 <?php
 // Connection Component Binding
-//Doctrine_Manager::getInstance()->bindComponent('Division', 'artelamp_1');
+Doctrine_Manager::getInstance()->bindComponent('Division', 'artelamp_1');
 
 /**
  * BaseDivision

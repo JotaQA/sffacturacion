@@ -2,8 +2,8 @@
 # http://www.symfony-project.org/reference/1_4/en/13-View
 
 all:
-  javascripts:    [jquery-ui-1.8.13.custom.min.js, notacredito.js]
-  stylesheets:    [redmond/jquery-ui-1.8.13.custom.css]
+  javascripts:    [jquery-ui-1.8.13.custom.min.js, jquery.ui.datepicker-es.js,  notacredito.js]
+  stylesheets:    [redmond/jquery-ui-1.8.13.custom.css, notacredito.css]
 
 #cambiartipoSuccess:
 #  layout:         poplayout

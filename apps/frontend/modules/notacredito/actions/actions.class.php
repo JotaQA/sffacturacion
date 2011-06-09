@@ -22,6 +22,31 @@ class notacreditoActions extends sfActions
     $this->form = new NotaCreditoForm();
   }
   
+  
+  public function executeIngresarNC(sfWebRequest $request)
+  {
+      $this->forward404Unless($request->isMethod(sfRequest::POST));
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      $form = new NotaCreditoForm();
+      $notaform = $request->getParameter('nota_credito');
+      $numero_factura = $notaform['numerofactura_nota_credito'];
+
+      if($this->isFormValid($request, $form)){
+          $vectordatos = json_decode($request->getParameter('id_detalles'));
+//          $nota_credito = $form->save();
+//          
+//          foreach ($vectordatos as $value) {
+//              $NCF = new NotacreditoFactura();
+//              $NCF->setNotaCredito($nota_credito);
+//              
+//          }
+          
+          return $this->renderText('true');
+      }
+      else return $this->renderText('Error validación');
+  }  
+  
+  
   public function executeEmitir(sfWebRequest $request)
   {
     $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
@@ -74,11 +99,13 @@ class notacreditoActions extends sfActions
 
   public function executeNew(sfWebRequest $request)
   {
+    Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
     $this->form = new NotaCreditoForm();
   }
 
   public function executeCreate(sfWebRequest $request)
   {
+    Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
     $this->forward404Unless($request->isMethod(sfRequest::POST));
 
     $this->form = new NotaCreditoForm();
@@ -120,9 +147,15 @@ class notacreditoActions extends sfActions
     $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
     if ($form->isValid())
     {
-      $nota_credito = $form->save();
+        $nota_credito = $form->save();
 
-      $this->redirect('notacredito/edit?id_nota_credito='.$nota_credito->getIdNotaCredito());
-    }
+        $this->redirect('notacedito/edit?id_nota_credito='.$nota_credito->getIdNotaCredito());
+    }    
+  }
+  protected function isFormValid(sfWebRequest $request, sfForm $form)
+  {
+    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
+    if ($form->isValid())  return true;
+    else return false;   
   }
 }
