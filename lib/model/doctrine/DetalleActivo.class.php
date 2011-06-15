@@ -12,5 +12,9 @@
  */
 class DetalleActivo extends BaseDetalleActivo
 {
-
+    public function getCliente(){
+        if($this->getFactura() != null){
+            return $this->getFactura()->getNombreFactura();
+        }
+    }
 }

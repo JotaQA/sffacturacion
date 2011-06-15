@@ -10,6 +10,11 @@
  */
 class notacreditoActions extends sfActions
 {
+  public function executeCrear2(sfWebRequest $request)
+  {
+    Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+    
+  }
   public function executeCrear(sfWebRequest $request)
   {
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
@@ -32,21 +37,12 @@ class notacreditoActions extends sfActions
       $this->forward404Unless($request->isMethod(sfRequest::POST));
       Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
       $form = new NotaCreditoForm();
-//      $notaform = $request->getParameter('nota_credito');
       $id_factura = $request->getParameter('id_factura');
       $id_detalles = json_decode($request->getParameter('id_detalles'));
       
       $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
       
-      if ($form->isValid() && count($id_detalles)%2==0){
-//          $str = '';
-//          while(list(, $id_detalle) = each($id_detalles)) {
-//              $str .= 'id'.$id_detalle;
-//              list(, $cantidad) = each($id_detalles);
-//              $str .= 'c'.$cantidad;
-//          }
-//          return $this->renderText($str);
-          
+      if ($form->isValid() && count($id_detalles)%2==0){          
           $nota_credito = $form->save();
           $NCF = new NotacreditoFactura();
           $NCF->setNotaCredito($nota_credito);
@@ -62,22 +58,6 @@ class notacreditoActions extends sfActions
           return $this->renderText('true');
       }
       return $this->renderText('false');
-      
-      
-
-//      if($this->isFormValid($request, $form)){
-//          $vectordatos = json_decode($request->getParameter('id_detalles'));
-//          $nota_credito = $form->save();
-//          
-//          foreach ($vectordatos as $value) {
-//              $NCF = new NotacreditoFactura();
-//              $NCF->setNotaCredito($nota_credito);
-//              
-//          }
-          
-//          return $this->renderText('true');
-//      }
-//      else return $this->renderText('Error validación');
   }  
   
   
