@@ -13,13 +13,17 @@ class notacreditoActions extends sfActions
   public function executeCrear(sfWebRequest $request)
   {
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
-    $this->detalle_activos = Doctrine_Core::getTable('DetalleActivo')
-      ->createQuery('a')
-      ->Where('a.id_factura = 73')
-      ->execute();
-    $this->cb = new sfWidgetFormInputCheckbox();
-    $this->it = new sfWidgetFormInputText();
-    $this->form = new NotaCreditoForm();
+    if($request->getParameter('id_factura') != null){
+        $this->forward404Unless($factura = Doctrine_Core::getTable('Factura')->find(array($request->getParameter('id_factura'))), sprintf('No se encontro la Factura (%s).', $request->getParameter('id_factura')));
+
+        $this->detalle_activos = Doctrine_Core::getTable('DetalleActivo')
+          ->createQuery('a')
+          ->Where('a.id_factura = ?', $request->getParameter('id_factura'))
+          ->execute();
+        $this->cb = new sfWidgetFormInputCheckbox();
+        $this->it = new sfWidgetFormInputText();
+        $this->form = new NotaCreditoForm();
+    }//FALTA EL ELSE
   }
   
   
@@ -28,11 +32,41 @@ class notacreditoActions extends sfActions
       $this->forward404Unless($request->isMethod(sfRequest::POST));
       Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
       $form = new NotaCreditoForm();
-      $notaform = $request->getParameter('nota_credito');
-      $numero_factura = $notaform['numerofactura_nota_credito'];
+//      $notaform = $request->getParameter('nota_credito');
+      $id_factura = $request->getParameter('id_factura');
+      $id_detalles = json_decode($request->getParameter('id_detalles'));
+      
+      $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
+      
+      if ($form->isValid() && count($id_detalles)%2==0){
+//          $str = '';
+//          while(list(, $id_detalle) = each($id_detalles)) {
+//              $str .= 'id'.$id_detalle;
+//              list(, $cantidad) = each($id_detalles);
+//              $str .= 'c'.$cantidad;
+//          }
+//          return $this->renderText($str);
+          
+          $nota_credito = $form->save();
+          $NCF = new NotacreditoFactura();
+          $NCF->setNotaCredito($nota_credito);
+          $NCF->setIdFactura($id_factura);
+          $NCF->save();
+          while(list(, $id_detalle) = each($id_detalles)) {
+              $detalle_activo = Doctrine_Core::getTable('DetalleActivo')->find($id_detalle);
+              list(, $cantidad) = each($id_detalles);
+              $detalle_activo->setNotaCredito($nota_credito);
+              $detalle_activo->setCantidadNotaCredito($cantidad);
+              $detalle_activo->save();              
+          }
+          return $this->renderText('true');
+      }
+      return $this->renderText('false');
+      
+      
 
-      if($this->isFormValid($request, $form)){
-          $vectordatos = json_decode($request->getParameter('id_detalles'));
+//      if($this->isFormValid($request, $form)){
+//          $vectordatos = json_decode($request->getParameter('id_detalles'));
 //          $nota_credito = $form->save();
 //          
 //          foreach ($vectordatos as $value) {
@@ -41,9 +75,9 @@ class notacreditoActions extends sfActions
 //              
 //          }
           
-          return $this->renderText('true');
-      }
-      else return $this->renderText('Error validación');
+//          return $this->renderText('true');
+//      }
+//      else return $this->renderText('Error validación');
   }  
   
   

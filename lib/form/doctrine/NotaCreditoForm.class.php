@@ -38,4 +38,7 @@ class NotaCreditoForm extends BaseNotaCreditoForm
             'fechaingreso_nota_credito' => 'Fec. Ingreso',
         ));      
   }
+  public function getvalues(){
+      return $this->taintedValues;
+  }
 }

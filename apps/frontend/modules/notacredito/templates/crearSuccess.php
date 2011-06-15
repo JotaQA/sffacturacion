@@ -99,17 +99,17 @@
     </div>
 </div>
 <script type="text/javascript">
-        var id_detalle = new Array();
-//        var id_detalle_str = "";
+        var id_detalle;
+        var id_factura = "<?php echo (count($detalle_activos)>0 ? $detalle_activos[0]->getIdFactura():'null') ?>";
         
         function crearNC(){
-            
+            id_detalle = new Array();
             $('table.detalle input[type=checkbox]:checked').each(function() {
-                id_detalle.push($(this).attr("id").substring(11));
-//                id_detalle_str += $(this).attr("id").substring(11);
+                var id = $(this).attr("id").substring(11);
+                id_detalle.push(id);                
+                id_detalle.push($('#icantidad'+id).val());
             });            
             $( "#dialog-form" ).dialog( "open" );
-//            alert(id_detalle[0]);
         }
         
     
@@ -178,14 +178,15 @@
 //					bValid = bValid && checkRegexp( email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. ui@jquery.com" );
 //					bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
 //
-					if ( bValid ) {
+					if ( bValid && id_factura != 'null' ) {
                                             var fields  = $("form").serialize();
                                             fields += '&id_detalles='+array2json(id_detalle);
-                                            alert(fields);
+                                            fields += '&id_factura='+id_factura;
+
                                             $.post("<?php echo url_for('notacredito/ingresarNC') ?>", fields ,
                                                function(data) {
                                                  alert("Data Loaded: " + data);
-                                               });					
+                                               });
 					}
 				},
 				'Cancelar': function() {
