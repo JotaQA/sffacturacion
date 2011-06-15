@@ -50,6 +50,7 @@
 <!--      <td id="<?php echo 'tdeditable'.$detalle_activo->getIdDetalleActivo() ?>" style="display: none; padding: 0" ><?php echo $it->render('icantidad'.$detalle_activo->getIdDetalleActivo(), $detalle_activo->getCantidadDetalleActivo(), array('size' => '1', 'style' => 'font-size: 8pt'), ESC_RAW) ?></td>-->
 <!--      <td id="<?php echo 'tdfija'.$detalle_activo->getIdDetalleActivo() ?>" ><?php echo $detalle_activo->getCantidadDetalleActivo() ?></td>-->
       
+      <td><?php echo $detalle_activo->getCliente() ?></td>
       <td><?php echo $detalle_activo->getPrecioDetalleActivo() ?></td>
       <td><?php echo $cb->render('id_detalle['.$detalle_activo->getIdDetalleActivo().']', ESC_RAW) ?></td>
 <!--      <td><?php echo $detalle_activo->getFechaingresoDetalleActivo() ?></td>-->
@@ -60,8 +61,7 @@
     <?php endforeach; ?>
   </tbody>
 </table>
-        <button onclick="crearNC()">Siguiente</button>
-<!--        <button onclick="emitir(<?php echo $detalle_activo->getIdFactura() ?>)">Emitir</button>-->
+        <button onclick="siguiente()">Siguiente</button>
         
         
         <div id="dialog-form" title="Datos de Nota de Credito">
@@ -113,12 +113,17 @@
                             <input type="text" id="datepicker2" size="9" readonly value="<?php echo date('d/m/Y',time() + 3 * 24 * 60 * 60) ?>">
                             <br />
                             <br />-->
-                            <h2>CLIENTE</h2>
-                            <div class="search">
-                                      <input type="text" value="<?php echo $sf_request->getParameter('query') ?>" name="query" id="search_cliente" />
-                            </div>
+                            <h2>CLIENTE</h2>                            
+                            <input type="text" value="<?php echo $sf_request->getParameter('query') ?>" name="query" id="search_cliente" />
+                            
 
                             <div id="clientes"></div>
+                            <br />
+                            <div id="cajaproductos" style="display: none">
+                                <h2>PRODUCTOS</h2>
+                                <input type="text" id="search_productos" />
+                                <div id="productos"></div>
+                            </div>
                     </div>
             </div>
 
@@ -134,8 +139,13 @@
 <script type="text/javascript">
         var id_detalle;
         var id_factura = "<?php echo (count($detalle_activos)>0 ? $detalle_activos[0]->getIdFactura():'null') ?>";
+        var rut_cliente = "";
         
-        function crearNC(){
+       
+        
+        
+        
+        function siguiente(){
             id_detalle = new Array();
             $('table.detalle input[type=checkbox]:checked').each(function() {
                 var id = $(this).attr("id").substring(11);
@@ -145,12 +155,45 @@
             $( "#dialog-form" ).dialog( "open" );
         }
         
+        
+        function mostrarProductos(_rut_cliente){
+            rut_cliente = _rut_cliente;
+            $('#cajaproductos').show();
+        }
+        
     
     
 	$(document).ready(function(){            
             $( "#nota_credito_fechaingreso_nota_credito" ).datepicker($.datepicker.regional[ "es" ]);
             $('button').button();
             $('input:text , textarea').addClass('ui-widget-content ui-corner-all');
+            
+            $('#search_cliente').keyup(function(key){
+                if (this.value.length >= 3){
+                    $('#clientes').load(
+                    "<?php echo url_for('notacredito/search_cliente') ?>",
+                    {query: this.value},
+                    function() { /*$('#loader').hide();*/ }
+                    );
+                }
+                if(this.value == ''){
+                    rut_cliente = "";
+                    $('#cajaproductos').hide();
+                }
+            });
+            
+            $('#search_productos').keyup(function(key){
+                if (this.value.length >= 3){
+                    $('#productos').load(
+                    "<?php echo url_for('notacredito/search_producto') ?>",
+                    {query: this.value},
+                    function() { }
+                    );
+                }
+                if(this.value == ''){
+                    $('#productos').html('');
+                }
+            });
 
 
 
@@ -230,13 +273,6 @@
 				allFields.val( "" ).removeClass( "ui-state-error" );
 			}
 		});
-                
-                
-                
-                
-                
-                
-                
         });
         
 </script>

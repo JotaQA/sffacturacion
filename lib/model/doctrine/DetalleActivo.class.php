@@ -16,5 +16,9 @@ class DetalleActivo extends BaseDetalleActivo
         if($this->getFactura() != null){
             return $this->getFactura()->getNombreFactura();
         }
+        if($this->getBoleta() != null){
+            return $this->getBoleta()->getNombreBoleta();
+        }
+        
     }
 }

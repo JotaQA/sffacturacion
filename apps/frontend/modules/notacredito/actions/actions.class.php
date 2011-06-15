@@ -13,8 +13,92 @@ class notacreditoActions extends sfActions
   public function executeCrear2(sfWebRequest $request)
   {
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
-    
+    $this->detalle_activos = array();
+    $this->cb = new sfWidgetFormInputCheckbox();
+    $this->it = new sfWidgetFormInputText();
+    $this->form = new NotaCreditoForm();
   }
+  
+  public function executeSearch_cliente(sfWebRequest $request){
+      $query = $request->getParameter('query');
+      $querys = explode('+',$query);
+      $limit=20;
+
+      if(count($querys) < 2){
+
+          $clientes = Doctrine_Core::getTable('Cliente')
+                  ->createQuery('a')
+                  ->where('a.nombre_cliente LIKE ?','%'.$query.'%')
+                  ->orWhere('a.descripcion_cliente LIKE ?','%'.$query.'%')
+                  ->orWhere('a.rut_cliente LIKE ?','%'.$query.'%');
+
+
+      }
+      else{
+          $clientes = Doctrine_Core::getTable('Cliente')
+                  ->createQuery('a');
+          for($j=0;$j<count($querys);$j++){
+                    $clientes = $clientes
+                  ->orwhere('a.nombre_cliente LIKE ?','%'.$query[$j].'%')
+                  ->orWhere('a.descripcion_cliente LIKE ?','%'.$query[$j].'%')
+                  ->orWhere('a.rut_cliente LIKE ?','%'.$query[$j].'%');
+          }
+      }
+
+      $clientes = $clientes->limit($limit)->execute();
+
+      if ($request->isXmlHttpRequest())
+      {
+        if ('' == $query || count($clientes)==0)
+        {
+          return $this->renderText('No hay Resultados...');
+        }
+
+        return $this->renderPartial('notacredito/listcliente', array('clientes' => $clientes));
+      }
+  }
+  
+  
+  public function executeSearch_producto(sfWebRequest $request){
+      $query = $request->getParameter('query');
+      $querys = explode('+',$query);
+      $limit=15;
+      
+
+      if(count($querys) < 2){
+
+          $productos = Doctrine_Core::getTable('ActivosSimples')
+                  ->createQuery('a')
+                  ->where('a.codigoemp LIKE ?','%'.$query.'%')
+                  ->orWhere('a.descripcion LIKE ?','%'.$query.'%')
+                  ->orWhere('a.detalle LIKE ?','%'.$query.'%');      
+      }
+      else{
+          $productos = Doctrine_Core::getTable('ActivosSimples')
+                  ->createQuery('a');
+          for($j=0;$j<count($querys);$j++){
+                    $productos = $productos
+                  ->orwhere('a.codigoemp LIKE ?','%'.$query[$j].'%')
+                  ->orWhere('a.descripcion LIKE ?','%'.$query[$j].'%')
+                  ->orWhere('a.detalle LIKE ?','%'.$query[$j].'%');
+          }
+      }
+
+      $productos = $productos->limit($limit)->execute();
+      
+
+      if ($request->isXmlHttpRequest())
+      {
+        if ('' == $query || count($productos)==0)
+        {
+          return $this->renderText('No hay Resultados...');
+        }
+
+        return $this->renderPartial('notacredito/listproducto', array('productos' => $productos));
+      }
+  }
+  
+  
   public function executeCrear(sfWebRequest $request)
   {
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');

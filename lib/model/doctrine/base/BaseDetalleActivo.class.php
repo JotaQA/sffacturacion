@@ -1,6 +1,6 @@
 <?php
 // Connection Component Binding
-Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
+//Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
 
 /**
  * BaseDetalleActivo
@@ -25,6 +25,7 @@ Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
  * @property string $descripcionexterna_detalle_activo
  * @property NotaCredito $NotaCredito
  * @property Guia $Guia
+ * @property Boleta $Boleta
  * @property Factura $Factura
  * 
  * @method integer       getIdDetalleActivo()                   Returns the current record's "id_detalle_activo" value
@@ -45,6 +46,7 @@ Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
  * @method string        getDescripcionexternaDetalleActivo()   Returns the current record's "descripcionexterna_detalle_activo" value
  * @method NotaCredito   getNotaCredito()                       Returns the current record's "NotaCredito" value
  * @method Guia          getGuia()                              Returns the current record's "Guia" value
+ * @method Boleta        getBoleta()                            Returns the current record's "Boleta" value
  * @method Factura       getFactura()                           Returns the current record's "Factura" value
  * @method DetalleActivo setIdDetalleActivo()                   Sets the current record's "id_detalle_activo" value
  * @method DetalleActivo setIdBoleta()                          Sets the current record's "id_boleta" value
@@ -64,6 +66,7 @@ Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
  * @method DetalleActivo setDescripcionexternaDetalleActivo()   Sets the current record's "descripcionexterna_detalle_activo" value
  * @method DetalleActivo setNotaCredito()                       Sets the current record's "NotaCredito" value
  * @method DetalleActivo setGuia()                              Sets the current record's "Guia" value
+ * @method DetalleActivo setBoleta()                            Sets the current record's "Boleta" value
  * @method DetalleActivo setFactura()                           Sets the current record's "Factura" value
  * 
  * @package    sffacturacion
@@ -231,6 +234,10 @@ abstract class BaseDetalleActivo extends sfDoctrineRecord
         $this->hasOne('Guia', array(
              'local' => 'id_guia',
              'foreign' => 'id_guia'));
+
+        $this->hasOne('Boleta', array(
+             'local' => 'id_boleta',
+             'foreign' => 'id_boleta'));
 
         $this->hasOne('Factura', array(
              'local' => 'id_factura',
