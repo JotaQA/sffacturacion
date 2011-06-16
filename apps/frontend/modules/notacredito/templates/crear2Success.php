@@ -24,13 +24,15 @@
     <div class="midcontent">
     <div class="divmiddle">
         
-        <table width="100%"  id="prueba">
+        <table width="100%"  id="prueba" class="display">
             
         </table>
         
-        <button onclick="siguiente()">Siguiente</button>
-        <button onclick="actualizarlista()">actualizar</button>
-        
+        <div style="text-align: right">
+            <button onclick="siguiente()">Siguiente</button>
+            <button onclick="actualizarlista()">Actualizar</button>
+            <button onclick="limpiar()">Limpiar</button>
+        </div>
         
         <div id="dialog-form" title="Datos de Nota de Credito">
             <p class="validateTips">Ingrese los datos de la Nota de Credito</p>
@@ -128,12 +130,19 @@
         
         
         function mostrarProductos(_rut_cliente){
+            if(_rut_cliente != rut_cliente){
+                limpiar();
+            }
             rut_cliente = _rut_cliente;
             $('#cajaproductos').show();
         }
         
         function cargarProducto(codigo, descripcion, precio){
-            productos.push(new Producto(codigo, descripcion, precio));
+            var bool = true;
+            for(i in productos){
+                if(productos[i].codigo == codigo) bool = false;
+            }
+            if(bool) productos.push(new Producto(codigo, descripcion, precio));
             actualizarlista();
         }
         
@@ -143,9 +152,22 @@
             for(i in productos){                
                 $('#prueba').dataTable().fnAddData( [
                     productos[i].codigo,
-                    productos[i].descripcion
+                    productos[i].descripcion,
+                    "<button onclick=borrarRow("+i+")>borrar</button>"
                 ]);
-            }            
+            }
+            $('button').button();
+        }
+        
+        function borrarRow(index){            
+            productos.splice(index,1);
+            $('#prueba').dataTable().fnDeleteRow(index);
+            actualizarlista();
+        }
+        
+        function limpiar(){
+            $('#prueba').dataTable().fnClearTable();
+            productos = new Array();
         }
         
         var Producto = function(codigo, descripcion, precio){
@@ -167,13 +189,28 @@
 //                ],
                 "aoColumns": [
 			{ "sTitle": "CODIGO" },
-			{ "sTitle": "DESCRIPCION" }			
+			{ "sTitle": "DESCRIPCION" },
+			{ 
+                            "sTitle": "ACCION",
+                            "sClass": "center",
+                            "sWidth": "15%"
+//                            "fnRender": "<button onclick='alert('hola')'>B</button>"
+                        }                     
 		],
                 "bJQueryUI": true,
 		"sPaginationType": "full_numbers",
                 "bLengthChange": false,
                 "bInfo": false,
-                "bPaginate": false
+                "bPaginate": false,
+//                "bLengthChange": 10,
+                "aaSorting": [],
+                "sScrollY": 400,
+//		"bScrollCollapse": true,
+//                "bScrollInfinite": true,
+                "oLanguage": {
+                    "sSearch": "Buscar:",
+                    "sZeroRecords": "Ningún producto cargado..."
+                }
             });
         
         
@@ -205,6 +242,7 @@
                 if(this.value == ''){
                     rut_cliente = "";
                     $('#cajaproductos').hide();
+                    $('#clientes').html('');
                 }
             });
             
