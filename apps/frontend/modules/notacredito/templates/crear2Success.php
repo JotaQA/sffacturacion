@@ -24,44 +24,12 @@
     <div class="midcontent">
     <div class="divmiddle">
         
-<table width="100%" class="detalle">
-  <thead>
-    <tr>
-      <th>Codigo</th>
-      <th>Descripcion</th>
-      <th>Cliente</th>
-      <th>Precio</th>
-      <th></th>   
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach ($detalle_activos as $detalle_activo): ?>
-    <tr>
-<!--      <td><a href="<?php echo url_for('detalle/edit?id_detalle_activo='.$detalle_activo->getIdDetalleActivo()) ?>"><?php echo $detalle_activo->getIdDetalleActivo() ?></a></td>
-      <td><?php echo $detalle_activo->getIdBoleta() ?></td>
-      <td><?php echo $detalle_activo->getIdFactura() ?></td>
-      <td><?php echo $detalle_activo->getIdGuia() ?></td>
-      <td><?php echo $detalle_activo->getIdNotaCredito() ?></td>
-      <td><?php echo $detalle_activo->getIdSalida() ?></td>
-      <td><?php echo $detalle_activo->getIdSalidaAc() ?></td>-->
-      <td><?php echo $detalle_activo->getCodigointernoDetalleActivo() ?></td>
-<!--      <td><?php echo $detalle_activo->getCodigoexternoDetalleActivo() ?></td>-->
-      <td><?php echo $detalle_activo->getDescripcionexternaDetalleActivo() ?></td>
-<!--      <td id="<?php echo 'tdeditable'.$detalle_activo->getIdDetalleActivo() ?>" style="display: none; padding: 0" ><?php echo $it->render('icantidad'.$detalle_activo->getIdDetalleActivo(), $detalle_activo->getCantidadDetalleActivo(), array('size' => '1', 'style' => 'font-size: 8pt'), ESC_RAW) ?></td>-->
-<!--      <td id="<?php echo 'tdfija'.$detalle_activo->getIdDetalleActivo() ?>" ><?php echo $detalle_activo->getCantidadDetalleActivo() ?></td>-->
-      
-      <td><?php echo $detalle_activo->getCliente() ?></td>
-      <td><?php echo $detalle_activo->getPrecioDetalleActivo() ?></td>
-      <td><?php echo $cb->render('id_detalle['.$detalle_activo->getIdDetalleActivo().']', ESC_RAW) ?></td>
-<!--      <td><?php echo $detalle_activo->getFechaingresoDetalleActivo() ?></td>-->
-<!--      <td><?php echo $detalle_activo->getIdProducto() ?></td>-->
-<!--      <td><?php echo $detalle_activo->getDescripcioninternaDetalleActivo() ?></td>-->
-      
-    </tr>
-    <?php endforeach; ?>
-  </tbody>
-</table>
+        <table width="100%"  id="prueba">
+            
+        </table>
+        
         <button onclick="siguiente()">Siguiente</button>
+        <button onclick="actualizarlista()">actualizar</button>
         
         
         <div id="dialog-form" title="Datos de Nota de Credito">
@@ -140,19 +108,22 @@
         var id_detalle;
         var id_factura = "<?php echo (count($detalle_activos)>0 ? $detalle_activos[0]->getIdFactura():'null') ?>";
         var rut_cliente = "";
+        var productos = new Array();        
+        
+        var giCount = 1;
         
        
         
         
         
         function siguiente(){
-            id_detalle = new Array();
-            $('table.detalle input[type=checkbox]:checked').each(function() {
-                var id = $(this).attr("id").substring(11);
-                id_detalle.push(id);                
-                id_detalle.push($('#icantidad'+id).val());
-            });            
-            $( "#dialog-form" ).dialog( "open" );
+//            id_detalle = new Array();
+//            $('table.detalle input[type=checkbox]:checked').each(function() {
+//                var id = $(this).attr("id").substring(11);
+//                id_detalle.push(id);                
+//                id_detalle.push($('#icantidad'+id).val());
+//            });            
+//            $( "#dialog-form" ).dialog( "open" );
         }
         
         
@@ -161,9 +132,61 @@
             $('#cajaproductos').show();
         }
         
+        function cargarProducto(codigo, descripcion, precio){
+            productos.push(new Producto(codigo, descripcion, precio));
+            actualizarlista();
+        }
+        
+        function actualizarlista(){
+//            productos.push(new Producto('123', '123', 10));
+            $('#prueba').dataTable().fnClearTable();
+            for(i in productos){                
+                $('#prueba').dataTable().fnAddData( [
+                    productos[i].codigo,
+                    productos[i].descripcion
+                ]);
+            }            
+        }
+        
+        var Producto = function(codigo, descripcion, precio){
+            this.codigo = codigo;
+            this.descripcion = descripcion;
+            this.precio = precio;
+//            this.getcodigo = function() {
+//                return this.codigo;
+//            }
+        }
+        
     
     
 	$(document).ready(function(){            
+            $('#prueba').dataTable( {
+//                "aaData": [
+//                    [ "Trident", "Internet Explorer 4.0", "Win 95+", 4, "X" ],
+//                    [ "Webkit", "Safari 3.0", "OSX.4+", 522.1, "A" ]
+//                ],
+                "aoColumns": [
+			{ "sTitle": "CODIGO" },
+			{ "sTitle": "DESCRIPCION" }			
+		],
+                "bJQueryUI": true,
+		"sPaginationType": "full_numbers"
+            });
+        
+        
+//        var Michi = new Gato("Michifu", "azul", 2);
+//        var Luna = new Gato("luna", "negra",40);
+//        var arr = new Array();
+//        arr.push(Michi, Luna);
+//        arr[1].comer();
+        
+        
+            
+            
+            
+            
+            
+            
             $( "#nota_credito_fechaingreso_nota_credito" ).datepicker($.datepicker.regional[ "es" ]);
             $('button').button();
             $('input:text , textarea').addClass('ui-widget-content ui-corner-all');
