@@ -170,7 +170,10 @@
 			{ "sTitle": "DESCRIPCION" }			
 		],
                 "bJQueryUI": true,
-		"sPaginationType": "full_numbers"
+		"sPaginationType": "full_numbers",
+                "bLengthChange": false,
+                "bInfo": false,
+                "bPaginate": false
             });
         
         
@@ -209,7 +212,7 @@
                 if (this.value.length >= 3){
                     $('#productos').load(
                     "<?php echo url_for('notacredito/search_producto') ?>",
-                    {query: this.value},
+                    {query: this.value, rut_cliente: rut_cliente},
                     function() { }
                     );
                 }

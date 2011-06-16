@@ -60,31 +60,39 @@ class notacreditoActions extends sfActions
   
   
   public function executeSearch_producto(sfWebRequest $request){
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
       $query = $request->getParameter('query');
+      $rut_cliente = $request->getParameter('rut_cliente');
       $querys = explode('+',$query);
-      $limit=15;
+      $limit=10;
+      
+      
       
 
       if(count($querys) < 2){
 
-          $productos = Doctrine_Core::getTable('ActivosSimples')
-                  ->createQuery('a')
-                  ->where('a.codigoemp LIKE ?','%'.$query.'%')
-                  ->orWhere('a.descripcion LIKE ?','%'.$query.'%')
-                  ->orWhere('a.detalle LIKE ?','%'.$query.'%');      
+          $productos = Doctrine_Query::create()
+                  ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo')
+                  ->from('DetalleActivo a')
+                  ->where('a.codigointerno_detalle_activo LIKE ?','%'.$query.'%')
+                  ->orWhere('a.descripcionexterna_detalle_activo LIKE ?','%'.$query.'%')
+                  ->orWhere('a.id_producto LIKE ?','%'.$query.'%');   
       }
       else{
-          $productos = Doctrine_Core::getTable('ActivosSimples')
-                  ->createQuery('a');
+          $productos = Doctrine_Query::create()
+                  ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo, a.id_producto')
+                  ->from('DetalleActivo a');
           for($j=0;$j<count($querys);$j++){
-                    $productos = $productos
-                  ->orwhere('a.codigoemp LIKE ?','%'.$query[$j].'%')
-                  ->orWhere('a.descripcion LIKE ?','%'.$query[$j].'%')
-                  ->orWhere('a.detalle LIKE ?','%'.$query[$j].'%');
+              $productos = $productos
+                  ->orwhere('a.codigointerno_detalle_activo LIKE ?','%'.$query[$j].'%')
+                  ->orWhere('a.descripcionexterna_detalle_activo LIKE ?','%'.$query[$j].'%')
+                  ->orWhere('a.id_producto LIKE ?','%'.$query[$j].'%');
           }
       }
-
-      $productos = $productos->limit($limit)->execute();
+      
+      $productos = $productos->innerJoin('a.Factura f')
+              ->AndWhere('f.rut_factura = ?',$rut_cliente);
+      $productos = $productos->limit($limit)->execute(array(), Doctrine_Core::HYDRATE_SCALAR);  
       
 
       if ($request->isXmlHttpRequest())
