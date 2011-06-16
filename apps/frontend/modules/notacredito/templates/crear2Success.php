@@ -126,6 +126,8 @@
 //                id_detalle.push($('#icantidad'+id).val());
 //            });            
 //            $( "#dialog-form" ).dialog( "open" );
+            var url = "<?php echo url_for('notacredito/paso2') ?>";
+            window.location = url;
         }
         
         

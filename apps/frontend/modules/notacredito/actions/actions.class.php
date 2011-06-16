@@ -10,6 +10,11 @@
  */
 class notacreditoActions extends sfActions
 {
+  public function executePaso2(sfWebRequest $request)
+  {
+    Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+    
+  }
   public function executeCrear2(sfWebRequest $request)
   {
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
