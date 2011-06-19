@@ -156,6 +156,13 @@ Boleta:
       primary: false
       notnull: false
       autoincrement: false
+    fechaingreso_boleta:
+      type: timestamp(25)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: true
+      autoincrement: false
     fechaemision_boleta:
       type: timestamp(25)
       fixed: false
@@ -1341,6 +1348,35 @@ EstadoCuota:
       local: id_estado_cuota
       foreign: id_estado_cuota
       type: many
+EstadoBoleta:
+  connection: artelamp_1
+  tableName: estado_boleta
+  columns:
+    id_estadoboleta:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: true
+      autoincrement: true
+    nombre_estadoboleta:
+      type: string(200)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    descripcion_estadoboleta:
+      type: string(512)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+  relations:
+    Boleta:
+      local: id_estadoboleta
+      foreign: id_estadoboleta
+      type: many
 EstadoFactura:
   connection: artelamp_1
   tableName: estado_factura
@@ -1669,10 +1705,10 @@ Factura:
       local: id_factura
       foreign: id_factura
       type: many
-    NotacreditoFactura:
-      local: id_factura
-      foreign: id_factura
-      type: many
+#    NotacreditoFactura:
+#      local: id_factura
+#      foreign: id_factura
+#      type: many
 FormasPago:
   connection: artelamp
   tableName: formas_pago
@@ -1822,6 +1858,13 @@ Guia:
     responsable_guia:
       type: string(512)
       fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    tipo_guia:
+      type: string(127)
+      fixed: true
       unsigned: false
       primary: false
       notnull: false
@@ -2233,10 +2276,10 @@ NotaCredito:
       local: id_nota_credito
       foreign: id_nota_credito
       type: many
-    NotacreditoFactura:
-      local: id_nota_credito
-      foreign: id_nota_credito
-      type: many
+#    NotacreditoFactura:
+#      local: id_nota_credito
+#      foreign: id_nota_credito
+#      type: many
 NotaVenta:
   connection: artelamp
   tableName: nota_venta
@@ -2275,31 +2318,31 @@ NotaVenta:
       primary: false
       notnull: true
       autoincrement: false
-NotacreditoFactura:
-  connection: artelamp_1
-  tableName: notacredito_factura
-  columns:
-    id_factura:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: true
-      autoincrement: false
-    id_nota_credito:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: true
-      autoincrement: false
-  relations:
-    NotaCredito:
-      local: id_nota_credito
-      foreign: id_nota_credito
-      type: one
-    Factura:
-      local: id_factura
-      foreign: id_factura
-      type: one
+#NotacreditoFactura:
+#  connection: artelamp_1
+#  tableName: notacredito_factura
+#  columns:
+#    id_factura:
+#      type: integer(4)
+#      fixed: false
+#      unsigned: false
+#      primary: true
+#      autoincrement: false
+#    id_nota_credito:
+#      type: integer(4)
+#      fixed: false
+#      unsigned: false
+#      primary: true
+#      autoincrement: false
+#  relations:
+#    NotaCredito:
+#      local: id_nota_credito
+#      foreign: id_nota_credito
+#      type: one
+#    Factura:
+#      local: id_factura
+#      foreign: id_factura
+#      type: one
 Pago:
   connection: artelamp_1
   tableName: pago

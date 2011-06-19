@@ -1,6 +1,6 @@
 <?php
 // Connection Component Binding
-//Doctrine_Manager::getInstance()->bindComponent('Factura', 'artelamp_1');
+Doctrine_Manager::getInstance()->bindComponent('Factura', 'artelamp_1');
 
 /**
  * BaseFactura
@@ -36,7 +36,6 @@
  * @property Doctrine_Collection $DetalleActivo
  * @property Doctrine_Collection $Guia
  * @property Doctrine_Collection $HistCuota
- * @property Doctrine_Collection $NotacreditoFactura
  * 
  * @method integer             getIdFactura()             Returns the current record's "id_factura" value
  * @method integer             getIdEstadofactura()       Returns the current record's "id_estadofactura" value
@@ -67,7 +66,6 @@
  * @method Doctrine_Collection getDetalleActivo()         Returns the current record's "DetalleActivo" collection
  * @method Doctrine_Collection getGuia()                  Returns the current record's "Guia" collection
  * @method Doctrine_Collection getHistCuota()             Returns the current record's "HistCuota" collection
- * @method Doctrine_Collection getNotacreditoFactura()    Returns the current record's "NotacreditoFactura" collection
  * @method Factura             setIdFactura()             Sets the current record's "id_factura" value
  * @method Factura             setIdEstadofactura()       Sets the current record's "id_estadofactura" value
  * @method Factura             setIdDivision()            Sets the current record's "id_division" value
@@ -97,7 +95,6 @@
  * @method Factura             setDetalleActivo()         Sets the current record's "DetalleActivo" collection
  * @method Factura             setGuia()                  Sets the current record's "Guia" collection
  * @method Factura             setHistCuota()             Sets the current record's "HistCuota" collection
- * @method Factura             setNotacreditoFactura()    Sets the current record's "NotacreditoFactura" collection
  * 
  * @package    sffacturacion
  * @subpackage model
@@ -343,10 +340,6 @@ abstract class BaseFactura extends sfDoctrineRecord
              'foreign' => 'id_factura'));
 
         $this->hasMany('HistCuota', array(
-             'local' => 'id_factura',
-             'foreign' => 'id_factura'));
-
-        $this->hasMany('NotacreditoFactura', array(
              'local' => 'id_factura',
              'foreign' => 'id_factura'));
     }

@@ -30,6 +30,7 @@ abstract class BaseGuiaFormFilter extends BaseFormFilterDoctrine
       'condicionpago_guia' => new sfWidgetFormFilterInput(),
       'comentario_guia'    => new sfWidgetFormFilterInput(),
       'responsable_guia'   => new sfWidgetFormFilterInput(),
+      'tipo_guia'          => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -50,6 +51,7 @@ abstract class BaseGuiaFormFilter extends BaseFormFilterDoctrine
       'condicionpago_guia' => new sfValidatorPass(array('required' => false)),
       'comentario_guia'    => new sfValidatorPass(array('required' => false)),
       'responsable_guia'   => new sfValidatorPass(array('required' => false)),
+      'tipo_guia'          => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('guia_filters[%s]');
@@ -87,6 +89,7 @@ abstract class BaseGuiaFormFilter extends BaseFormFilterDoctrine
       'condicionpago_guia' => 'Text',
       'comentario_guia'    => 'Text',
       'responsable_guia'   => 'Text',
+      'tipo_guia'          => 'Text',
     );
   }
 }

@@ -25,6 +25,7 @@ Doctrine_Manager::getInstance()->bindComponent('Guia', 'artelamp_1');
  * @property string $condicionpago_guia
  * @property string $comentario_guia
  * @property string $responsable_guia
+ * @property string $tipo_guia
  * @property Factura $Factura
  * @property EstadoGuia $EstadoGuia
  * @property Doctrine_Collection $DetalleActivo
@@ -47,6 +48,7 @@ Doctrine_Manager::getInstance()->bindComponent('Guia', 'artelamp_1');
  * @method string              getCondicionpagoGuia()  Returns the current record's "condicionpago_guia" value
  * @method string              getComentarioGuia()     Returns the current record's "comentario_guia" value
  * @method string              getResponsableGuia()    Returns the current record's "responsable_guia" value
+ * @method string              getTipoGuia()           Returns the current record's "tipo_guia" value
  * @method Factura             getFactura()            Returns the current record's "Factura" value
  * @method EstadoGuia          getEstadoGuia()         Returns the current record's "EstadoGuia" value
  * @method Doctrine_Collection getDetalleActivo()      Returns the current record's "DetalleActivo" collection
@@ -68,6 +70,7 @@ Doctrine_Manager::getInstance()->bindComponent('Guia', 'artelamp_1');
  * @method Guia                setCondicionpagoGuia()  Sets the current record's "condicionpago_guia" value
  * @method Guia                setComentarioGuia()     Sets the current record's "comentario_guia" value
  * @method Guia                setResponsableGuia()    Sets the current record's "responsable_guia" value
+ * @method Guia                setTipoGuia()           Sets the current record's "tipo_guia" value
  * @method Guia                setFactura()            Sets the current record's "Factura" value
  * @method Guia                setEstadoGuia()         Sets the current record's "EstadoGuia" value
  * @method Guia                setDetalleActivo()      Sets the current record's "DetalleActivo" collection
@@ -242,6 +245,15 @@ abstract class BaseGuia extends sfDoctrineRecord
              'notnull' => false,
              'autoincrement' => false,
              'length' => 512,
+             ));
+        $this->hasColumn('tipo_guia', 'string', 127, array(
+             'type' => 'string',
+             'fixed' => 1,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => false,
+             'autoincrement' => false,
+             'length' => 127,
              ));
     }
 

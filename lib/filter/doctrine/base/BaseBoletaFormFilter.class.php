@@ -14,10 +14,11 @@ abstract class BaseBoletaFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'numero_boleta'        => new sfWidgetFormFilterInput(),
+      'fechaingreso_boleta'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
       'fechaemision_boleta'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate())),
       'monto_boleta'         => new sfWidgetFormFilterInput(),
       'id_notapedido_boleta' => new sfWidgetFormFilterInput(),
-      'id_estadoboleta'      => new sfWidgetFormFilterInput(),
+      'id_estadoboleta'      => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('EstadoBoleta'), 'add_empty' => true)),
       'rut_boleta'           => new sfWidgetFormFilterInput(),
       'telefono_boleta'      => new sfWidgetFormFilterInput(),
       'nombre_boleta'        => new sfWidgetFormFilterInput(),
@@ -33,10 +34,11 @@ abstract class BaseBoletaFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'numero_boleta'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'fechaingreso_boleta'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
       'fechaemision_boleta'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
       'monto_boleta'         => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'id_notapedido_boleta' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'id_estadoboleta'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'id_estadoboleta'      => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('EstadoBoleta'), 'column' => 'id_estadoboleta')),
       'rut_boleta'           => new sfValidatorPass(array('required' => false)),
       'telefono_boleta'      => new sfValidatorPass(array('required' => false)),
       'nombre_boleta'        => new sfValidatorPass(array('required' => false)),
@@ -69,10 +71,11 @@ abstract class BaseBoletaFormFilter extends BaseFormFilterDoctrine
     return array(
       'id_boleta'            => 'Number',
       'numero_boleta'        => 'Number',
+      'fechaingreso_boleta'  => 'Date',
       'fechaemision_boleta'  => 'Date',
       'monto_boleta'         => 'Number',
       'id_notapedido_boleta' => 'Number',
-      'id_estadoboleta'      => 'Number',
+      'id_estadoboleta'      => 'ForeignKey',
       'rut_boleta'           => 'Text',
       'telefono_boleta'      => 'Text',
       'nombre_boleta'        => 'Text',

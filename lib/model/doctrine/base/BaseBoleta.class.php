@@ -9,6 +9,7 @@ Doctrine_Manager::getInstance()->bindComponent('Boleta', 'artelamp_1');
  * 
  * @property integer $id_boleta
  * @property integer $numero_boleta
+ * @property timestamp $fechaingreso_boleta
  * @property timestamp $fechaemision_boleta
  * @property integer $monto_boleta
  * @property integer $id_notapedido_boleta
@@ -25,9 +26,11 @@ Doctrine_Manager::getInstance()->bindComponent('Boleta', 'artelamp_1');
  * @property string $comentario_boleta
  * @property string $responsable_boleta
  * @property Doctrine_Collection $DetalleActivo
+ * @property EstadoBoleta $EstadoBoleta
  * 
  * @method integer             getIdBoleta()             Returns the current record's "id_boleta" value
  * @method integer             getNumeroBoleta()         Returns the current record's "numero_boleta" value
+ * @method timestamp           getFechaingresoBoleta()   Returns the current record's "fechaingreso_boleta" value
  * @method timestamp           getFechaemisionBoleta()   Returns the current record's "fechaemision_boleta" value
  * @method integer             getMontoBoleta()          Returns the current record's "monto_boleta" value
  * @method integer             getIdNotapedidoBoleta()   Returns the current record's "id_notapedido_boleta" value
@@ -44,8 +47,10 @@ Doctrine_Manager::getInstance()->bindComponent('Boleta', 'artelamp_1');
  * @method string              getComentarioBoleta()     Returns the current record's "comentario_boleta" value
  * @method string              getResponsableBoleta()    Returns the current record's "responsable_boleta" value
  * @method Doctrine_Collection getDetalleActivo()        Returns the current record's "DetalleActivo" collection
+ * @method EstadoBoleta        getEstadoBoleta()         Returns the current record's "EstadoBoleta" value
  * @method Boleta              setIdBoleta()             Sets the current record's "id_boleta" value
  * @method Boleta              setNumeroBoleta()         Sets the current record's "numero_boleta" value
+ * @method Boleta              setFechaingresoBoleta()   Sets the current record's "fechaingreso_boleta" value
  * @method Boleta              setFechaemisionBoleta()   Sets the current record's "fechaemision_boleta" value
  * @method Boleta              setMontoBoleta()          Sets the current record's "monto_boleta" value
  * @method Boleta              setIdNotapedidoBoleta()   Sets the current record's "id_notapedido_boleta" value
@@ -62,6 +67,7 @@ Doctrine_Manager::getInstance()->bindComponent('Boleta', 'artelamp_1');
  * @method Boleta              setComentarioBoleta()     Sets the current record's "comentario_boleta" value
  * @method Boleta              setResponsableBoleta()    Sets the current record's "responsable_boleta" value
  * @method Boleta              setDetalleActivo()        Sets the current record's "DetalleActivo" collection
+ * @method Boleta              setEstadoBoleta()         Sets the current record's "EstadoBoleta" value
  * 
  * @package    sffacturacion
  * @subpackage model
@@ -89,6 +95,15 @@ abstract class BaseBoleta extends sfDoctrineRecord
              'notnull' => false,
              'autoincrement' => false,
              'length' => 4,
+             ));
+        $this->hasColumn('fechaingreso_boleta', 'timestamp', 25, array(
+             'type' => 'timestamp',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => true,
+             'autoincrement' => false,
+             'length' => 25,
              ));
         $this->hasColumn('fechaemision_boleta', 'timestamp', 25, array(
              'type' => 'timestamp',
@@ -233,5 +248,9 @@ abstract class BaseBoleta extends sfDoctrineRecord
         $this->hasMany('DetalleActivo', array(
              'local' => 'id_boleta',
              'foreign' => 'id_boleta'));
+
+        $this->hasOne('EstadoBoleta', array(
+             'local' => 'id_estadoboleta',
+             'foreign' => 'id_estadoboleta'));
     }
 }

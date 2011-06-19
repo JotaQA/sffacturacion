@@ -33,6 +33,7 @@ abstract class BaseGuiaForm extends BaseFormDoctrine
       'condicionpago_guia' => new sfWidgetFormTextarea(),
       'comentario_guia'    => new sfWidgetFormTextarea(),
       'responsable_guia'   => new sfWidgetFormTextarea(),
+      'tipo_guia'          => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -54,6 +55,7 @@ abstract class BaseGuiaForm extends BaseFormDoctrine
       'condicionpago_guia' => new sfValidatorString(array('max_length' => 512, 'required' => false)),
       'comentario_guia'    => new sfValidatorString(array('max_length' => 512, 'required' => false)),
       'responsable_guia'   => new sfValidatorString(array('max_length' => 512, 'required' => false)),
+      'tipo_guia'          => new sfValidatorString(array('max_length' => 127, 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('guia[%s]');
