@@ -16,4 +16,6 @@ class NotaCreditoTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('NotaCredito');
     }
+    
+    public $datos = "hola";
 }

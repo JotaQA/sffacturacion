@@ -10,11 +10,29 @@
  */
 class notacreditoActions extends sfActions
 {
-  public function executePaso2(sfWebRequest $request)
+    public function executePaso2(sfWebRequest $request)
   {
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+    $productos = $this->getUser()->getFlash('productos');
+    $rut_cliente = $this->getUser()->getFlash('rut_cliente');
+//    $this->rut = $rut_cliente;
+    $this->datos = array();
+    foreach ($productos as $producto){
+        $facturas = Doctrine_Query::create()
+                ->select('a.id_factura, a.numero_factura, a.fechaingreso_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura')
+                ->from('Factura a')
+                ->where('a.rut_factura = ?', $rut_cliente)
+                ->innerJoin('a.DetalleActivo da')                
+                ->Andwhere('da.codigointerno_detalle_activo = ?', $producto->codigo)
+//                ->limit(1)
+                ->execute();
+        
+        $this->datos[] = $producto->codigo.' '.$producto->descripcion;
+        $this->datos[] = $facturas;
+    }
     
   }
+  
   public function executeCrear2(sfWebRequest $request)
   {
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
@@ -22,6 +40,16 @@ class notacreditoActions extends sfActions
     $this->cb = new sfWidgetFormInputCheckbox();
     $this->it = new sfWidgetFormInputText();
     $this->form = new NotaCreditoForm();
+  }
+  
+  public function executeGuardarproductos(sfWebRequest $request){
+//      $this->vdatos = json_decode($request->getParameter('datos'));
+//      Doctrine_Core::getTable('NotaCredito')->datos = "hola mundo";
+      $this->getUser()->setFlash('productos', json_decode($request->getParameter('productos')));
+      $this->getUser()->setFlash('rut_cliente', $request->getParameter('rut_cliente'));
+      
+      return $this->renderText('hola');
+//      return sfView::NONE;
   }
   
   public function executeSearch_cliente(sfWebRequest $request){
@@ -79,9 +107,9 @@ class notacreditoActions extends sfActions
           $productos = Doctrine_Query::create()
                   ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo')
                   ->from('DetalleActivo a')
-                  ->where('a.codigointerno_detalle_activo LIKE ?','%'.$query.'%')
-                  ->orWhere('a.descripcionexterna_detalle_activo LIKE ?','%'.$query.'%')
-                  ->orWhere('a.id_producto LIKE ?','%'.$query.'%');   
+                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$query.'%', '%'.$query.'%', '%'.$query.'%'));
+//                  ->orWhere('a.descripcionexterna_detalle_activo LIKE ?','%'.$query.'%')
+//                  ->orWhere('a.id_producto LIKE ?','%'.$query.'%');   
       }
       else{
           $productos = Doctrine_Query::create()
@@ -96,7 +124,9 @@ class notacreditoActions extends sfActions
       }
       
       $productos = $productos->innerJoin('a.Factura f')
-              ->AndWhere('f.rut_factura = ?',$rut_cliente);
+              ->Andwhere('f.rut_factura = ?',$rut_cliente);
+//              ->AndWhere('a.id_factura IS NOT NULL');
+//      return $this->renderText($productos->getSqlQuery());
       $productos = $productos->limit($limit)->execute(array(), Doctrine_Core::HYDRATE_SCALAR);  
       
 

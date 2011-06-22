@@ -22,17 +22,13 @@
 
     <!--Begin content1-->
     <div class="midcontent">
-    <div class="divmiddle">
+        <div class="divmiddle" style="min-height: 530px">
         
         <table width="100%"  id="prueba" class="display">
             
         </table>
         
-        <div style="text-align: right">
-            <button onclick="siguiente()">Siguiente</button>
-            <button onclick="actualizarlista()">Actualizar</button>
-            <button onclick="limpiar()">Limpiar</button>
-        </div>
+        
         
         <div id="dialog-form" title="Datos de Nota de Credito">
             <p class="validateTips">Ingrese los datos de la Nota de Credito</p>
@@ -55,6 +51,11 @@
         
         
          </div>
+        <div style="text-align: right">
+            <button onclick="siguiente()">Siguiente</button>
+            <button onclick="actualizarlista()">Actualizar</button>
+            <button onclick="limpiar()">Limpiar</button>
+        </div>
     </div>
 </div>
 
@@ -110,7 +111,7 @@
         var id_detalle;
         var id_factura = "<?php echo (count($detalle_activos)>0 ? $detalle_activos[0]->getIdFactura():'null') ?>";
         var rut_cliente = "";
-        var productos = new Array();        
+        var productos = new Array();
         
         var giCount = 1;
         
@@ -126,8 +127,17 @@
 //                id_detalle.push($('#icantidad'+id).val());
 //            });            
 //            $( "#dialog-form" ).dialog( "open" );
-            var url = "<?php echo url_for('notacredito/paso2') ?>";
-            window.location = url;
+            var jsonStr = JSON.stringify(productos);
+            var url = "<?php echo url_for('notacredito/guardarproductos') ?>"+'?productos='+jsonStr+'&rut_cliente='+rut_cliente;
+            
+            $.post(url, function(dato) {
+//                  alert("success"+dato+'&rut_cliente='+rut_cliente);
+                  window.location = "<?php echo url_for('notacredito/paso2') ?>";
+                });
+//                .success(function() { alert("second success");})
+//                .error(function() { alert("error"); })
+//                .complete(function() { alert("complete"); });      
+            
         }
         
         
@@ -139,12 +149,12 @@
             $('#cajaproductos').show();
         }
         
-        function cargarProducto(codigo, descripcion, precio){
+        function cargarProducto(codigo, descripcion){
             var bool = true;
             for(i in productos){
                 if(productos[i].codigo == codigo) bool = false;
             }
-            if(bool) productos.push(new Producto(codigo, descripcion, precio));
+            if(bool) productos.push(new Producto(codigo, descripcion));
             actualizarlista();
         }
         
@@ -172,10 +182,10 @@
             productos = new Array();
         }
         
-        var Producto = function(codigo, descripcion, precio){
+        var Producto = function(codigo, descripcion){
             this.codigo = codigo;
             this.descripcion = descripcion;
-            this.precio = precio;
+//            this.precio = precio;
 //            this.getcodigo = function() {
 //                return this.codigo;
 //            }
@@ -183,7 +193,10 @@
         
     
     
-	$(document).ready(function(){            
+	$(document).ready(function(){
+//            var arrCars = new Array("Toyota", "Mercedes", "BMW");
+//            var jsonStr = JSON.stringify(arrCars);
+//            alert(jsonStr);
             $('#prueba').dataTable( {
 //                "aaData": [
 //                    [ "Trident", "Internet Explorer 4.0", "Win 95+", 4, "X" ],
