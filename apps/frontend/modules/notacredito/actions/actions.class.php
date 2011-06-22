@@ -10,13 +10,75 @@
  */
 class notacreditoActions extends sfActions
 {
-    public function executePaso2(sfWebRequest $request)
+  public function executeGetFactura(sfWebRequest $request)
+  {
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      $id_factura = $request->getParameter('id_factura');
+      $factura = Doctrine_Core::getTable('Factura')->find($id_factura);
+      return $this->renderText(json_encode($factura->toArray()));
+  }
+  public function executeIngresarNC2(sfWebRequest $request)
+  {
+      $this->forward404Unless($request->isMethod(sfRequest::POST));
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      $form = new NotaCreditoForm();
+
+      
+      $datos = json_decode($request->getParameter('datos'));
+      //SI NO HAY DATOS RETORNA ERROR
+      if($datos == null || count($datos) == 0 || count($datos)%3 != 0) return $this->renderText('Datos invalidos o corruptos');
+      
+      $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
+      
+      if ($form->isValid()){
+          //SE PUEDEN PRODUCIR ERRORES, SE USA ROLLBACK
+          $conn = Doctrine_Manager::getInstance()->getCurrentConnection();
+          try{
+              $msgerr = false;
+              //INICIO DE LA TRANSACCION
+              $conn->beginTransaction();
+              
+              $nota_credito = $form->save();
+              
+              while(list(, $codigo) = each($datos)) {
+                  list(, $id_factura) = each($datos);
+                  list(, $cantidad) = each($datos);
+                  $detalle_activo = Doctrine_Core::getTable('DetalleActivo')->findOneByCodigointernoDetalleActivoAndIdFactura($codigo, $id_factura);
+                  if($detalle_activo == null){
+                      $msgerr = true;
+                      throw new Exception('detalle nulo');
+                  }
+                  if($detalle_activo->getCantidadDetalleActivo() < $cantidad){
+                      $msgerr = true;
+                      throw new Exception('superada la cantidad máxima');
+                  }
+                  $detalle_activo->setNotaCredito($nota_credito);
+                  $detalle_activo->setCantidadNotaCredito($cantidad);
+                  $detalle_activo->save();
+              }
+              //SI TODO VA BIEN SE GUARDA
+              $conn->commit();
+              return $this->renderText('true');
+          }          
+          catch (Exception $e){
+              //SI OCURRE UN ERROR NO SE GUARDA NADA
+              $conn->rollBack();
+              if($msgerr) return $this->renderText('Error al procesar los datos, '.$e->getMessage());
+              return $this->renderText('Error al procesar los datos');
+          }
+          
+      }
+      return $this->renderText('Formulario invalido');
+  }  
+    
+  public function executePaso2(sfWebRequest $request)
   {
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
     $productos = $this->getUser()->getFlash('productos');
     $rut_cliente = $this->getUser()->getFlash('rut_cliente');
 //    $this->rut = $rut_cliente;
     $this->datos = array();
+    $primerafac = true;
     foreach ($productos as $producto){
         $facturas = Doctrine_Query::create()
                 ->select('a.id_factura, a.numero_factura, a.fechaingreso_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura')
@@ -24,14 +86,31 @@ class notacreditoActions extends sfActions
                 ->where('a.rut_factura = ?', $rut_cliente)
                 ->innerJoin('a.DetalleActivo da')                
                 ->Andwhere('da.codigointerno_detalle_activo = ?', $producto->codigo)
-//                ->limit(1)
+                ->limit(10)
                 ->execute();
-        
-        $this->datos[] = $producto->codigo.' '.$producto->descripcion;
+        if($facturas[0] != null && $primerafac){
+            $factura = $facturas[0];
+            $primerafac = false;
+        }
+        $this->datos[] = $producto->codigo;
+        $this->datos[] = $producto->descripcion;
         $this->datos[] = $facturas;
     }
     $this->cb = new sfWidgetFormInputCheckbox();
     $this->it = new sfWidgetFormInputText();
+//    $NC = new NotaCredito();
+//    $NC->setRutNotaCredito($factura->getRutFactura());
+//    $NC->setNombreNotaCredito($factura->getNombreFactura());
+//    $NC->setTelefonoNotaCredito($factura->getTelefonoFactura());
+//    $NC->setDireccionNotaCredito($factura->getDireccionFactura());
+//    $NC->setComunaNotaCredito($factura->getComunaFactura());
+//    $NC->setCiudadNotaCredito($factura->getCiudadFactura());
+//    $NC->setGiroNotaCredito($factura->getGiroFactura());
+//    $NC->setCondicionpagoNotaCredito($factura->getCondicionpagoFactura());
+//    $NC->setOcNotaCredito($factura->getOcFactura());
+//    $NC->setResponsableNotaCredito($factura->getResponsableFactura());
+//    $NC->setNumerofacturaNotaCredito($factura->getNumeroFactura());
+    $this->form = new NotaCreditoForm();
   }
   
   public function executeCrear2(sfWebRequest $request)

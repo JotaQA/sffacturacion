@@ -20,6 +20,7 @@ class NotaCreditoForm extends BaseNotaCreditoForm
       $this->widgetSchema['oc_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['responsable_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['fechaingreso_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['fechaemision_nota_credito'] = new sfWidgetFormInputText();
 
       $this->widgetSchema->setLabels(array(
             'numero_nota_credito' => 'Numero NC',
@@ -36,6 +37,7 @@ class NotaCreditoForm extends BaseNotaCreditoForm
             'comentarior_nota_credito' => 'Comentario',
             'numerofactura_nota_credito' => 'Numero Factura',
             'fechaingreso_nota_credito' => 'Fec. Ingreso',
+            'fechaemision_nota_credito' => 'Fec. Emision',
         ));      
   }
   public function getvalues(){

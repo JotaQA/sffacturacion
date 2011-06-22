@@ -86,6 +86,14 @@
                 <?php echo $form->renderHiddenFields(true) ?>
             </td>
         </tr>
+        <tr>
+            <th><?php echo $form['fechaemision_nota_credito']->renderLabel() ?></th>
+            <td>
+                <?php echo $form['fechaemision_nota_credito']->renderError() ?>
+                <?php echo $form['fechaemision_nota_credito'] ?>
+                <?php echo $form->renderHiddenFields(true) ?>
+            </td>
+        </tr>
     </table>
    </fieldset>
 </form>
