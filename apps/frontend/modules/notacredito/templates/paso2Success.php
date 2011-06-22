@@ -28,20 +28,22 @@
         <?php list(, $facturas) = each($datos) ?>
         <table class="display" title="<?php echo $producto ?>">
             <thead>
-            <th>Numero</th>
+            <th>Número</th>
             <th>Ingreso</th>
             <th>Emision</th>
             <th>Tipo</th>
             <th>Monto</th>
+            <th>Acción</th>
             </thead>
             <tbody>
             <?php foreach ($facturas as $factura): ?>
             <tr>
-                <td><?php echo $factura->getNumeroFactura() ?></td>
+                <td><?php echo 'F'.$factura->getNumeroFactura() ?></td>
                 <td><?php echo $factura->getDateTimeObject('fechaingreso_factura')->format('m/d/Y') ?></td>
                 <td><?php echo $factura->getDateTimeObject('fechaemision_factura')->format('m/d/Y') ?></td>
                 <td><?php echo $factura->getTipoFactura() ?></td>
                 <td><?php echo $factura->getMontoFactura() ?></td>
+                <td class="center"><?php echo $cb->render('factura['.$factura->getIdFactura().']', ESC_RAW) ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>
@@ -51,13 +53,10 @@
         <?php endwhile; ?>
         
         
-        
-        <?php //echo print_r($datos) ?>
-        
-        
     </div>
     <div style="text-align: right">
-        <button onclick="anterior()">Anterior</button>       
+        <button onclick="anterior()">Anterior</button>
+        <button onclick="siguiente()">Siguiente</button>
     </div>
     </div>
 </div>
@@ -74,6 +73,15 @@
 
 
 <script type="text/javascript">
+    var cbs;
+    function siguiente(){
+        cbs = new Array();
+        $('input[type=checkbox]:checked').each(function() {
+            var id = $(this).attr("id").substring(8);
+            cbs.push(id);
+        });
+        alert(cbs);
+    }
     $(document).ready(function(){
         $('button').button();
         $('.display').dataTable({
@@ -83,7 +91,11 @@
             "bScrollCollapse": true,
             "bPaginate": false,
             "bFilter": false,
-            "sDom": '<"head-toolbar fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"F"ip>'
+            "sDom": '<"head-toolbar fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"F"ip>',
+            "aoColumnDefs": [ 
+			{ "sWidth": "8%", "aTargets": [ 5 ] }
+		],
+            "bAutoWidth": false
         });
         $("div.head-toolbar").each(function () {
             $(this).append('<b>'+$(this).next('table').attr('title')+'</b>');

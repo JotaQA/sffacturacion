@@ -30,7 +30,8 @@ class notacreditoActions extends sfActions
         $this->datos[] = $producto->codigo.' '.$producto->descripcion;
         $this->datos[] = $facturas;
     }
-    
+    $this->cb = new sfWidgetFormInputCheckbox();
+    $this->it = new sfWidgetFormInputText();
   }
   
   public function executeCrear2(sfWebRequest $request)
