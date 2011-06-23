@@ -31,6 +31,7 @@ class notacreditoActions extends sfActions
       $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
       
       if ($form->isValid()){
+//      if (false){
           //SE PUEDEN PRODUCIR ERRORES, SE USA ROLLBACK
           $conn = Doctrine_Manager::getInstance()->getCurrentConnection();
           try{
@@ -81,7 +82,7 @@ class notacreditoActions extends sfActions
     $primerafac = true;
     foreach ($productos as $producto){
         $facturas = Doctrine_Query::create()
-                ->select('a.id_factura, a.numero_factura, a.fechaingreso_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura')
+                ->select('a.id_factura, a.numero_factura, a.fechaingreso_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura, da.cantidad_detalle_activo')
                 ->from('Factura a')
                 ->where('a.rut_factura = ?', $rut_cliente)
                 ->innerJoin('a.DetalleActivo da')                

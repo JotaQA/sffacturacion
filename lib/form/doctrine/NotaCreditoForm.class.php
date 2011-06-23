@@ -12,14 +12,19 @@ class NotaCreditoForm extends BaseNotaCreditoForm
 {
   public function configure()
   {
+      unset(
+      $this['fechaingreso_nota_credito']
+              );
       $this->widgetSchema['comuna_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['direccion_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['ciudad_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['giro_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['condicionpago_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['oc_nota_credito'] = new sfWidgetFormInputText();
-      $this->widgetSchema['responsable_nota_credito'] = new sfWidgetFormInputText();
-      $this->widgetSchema['fechaingreso_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['responsable_nota_credito'] = new sfWidgetFormChoice(array(
+            'choices'  => Doctrine_Core::getTable('Usuarios')->getUsuariosParaChoice()
+        ));
+//      $this->widgetSchema['fechaingreso_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['fechaemision_nota_credito'] = new sfWidgetFormInputText();
 
       $this->widgetSchema->setLabels(array(
@@ -36,11 +41,11 @@ class NotaCreditoForm extends BaseNotaCreditoForm
             'responsable_nota_credito' => 'Vendedor',
             'comentarior_nota_credito' => 'Comentario',
             'numerofactura_nota_credito' => 'Numero Factura',
-            'fechaingreso_nota_credito' => 'Fec. Ingreso',
+//            'fechaingreso_nota_credito' => 'Fec. Ingreso',
             'fechaemision_nota_credito' => 'Fec. Emision',
         ));      
   }
-  public function getvalues(){
-      return $this->taintedValues;
-  }
+//  public function getvalues(){
+//      return $this->taintedValues;
+//  }
 }

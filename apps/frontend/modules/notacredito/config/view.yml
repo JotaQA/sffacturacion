@@ -2,7 +2,7 @@
 # http://www.symfony-project.org/reference/1_4/en/13-View
 
 all:
-  javascripts:    [jquery-ui-1.8.13.custom.min.js, jquery.ui.datepicker-es.js, jquery.dataTables.min.js, json2.js]
+  javascripts:    [jquery-ui-1.8.13.custom.min.js, jquery.ui.datepicker-es.js, jquery.dataTables.min.js, json2.js, jquery.Rut.js]
   stylesheets:    [redmond/jquery-ui-1.8.13.custom.css, notacredito.css, datatable/demo_table.css, datatable/demo_page.css , datatable/demo_table_jui.css]
 
 #cambiartipoSuccess:

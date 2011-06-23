@@ -12,32 +12,39 @@
  */
 class NotaCredito extends BaseNotaCredito
 {
-    public function copiarDeFactura($id_factura){
-        $FACTURA = Doctrine::getTable('Factura')->findOneByIdFactura($id_factura);
-        $EEMITIDA = Doctrine::getTable('EstadoNotaCredito')->findOneByNombreEstadoNotaCredito('Emitida');
+//    public function copiarDeFactura($id_factura){
+//        $FACTURA = Doctrine::getTable('Factura')->findOneByIdFactura($id_factura);
+//        $EEMITIDA = Doctrine::getTable('EstadoNotaCredito')->findOneByNombreEstadoNotaCredito('Emitida');
         //SE COPIAN TODOS LOS VALORES EXCEPTO
 //        NumeroNotaCredito
 //        NetoNotaCredito
 //        TotalNotaCredito
-        if($FACTURA != null){
-            $this->setNumerofacturaNotaCredito($FACTURA->getNumeroFactura()); //NUMERO FACTURA
-            $now = time();
-            $this->setFechaingresoNotaCredito(date('Y-m-d H:i:s', $now));//FECHA INGRESO
-            $this->setFechaemisionNotaCredito(date('Y-m-d H:i:s', $now));//FECHA EMISION
-            $this->setIdNotapedidoNotaCredito($FACTURA->getIdNotapedidoFactura());//NOTA PEDIDO
-            $this->setRutNotaCredito($FACTURA->getRutFactura());//RUT
-            $this->setTelefonoNotaCredito($FACTURA->getTelefonoFactura());//TELEFONO
-            $this->setNombreNotaCredito($FACTURA->getNombreFactura());//NOMBRE
-            $this->setDireccionNotaCredito($FACTURA->getDireccionFactura());//DIRECCION
-            $this->setComunaNotaCredito($FACTURA->getComunaFactura());//COMUNA
-            $this->setCiudadNotaCredito($FACTURA->getCiudadFactura());//CIUDAD            
-            $this->setGiroNotaCredito($FACTURA->getGiroFactura());//GIRO          
-            $this->setOcNotaCredito($FACTURA->getOcFactura());//OC
-            $this->setCondicionpagoNotaCredito($FACTURA->getCondicionpagoFactura());//CONDICION PAGO            
-            $this->setResponsableNotaCredito($FACTURA->getResponsableFactura());//RESPONSABLE           
-            $this->setComentariorNotaCredito($FACTURA->getComentarioFactura());//COMENTARIO
-            $this->setEstadoNotaCredito($EEMITIDA);//ESTADO EMITIDA
-        }
-    }
+//        if($FACTURA != null){
+//            $this->setNumerofacturaNotaCredito($FACTURA->getNumeroFactura()); //NUMERO FACTURA
+//            $now = time();
+//            $this->setFechaingresoNotaCredito(date('Y-m-d H:i:s', $now));//FECHA INGRESO
+//            $this->setFechaemisionNotaCredito(date('Y-m-d H:i:s', $now));//FECHA EMISION
+//            $this->setIdNotapedidoNotaCredito($FACTURA->getIdNotapedidoFactura());//NOTA PEDIDO
+//            $this->setRutNotaCredito($FACTURA->getRutFactura());//RUT
+//            $this->setTelefonoNotaCredito($FACTURA->getTelefonoFactura());//TELEFONO
+//            $this->setNombreNotaCredito($FACTURA->getNombreFactura());//NOMBRE
+//            $this->setDireccionNotaCredito($FACTURA->getDireccionFactura());//DIRECCION
+//            $this->setComunaNotaCredito($FACTURA->getComunaFactura());//COMUNA
+//            $this->setCiudadNotaCredito($FACTURA->getCiudadFactura());//CIUDAD            
+//            $this->setGiroNotaCredito($FACTURA->getGiroFactura());//GIRO          
+//            $this->setOcNotaCredito($FACTURA->getOcFactura());//OC
+//            $this->setCondicionpagoNotaCredito($FACTURA->getCondicionpagoFactura());//CONDICION PAGO            
+//            $this->setResponsableNotaCredito($FACTURA->getResponsableFactura());//RESPONSABLE           
+//            $this->setComentariorNotaCredito($FACTURA->getComentarioFactura());//COMENTARIO
+//            $this->setEstadoNotaCredito($EEMITIDA);//ESTADO EMITIDA
+//        }
+//    }
 
+    public function save(Doctrine_Connection $conn = null) {
+        if ($this->isNew()){
+            $this->setFechaingresoNotaCredito(date('Y-m-d H:i:s', time()));
+        }
+
+        return parent::save($conn);
+    }
 }

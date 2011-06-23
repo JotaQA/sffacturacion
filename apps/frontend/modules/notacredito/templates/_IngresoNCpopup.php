@@ -10,26 +10,26 @@
             <th><?php echo $form['rut_nota_credito']->renderLabel() ?></th>
             <td>
                 <?php echo $form['rut_nota_credito']->renderError() ?>
-                <?php echo $form['rut_nota_credito'] ?>
+                <?php echo $form['rut_nota_credito']->render(array('size' => 16)) ?>
             </td>
         </tr>
         <tr>
             <th><?php echo $form['nombre_nota_credito']->renderLabel() ?></th>
             <td>
                 <?php echo $form['nombre_nota_credito']->renderError() ?>
-                <?php echo $form['nombre_nota_credito'] ?>
+                <?php echo $form['nombre_nota_credito']->render(array('size' => 25)) ?>
             </td>
             <th><?php echo $form['telefono_nota_credito']->renderLabel() ?></th>
             <td>
                 <?php echo $form['telefono_nota_credito']->renderError() ?>
-                <?php echo $form['telefono_nota_credito'] ?>
+                <?php echo $form['telefono_nota_credito']->render(array('size' => 16)) ?>
             </td>
         </tr>
         <tr>
             <th><?php echo $form['direccion_nota_credito']->renderLabel() ?></th>
             <td>
                 <?php echo $form['direccion_nota_credito']->renderError() ?>
-                <?php echo $form['direccion_nota_credito'] ?>
+                <?php echo $form['direccion_nota_credito']->render(array('size' => 30)) ?>
             </td>
             <th><?php echo $form['comuna_nota_credito']->renderLabel() ?></th>
             <td>
@@ -53,7 +53,7 @@
             <th><?php echo $form['condicionpago_nota_credito']->renderLabel() ?></th>
             <td>
                 <?php echo $form['condicionpago_nota_credito']->renderError() ?>
-                <?php echo $form['condicionpago_nota_credito'] ?>
+                <?php echo $form['condicionpago_nota_credito']->render(array('size' => 30)) ?>
             </td>
             <th><?php echo $form['oc_nota_credito']->renderLabel() ?></th>
             <td>
@@ -79,18 +79,10 @@
                 <?php echo $form['comentarior_nota_credito']->renderError() ?>
                 <?php echo $form['comentarior_nota_credito']->render(array('cols' => 25)) ?>
             </td>            
-            <th><?php echo $form['fechaingreso_nota_credito']->renderLabel() ?></th>
-            <td>
-                <?php echo $form['fechaingreso_nota_credito']->renderError() ?>
-                <?php echo $form['fechaingreso_nota_credito'] ?>
-                <?php echo $form->renderHiddenFields(true) ?>
-            </td>
-        </tr>
-        <tr>
             <th><?php echo $form['fechaemision_nota_credito']->renderLabel() ?></th>
             <td>
                 <?php echo $form['fechaemision_nota_credito']->renderError() ?>
-                <?php echo $form['fechaemision_nota_credito'] ?>
+                <?php echo $form['fechaemision_nota_credito']->render(array('size' => 12)) ?>
                 <?php echo $form->renderHiddenFields(true) ?>
             </td>
         </tr>

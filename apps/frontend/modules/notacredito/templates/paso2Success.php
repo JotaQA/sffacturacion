@@ -39,14 +39,15 @@
             </thead>
             <tbody>
             <?php foreach ($facturas as $factura): ?>
+            <?php $detalle = $factura->getDetalleActivo() ?>
             <tr>
                 <td><?php echo 'F'.$factura->getNumeroFactura() ?></td>
                 <td><?php echo $factura->getDateTimeObject('fechaingreso_factura')->format('d/m/Y') ?></td>
                 <td><?php echo $factura->getDateTimeObject('fechaemision_factura')->format('d/m/Y') ?></td>
                 <td><?php echo $factura->getTipoFactura() ?></td>
                 <td><?php echo $factura->getMontoFactura() ?></td>
-                <td class="center"><?php echo $it->render('itfactura['.$factura->getIdFactura().$codigo.']', 0, array('size' => '1', 'style' => 'font-size: 8pt'), ESC_RAW) ?></td>
-                <td class="center"><?php echo $cb->render('cbfactura['.$factura->getIdFactura().$codigo.']', null, array('codigo' => $codigo, 'factura' => $factura->getIdFactura()), ESC_RAW) ?></td>
+                <td class="center"><?php echo $it->render('itfactura['.$factura->getIdFactura().$codigo.']', 0, array('size' => '1', 'style' => 'font-size: 8pt', 'cantmax' => $detalle[0]->getCantidadDetalleActivo()), ESC_RAW) ?></td>
+                <td class="center"><?php echo $cb->render('cbfactura['.$factura->getIdFactura().$codigo.']', null, array('codigo' => $codigo, 'factura' => $factura->getIdFactura(), 'cantmax' => $detalle[0]->getCantidadDetalleActivo()), ESC_RAW) ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>
@@ -82,40 +83,101 @@
 
 <script type="text/javascript">
     var datos;
+    var numerofacturas;
     function siguiente(){
         datos = new Array();
-        $('input[type=checkbox]:checked').each(function() {
+        numerofacturas="";
+//        var superamax = false;
+        $('input[type=checkbox]:checked').each(function(i) {
             var codigo = $(this).attr("codigo");
             var id_factura = $(this).attr("factura");
             var cantidad = $('#itfactura_'+id_factura+codigo).val();
+//            var cantmax = $(this).attr("cantmax");
+//            if(cantidad > cantmax){
+//                $('#itfactura_'+id_factura+codigo).val(cantmax);
+//                superamax = true;
+//            }
             datos.push(codigo);
             datos.push(id_factura);
-            datos.push(cantidad);       
+            datos.push(cantidad);
+            var numF = $(this).parent().parent().children('td:first').text().substring(1);
+            if(i == 0) numerofacturas += numF;
+            else numerofacturas += ','+numF
         });
-//        alert(datos);
+        
+//        if(superamax) alert('Algunas cantidades superan el maximo')
+        
         var id_factura = $('input[type=checkbox]:checked:first').attr("factura");
-        $.get("<?php echo url_for('notacredito/getFactura') ?>"+'?id_factura='+id_factura, function(data){
-            $("#nota_credito_rut_nota_credito").val(data.rut_factura);
-            $("#nota_credito_nombre_nota_credito").val(data.nombre_factura);
-            $("#nota_credito_telefono_nota_credito").val(data.telefono_factura);
-            $("#nota_credito_direccion_nota_credito").val(data.direccion_factura);
-            $("#nota_credito_comuna_nota_credito").val(data.comuna_factura);
-            $("#nota_credito_ciudad_nota_credito").val(data.ciudad_factura);
-            $("#nota_credito_giro_nota_credito").val(data.giro_factura);
-            $("#nota_credito_condicionpago_nota_credito").val(data.condicionpago_factura);
-            $("#nota_credito_oc_nota_credito").val(data.oc_factura);
-            $("#nota_credito_responsable_nota_credito").val(data.responsable_factura);
-            $("#nota_credito_numerofactura_nota_credito").val(data.numero_factura);
-            $("#nota_credito_fechaingreso_nota_credito").val();
-            $("#nota_credito_fechaemision_nota_credito").val();
-//            alert(data.id_factura);
-            
-            $( "#dialog-form" ).dialog( "open" );
-        },"json");
+        if(id_factura == null) alert('Al menos debe elegir una factura');
+        else{
+            $.get("<?php echo url_for('notacredito/getFactura') ?>"+'?id_factura='+id_factura, function(data){
+                $("#nota_credito_rut_nota_credito").val(data.rut_factura);
+                $("#nota_credito_nombre_nota_credito").val(data.nombre_factura);
+                $("#nota_credito_telefono_nota_credito").val(data.telefono_factura);
+                $("#nota_credito_direccion_nota_credito").val(data.direccion_factura);
+                $("#nota_credito_comuna_nota_credito").val(data.comuna_factura);
+                $("#nota_credito_ciudad_nota_credito").val(data.ciudad_factura);
+                $("#nota_credito_giro_nota_credito").val(data.giro_factura);
+                $("#nota_credito_condicionpago_nota_credito").val(data.condicionpago_factura);
+                $("#nota_credito_oc_nota_credito").val(data.oc_factura);
+                $("#nota_credito_responsable_nota_credito").val(data.responsable_factura.replace(/^\s+|\s+$/g, ''));
+                $("#nota_credito_numerofactura_nota_credito").val(numerofacturas);
+//                $("#nota_credito_fechaingreso_nota_credito").val();
+//                var d=new Date();
+//                if(d.getMonth()+1 < 10) var mes = '0'+(d.getMonth()+1);
+//                else var mes = d.getMonth()+1;
+//                $("#nota_credito_fechaemision_nota_credito").val((new Date().getDate())+'/'+mes+'/'+(new Date().getFullYear())) ;
+    
+                $( "#dialog-form" ).dialog( "open" );
+            },"json");
+        }
+        
         
     }
     $(document).ready(function(){
+        $('input[type=checkbox]').change( function() {
+            if($(this).is(':checked')){
+                var codigo = $(this).attr("codigo");
+                var id_factura = $(this).attr("factura");
+                var cantidad = $('#itfactura_'+id_factura+codigo).val();
+                var cantmax = $(this).attr("cantmax");
+                if(cantidad > cantmax || cantidad < 0){
+                    $(this).parent().parent().children('td:eq(5)').addClass( "ui-state-error" );                    
+                    var textoantiguo = $('.head-toolbar').html();
+                    $('.head-toolbar').html("<b>A sobrepasado la cantidada máxima "+cantmax+' o el valor es negativo</b>');
+                    $('.head-toolbar').addClass("ui-state-highlight");
+                    $('#itfactura_'+id_factura+codigo).val(0);
+                    setTimeout(function() {
+                            $('.head-toolbar').removeClass( "ui-state-highlight");
+                            $('.head-toolbar').html(textoantiguo);
+                            
+                    }, 3500 );                    
+                }
+                else $(this).parent().parent().children('td:eq(5)').removeClass("ui-state-error");
+            }
+        });
+        
+        $('tbody input[type=text]').change( function() {
+            var cantidad = $(this).val();
+            var cantmax = $(this).attr("cantmax");
+            if(cantidad > cantmax || cantidad < 0){
+                $(this).parent().addClass( "ui-state-error" );                    
+                var textoantiguo = $('.head-toolbar').html();
+                $('.head-toolbar').html("<b>A sobrepasado la cantidada máxima "+cantmax+' o el valor es negativo</b>');
+                $('.head-toolbar').addClass("ui-state-highlight");
+                $(this).val('0');
+                setTimeout(function() {
+                        $('.head-toolbar').removeClass( "ui-state-highlight");
+                        $('.head-toolbar').html(textoantiguo);
+                        
+                }, 3500 );
+            }
+            else $(this).parent().removeClass("ui-state-error");
+        });
+        
+        
         $('button').button();
+        $( "#nota_credito_fechaemision_nota_credito" ).datepicker($.datepicker.regional[ "es" ]);
         $('.display').dataTable({
             "bJQueryUI": true,
             "bInfo": false,
@@ -135,7 +197,8 @@
         });
         
         
-        var rut = $( "#nota_credito_rut_nota_credito" ),
+        var numeronc = $( "#nota_credito_numero_nota_credito" ),
+            rut = $( "#nota_credito_rut_nota_credito" ),
             nombre = $( "#nota_credito_nombre_nota_credito" ),
             telefono = $( "#nota_credito_telefono_nota_credito" ),
             direccion = $( "#nota_credito_direccion_nota_credito" ),
@@ -146,9 +209,10 @@
             oc = $( "#nota_credito_oc_nota_credito" ),
             responsable = $( "#nota_credito_responsable_nota_credito" ),
             numerofactura = $( "#nota_credito_numerofactura_nota_credito" ),
-            fechaingreso = $( "#nota_credito_fechaingreso_nota_credito" ),
+//            fechaingreso = $( "#nota_credito_fechaingreso_nota_credito" ),
             fechaemision = $( "#nota_credito_fechaemision_nota_credito" ),
             allFields = $( [] )
+            .add( numeronc )
             .add( rut )
             .add( nombre )
             .add( telefono )
@@ -160,7 +224,7 @@
             .add( oc )
             .add( responsable )
             .add( numerofactura )
-            .add( fechaingreso )
+//            .add( fechaingreso )
             .add( fechaemision ),
             tips = $( ".validateTips" );
                 
@@ -175,7 +239,7 @@
         function checkLength( o, n, min, max ) {
                     if ( o.val().length > max || o.val().length < min ) {
                             o.addClass( "ui-state-error" );
-                            updateTips( "El largo de " + n + " debe estar entre " +
+                            updateTips( "El largo del campo " + n + " debe estar entre " +
                                     min + " y " + max + "." );
                             return false;
                     } else {
@@ -193,6 +257,23 @@
                     }
         }
         
+        $( "#nota_credito_rut_nota_credito" ).Rut({
+            on_error: function(){ alert('Rut incorrecto'); },
+            format_on: 'keyup'
+        });
+          
+        function checkRut(o, n){
+            if(! $.Rut.validar(o.val())){
+                o.addClass( "ui-state-error" );
+                updateTips( n );
+                return false;
+            }else {
+                return true;
+            }
+            
+        }
+        
+        
         
         
         $('input:text , textarea').addClass('ui-widget-content ui-corner-all');
@@ -207,20 +288,35 @@
                         allFields.removeClass( "ui-state-error" );
                                         
 
+                        bValid = bValid && checkLength( numeronc, "numero NC", 1, 10 );
                         bValid = bValid && checkLength( rut, "RUT", 8, 12 );
-//                        bValid = bValid && checkLength( nombre, "nombre", 6, 80 );
-//                        bValid = bValid && checkLength( telefono, "telefono", 5, 16 );
-//
-//					bValid = bValid && checkRegexp( name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter." );
-//					// From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
-//					bValid = bValid && checkRegexp( email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. ui@jquery.com" );
-//					bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
-//
+                        bValid = bValid && checkLength( nombre, "nombre", 1, 200 );
+                        bValid = bValid && checkLength( telefono, "telefono", 0, 32 );
+                        bValid = bValid && checkLength( direccion, "direccion", 1, 512 );
+                        bValid = bValid && checkLength( comuna, "comuna", 1, 512 );
+                        bValid = bValid && checkLength( ciudad, "ciudad", 1, 512 );
+                        bValid = bValid && checkLength( giro, "giro", 1, 512 );
+                        bValid = bValid && checkLength( condicion, "condicion", 1, 512 );
+                        bValid = bValid && checkLength( oc, "oc", 0, 512 );
+                        bValid = bValid && checkLength( responsable, "responsable", 1, 512 );
+                        bValid = bValid && checkLength( numerofactura, "numero factura", 1, 128 );
+//                        bValid = bValid && checkLength( fechaingreso, "fecha ingreso", 6, 20 );
+//                        bValid = bValid && checkLength( fechaemision, "fecha emision", 9, 11 );
+
+//                        bValid = bValid && checkRegexp( name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter." );
+                        // From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
+//                        bValid = bValid && checkRegexp( email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. ui@jquery.com" );
+//                        bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+                        bValid = bValid && checkRegexp( numeronc, /^\d+$/, "El número de NC es invalido" );
+                        bValid = bValid && checkRegexp( rut, /^\d{7,10}-(\d|k)$/i, "El RUT debe tener formato 12345678-9" );
+                        bValid = bValid && checkRut( rut, "El RUT es invalido" );
+                        bValid = bValid && checkRegexp( telefono, /^\d{1,2}-\d{5,11}$/, "El telefono debe tener formato: codigo-numero, ejemplo 02-6412345" );
+                        bValid = bValid && checkRegexp( numerofactura, /^\d+(,\d+)*$/, "El número de factura es invalido, si ingresa dos o más el formato es 1111,2222,3333..." );
+                        bValid = bValid && checkRegexp( fechaemision, /^\d{2}(\/)\d{2}(\/)\d{4}$/, "La fecha debe tener formato dd/mm/yyyy" );
+                        
                         if ( bValid ) {
                             var fields  = $("form").serialize();
-//                            alert(fields);
                             fields += '&datos='+JSON.stringify(datos);
-//                            fields += '&id_factura='+id_factura;
 
                             var error = true;
                             $.post("<?php echo url_for('notacredito/ingresarNC2') ?>", fields ,
@@ -230,7 +326,6 @@
                                        alert('Se produjo un error: '+data);
                                        error = false;
                                    }
-//                                 alert("Data Loaded: " + data);
                                }).error(function() {
                                    if(error)
                                    alert('Se produjo un error'); 

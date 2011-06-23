@@ -16,4 +16,18 @@ class UsuariosTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('Usuarios');
     }
+    
+    public function getUsuariosParaChoice()
+    {
+        $users = Doctrine_Core::getTable('Usuarios')
+                ->createQuery('a')
+                ->select('a.descripcion')
+                ->where('vendedor = ?', '1')
+                ->execute();
+        $resultado = array();
+        foreach ($users as $user){
+            $resultado[strtoupper($user->getDescripcion())] = strtoupper($user->getDescripcion());
+        }
+        return $resultado;
+    }
 }
