@@ -139,11 +139,12 @@
             if($(this).is(':checked')){
                 var codigo = $(this).attr("codigo");
                 var id_factura = $(this).attr("factura");
-                var cantidad = $('#itfactura_'+id_factura+codigo).val();
-                var cantmax = $(this).attr("cantmax");
+                var cantidad = parseInt($('#itfactura_'+id_factura+codigo).val());
+                var cantmax = parseInt($(this).attr("cantmax"));
                 if(cantidad > cantmax || cantidad < 0){
                     $(this).parent().parent().children('td:eq(5)').addClass( "ui-state-error" );                    
                     var textoantiguo = $('.head-toolbar').html();
+                    
                     $('.head-toolbar').html("<b>A sobrepasado la cantidada máxima "+cantmax+' o el valor es negativo</b>');
                     $('.head-toolbar').addClass("ui-state-highlight");
                     $('#itfactura_'+id_factura+codigo).val(0);
@@ -158,21 +159,43 @@
         });
         
         $('tbody input[type=text]').change( function() {
-            var cantidad = $(this).val();
-            var cantmax = $(this).attr("cantmax");
-            if(cantidad > cantmax || cantidad < 0){
-                $(this).parent().addClass( "ui-state-error" );                    
-                var textoantiguo = $('.head-toolbar').html();
-                $('.head-toolbar').html("<b>A sobrepasado la cantidada máxima "+cantmax+' o el valor es negativo</b>');
-                $('.head-toolbar').addClass("ui-state-highlight");
-                $(this).val('0');
+            //VAR A OCUPAR
+            var tabletitle = $(this).parent().parent().parent().parent().prev('.head-toolbar');
+            var input = $(this);
+            //VALIDA SI LA CANTIDAD ES NUMERO
+            var cantidad = parseInt($(this).val());
+            if(isNaN(parseInt(cantidad, 10))){
+                alert('hola');
+                var textoantiguo = tabletitle.html();
+                tabletitle.html('<b>Ingrese un numero valido</b>');
+                tabletitle.addClass("ui-state-highlight");
+                input.addClass( "ui-state-error" );
                 setTimeout(function() {
-                        $('.head-toolbar').removeClass( "ui-state-highlight");
-                        $('.head-toolbar').html(textoantiguo);
-                        
-                }, 3500 );
+                    tabletitle.removeClass( "ui-state-highlight");
+                    tabletitle.html(textoantiguo);
+                    input.removeClass( "ui-state-error" );
+                });
             }
-            else $(this).parent().removeClass("ui-state-error");
+            else{
+                //VALIDA EL MAXIMO Y NEGATIVO
+                var cantmax = parseInt($(this).attr("cantmax"));
+                if(cantidad > cantmax || cantidad < 0){                
+
+
+                    var textoantiguo = tabletitle.html();
+                    input.addClass( "ui-state-error" );
+
+                    tabletitle.html('<b>A sobrepasado la cantidada máxima '+cantmax+' o el valor es negativo</b>');
+                    tabletitle.addClass("ui-state-highlight");
+                    $(this).val('0');                
+
+                    setTimeout(function() {
+                            tabletitle.removeClass( "ui-state-highlight");
+                            tabletitle.html(textoantiguo);
+                            input.removeClass( "ui-state-error" );
+                    }, 3500 );
+                }
+            }
         });
         
         
