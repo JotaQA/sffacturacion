@@ -23,7 +23,7 @@
     <!--Begin content1-->
     <div class="midcontent">
         <div class="divmiddle" style="min-height: 530px">
-        
+
         <table width="100%"  id="prueba" class="display">
             
         </table>

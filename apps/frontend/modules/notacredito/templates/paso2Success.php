@@ -1,3 +1,5 @@
+<?php use_helper('Number') ?>
+<?php $sf_user->setCulture('es_CL') ?>
 <div id="divmid">
 
 <!--    <h1>Existencias</h1>-->
@@ -22,6 +24,7 @@
     <!--Begin content1-->
     <div class="midcontent">
     <div class="divmiddle" style="min-height: 530px">
+    
         
         <?php $datos = $sf_data->getRaw('datos') ?>
         <?php while(list(, $codigo) = each($datos)): ?>
@@ -29,25 +32,23 @@
         <?php list(, $facturas) = each($datos) ?>
         <table class="display" title="<?php echo $codigo.' '.$descripcion ?>">
             <thead>
-            <th>Número</th>
-            <th>Ingreso</th>
+            <th>Factura</th>
             <th>Emision</th>
-            <th>Tipo</th>
             <th>Monto</th>
-            <th>Cantidad</th>
-            <th>Acción</th>
+            <th>Cant Fac</th>
+            <th>Cant NC</th>
+            <th>Elección</th>
             </thead>
             <tbody>
             <?php foreach ($facturas as $factura): ?>
             <?php $detalle = $factura->getDetalleActivo() ?>
             <tr>
-                <td><?php echo 'F'.$factura->getNumeroFactura() ?></td>
-                <td><?php echo $factura->getDateTimeObject('fechaingreso_factura')->format('d/m/Y') ?></td>
+                <td><?php echo '<b title="Factura Fisica" style="background: yellow; color: black; padding: 1px 2px; font-size: 120%">'.substr($factura->getTipoFactura(),0,1).'</b>'.$factura->getNumeroFactura() ?></td>
                 <td><?php echo $factura->getDateTimeObject('fechaemision_factura')->format('d/m/Y') ?></td>
-                <td><?php echo $factura->getTipoFactura() ?></td>
-                <td><?php echo $factura->getMontoFactura() ?></td>
-                <td class="center"><?php echo $it->render('itfactura['.$factura->getIdFactura().$codigo.']', 0, array('size' => '1', 'style' => 'font-size: 8pt', 'cantmax' => $detalle[0]->getCantidadDetalleActivo()), ESC_RAW) ?></td>
-                <td class="center"><?php echo $cb->render('cbfactura['.$factura->getIdFactura().$codigo.']', null, array('codigo' => $codigo, 'factura' => $factura->getIdFactura(), 'cantmax' => $detalle[0]->getCantidadDetalleActivo()), ESC_RAW) ?></td>
+                <td><?php echo format_currency($factura->getMontoFactura(),'CLP') ?></td>
+                <td><?php echo $detalle[0]->getCantidadDetalleActivo() ?></td>
+                <td><?php echo $it->render('itfactura['.$factura->getIdFactura().$codigo.']', 0, array('size' => '2', 'style' => 'font-size: 8pt', 'cantmax' => $detalle[0]->getCantidadDetalleActivo()), ESC_RAW) ?></td>
+                <td><?php echo $cb->render('cbfactura['.$factura->getIdFactura().$codigo.']', null, array('codigo' => $codigo, 'factura' => $factura->getIdFactura(),'numfactura' => $factura->getNumeroFactura(), 'cantmax' => $detalle[0]->getCantidadDetalleActivo()), ESC_RAW) ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>
@@ -87,20 +88,15 @@
     function siguiente(){
         datos = new Array();
         numerofacturas="";
-//        var superamax = false;
         $('input[type=checkbox]:checked').each(function(i) {
             var codigo = $(this).attr("codigo");
             var id_factura = $(this).attr("factura");
             var cantidad = $('#itfactura_'+id_factura+codigo).val();
-//            var cantmax = $(this).attr("cantmax");
-//            if(cantidad > cantmax){
-//                $('#itfactura_'+id_factura+codigo).val(cantmax);
-//                superamax = true;
-//            }
+
             datos.push(codigo);
             datos.push(id_factura);
             datos.push(cantidad);
-            var numF = $(this).parent().parent().children('td:first').text().substring(1);
+            var numF = $(this).attr("numfactura");
             if(i == 0) numerofacturas += numF;
             else numerofacturas += ','+numF
         });
@@ -165,16 +161,16 @@
             //VALIDA SI LA CANTIDAD ES NUMERO
             var cantidad = parseInt($(this).val());
             if(isNaN(parseInt(cantidad, 10))){
-                alert('hola');
                 var textoantiguo = tabletitle.html();
-                tabletitle.html('<b>Ingrese un numero valido</b>');
+                tabletitle.html('<b>Ingrese un número valido</b>');
                 tabletitle.addClass("ui-state-highlight");
                 input.addClass( "ui-state-error" );
+                $(this).val('0');
                 setTimeout(function() {
                     tabletitle.removeClass( "ui-state-highlight");
                     tabletitle.html(textoantiguo);
                     input.removeClass( "ui-state-error" );
-                });
+                }, 3500);
             }
             else{
                 //VALIDA EL MAXIMO Y NEGATIVO
@@ -187,7 +183,7 @@
 
                     tabletitle.html('<b>A sobrepasado la cantidada máxima '+cantmax+' o el valor es negativo</b>');
                     tabletitle.addClass("ui-state-highlight");
-                    $(this).val('0');                
+                    $(this).val('0');
 
                     setTimeout(function() {
                             tabletitle.removeClass( "ui-state-highlight");
@@ -210,7 +206,10 @@
             "bFilter": false,
             "sDom": '<"head-toolbar fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"F"ip>',
             "aoColumnDefs": [ 
-			{ "sWidth": "8%", "aTargets": [ 5 ] }
+			{ "sWidth": "14%", "aTargets": [ 2 ],"sClass": "right" },
+			{ "sWidth": "12%", "aTargets": [ 3 ],"sClass": "center" },
+			{ "sWidth": "12%", "aTargets": [ 4 ],"sClass": "center" },
+			{ "sWidth": "12%", "aTargets": [ 5 ],"sClass": "center" }
 		],
             "bAutoWidth": false
         });

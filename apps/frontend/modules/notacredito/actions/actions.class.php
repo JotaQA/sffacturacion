@@ -82,11 +82,13 @@ class notacreditoActions extends sfActions
     $primerafac = true;
     foreach ($productos as $producto){
         $facturas = Doctrine_Query::create()
-                ->select('a.id_factura, a.numero_factura, a.fechaingreso_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura, da.cantidad_detalle_activo')
+                ->select('a.id_factura, a.numero_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura, da.cantidad_detalle_activo')
                 ->from('Factura a')
                 ->where('a.rut_factura = ?', $rut_cliente)
-                ->innerJoin('a.DetalleActivo da')                
+                ->innerJoin('a.DetalleActivo da')
+                ->innerJoin('a.EstadoFactura e')
                 ->Andwhere('da.codigointerno_detalle_activo = ?', $producto->codigo)
+                ->Andwhere('e.nombre_estadofactura = ?', 'Emitida')
                 ->limit(10)
                 ->execute();
         if($facturas[0] != null && $primerafac){
@@ -99,19 +101,7 @@ class notacreditoActions extends sfActions
     }
     $this->cb = new sfWidgetFormInputCheckbox();
     $this->it = new sfWidgetFormInputText();
-//    $NC = new NotaCredito();
-//    $NC->setRutNotaCredito($factura->getRutFactura());
-//    $NC->setNombreNotaCredito($factura->getNombreFactura());
-//    $NC->setTelefonoNotaCredito($factura->getTelefonoFactura());
-//    $NC->setDireccionNotaCredito($factura->getDireccionFactura());
-//    $NC->setComunaNotaCredito($factura->getComunaFactura());
-//    $NC->setCiudadNotaCredito($factura->getCiudadFactura());
-//    $NC->setGiroNotaCredito($factura->getGiroFactura());
-//    $NC->setCondicionpagoNotaCredito($factura->getCondicionpagoFactura());
-//    $NC->setOcNotaCredito($factura->getOcFactura());
-//    $NC->setResponsableNotaCredito($factura->getResponsableFactura());
-//    $NC->setNumerofacturaNotaCredito($factura->getNumeroFactura());
-    $this->form = new NotaCreditoForm();
+    $this->form = new NotaCreditoForm();    
   }
   
   public function executeCrear2(sfWebRequest $request)
@@ -121,6 +111,8 @@ class notacreditoActions extends sfActions
     $this->cb = new sfWidgetFormInputCheckbox();
     $this->it = new sfWidgetFormInputText();
     $this->form = new NotaCreditoForm();
+//    $nf = new sfNumberFormat('es_CL');
+//    $this->aux = $nf->format(3000, 'c', 'CLP', 'UTF-8');
   }
   
   public function executeGuardarproductos(sfWebRequest $request){
