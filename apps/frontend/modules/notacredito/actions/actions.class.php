@@ -10,6 +10,14 @@
  */
 class notacreditoActions extends sfActions
 {
+  public function executeVerificarnumNC(sfWebRequest $request)
+  {
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      $numeroNC = $request->getParameter('numeroNC');
+      $factura = Doctrine_Core::getTable('NotaCredito')->findOneByNumeroNotaCredito($numeroNC);
+      if($factura == null) return $this->renderText('false');
+      else return $this->renderText('true');
+  }
   public function executeGetFactura(sfWebRequest $request)
   {
       Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');

@@ -127,30 +127,73 @@
                 $( "#dialog-form" ).dialog( "open" );
             },"json");
         }
-        
-        
     }
+    
     $(document).ready(function(){
+        //VERIFICAMOS SI EL NUM NC EXISTE
+        $("#nota_credito_numero_nota_credito").live({
+            blur: function(){
+                var numeroNC = $(this).val();
+                if(!isNaN(parseInt(numeroNC, 10)) && parseInt(numeroNC, 10) > 0){
+                    $.get("<?php echo url_for('notacredito/verificarnumNC') ?>"+'?numeroNC='+numeroNC, function(data){
+                        if(data == 'true'){
+                            var tabletitle = $('.validateTips');
+                            var input = $("#nota_credito_numero_nota_credito");
+                            var textoantiguo = tabletitle.html();
+                            tabletitle.html('EL número de NC ya existe');
+                            tabletitle.addClass("ui-state-highlight");
+                            input.addClass( "ui-state-error" );
+                            input.val('0');
+                            setTimeout(function() {
+                                tabletitle.removeClass( "ui-state-highlight");
+                                tabletitle.html(textoantiguo);
+                                input.removeClass( "ui-state-error" );
+                            }, 3500);
+                        }
+                    });
+                }
+                else{
+                    var tabletitle = $('.validateTips');
+                    var input = $("#nota_credito_numero_nota_credito");
+                    var textoantiguo = tabletitle.html();
+                    tabletitle.html('EL número de NC no es valido');
+                    tabletitle.addClass("ui-state-highlight");
+                    input.addClass( "ui-state-error" );
+                    input.val('0');
+                    setTimeout(function() {
+                        tabletitle.removeClass( "ui-state-highlight");
+                        tabletitle.html(textoantiguo);
+                        input.removeClass( "ui-state-error" );
+                    }, 3500);
+                }
+            }
+        });
+     
+        //AL MENOS DEBE TENER UNO ELEGIDO
         $('input[type=checkbox]').change( function() {
             if($(this).is(':checked')){
                 var codigo = $(this).attr("codigo");
                 var id_factura = $(this).attr("factura");
-                var cantidad = parseInt($('#itfactura_'+id_factura+codigo).val());
-                var cantmax = parseInt($(this).attr("cantmax"));
-                if(cantidad > cantmax || cantidad < 0){
-                    $(this).parent().parent().children('td:eq(5)').addClass( "ui-state-error" );                    
-                    var textoantiguo = $('.head-toolbar').html();
-                    
-                    $('.head-toolbar').html("<b>A sobrepasado la cantidada máxima "+cantmax+' o el valor es negativo</b>');
-                    $('.head-toolbar').addClass("ui-state-highlight");
-                    $('#itfactura_'+id_factura+codigo).val(0);
-                    setTimeout(function() {
-                            $('.head-toolbar').removeClass( "ui-state-highlight");
-                            $('.head-toolbar').html(textoantiguo);
-                            
-                    }, 3500 );                    
+                var input = $('#itfactura_'+id_factura+codigo);
+                var cantidad = parseInt(input.val());
+                if(cantidad == 0){
+                    input.val(1);
                 }
-                else $(this).parent().parent().children('td:eq(5)').removeClass("ui-state-error");
+//                var cantmax = parseInt($(this).attr("cantmax"));
+//                if(cantidad > cantmax || cantidad < 0){
+//                    $(this).parent().parent().children('td:eq(5)').addClass( "ui-state-error" );                    
+//                    var textoantiguo = $('.head-toolbar').html();
+//                    
+//                    $('.head-toolbar').html("<b>A sobrepasado la cantidada máxima "+cantmax+' o el valor es negativo</b>');
+//                    $('.head-toolbar').addClass("ui-state-highlight");
+//                    $('#itfactura_'+id_factura+codigo).val(0);
+//                    setTimeout(function() {
+//                            $('.head-toolbar').removeClass( "ui-state-highlight");
+//                            $('.head-toolbar').html(textoantiguo);
+//                            
+//                    }, 3500 );                    
+//                }
+//                else $(this).parent().parent().children('td:eq(5)').removeClass("ui-state-error");
             }
         });
         
@@ -165,7 +208,7 @@
                 tabletitle.html('<b>Ingrese un número valido</b>');
                 tabletitle.addClass("ui-state-highlight");
                 input.addClass( "ui-state-error" );
-                $(this).val('0');
+                input.val('0');
                 setTimeout(function() {
                     tabletitle.removeClass( "ui-state-highlight");
                     tabletitle.html(textoantiguo);
@@ -329,7 +372,7 @@
                         // From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
 //                        bValid = bValid && checkRegexp( email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. ui@jquery.com" );
 //                        bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
-                        bValid = bValid && checkRegexp( numeronc, /^\d+$/, "El número de NC es invalido" );
+                        bValid = bValid && checkRegexp( numeronc, /^[1-9]\d*$/, "El número de NC es invalido" );
                         bValid = bValid && checkRegexp( rut, /^\d{7,10}-(\d|k)$/i, "El RUT debe tener formato 12345678-9" );
                         bValid = bValid && checkRut( rut, "El RUT es invalido" );
                         bValid = bValid && checkRegexp( telefono, /^\d{1,2}-\d{5,11}$/, "El telefono debe tener formato: codigo-numero, ejemplo 02-6412345" );
@@ -365,6 +408,7 @@
             },
             close: function() {
                     allFields.val( "" ).removeClass( "ui-state-error" );
+                    $('.validateTips').html('Ingrese los datos de la Nota de Credito');
             }
         });
         
