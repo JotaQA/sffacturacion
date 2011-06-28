@@ -386,7 +386,10 @@
                             var error = true;
                             $.post("<?php echo url_for('notacredito/ingresarNC2') ?>", fields ,
                                function(data) {
-                                   if(data == 'true') alert('Nota de Credito ingresada');
+                                   if(data == 'true'){
+                                       alert('Nota de Credito ingresada');
+                                       $( "#dialog-form" ).dialog("close");
+                                   }
                                    else{
                                        alert('Se produjo un error: '+data);
                                        error = false;

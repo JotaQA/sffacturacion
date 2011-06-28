@@ -35,11 +35,16 @@ class notacreditoActions extends sfActions
       $datos = json_decode($request->getParameter('datos'));
       //SI NO HAY DATOS RETORNA ERROR
       if($datos == null || count($datos) == 0 || count($datos)%3 != 0) return $this->renderText('Datos invalidos o corruptos');
+      //CAMBIAMOS EL FORMATO DE LA FECHA
+      $values = $request->getParameter($form->getName());
+      $fecha = $values['fechaemision_nota_credito'];
+      list($dia,$mes,$año)=explode("/", $fecha);
+      $fecha = date("Y-m-d",mktime(0,0,0, $mes,$dia,$año));
+      $values['fechaemision_nota_credito'] = $fecha;
       
-      $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
+      $form->bind($values, $request->getFiles($form->getName()));
       
       if ($form->isValid()){
-//      if (false){
           //SE PUEDEN PRODUCIR ERRORES, SE USA ROLLBACK
           $conn = Doctrine_Manager::getInstance()->getCurrentConnection();
           try{

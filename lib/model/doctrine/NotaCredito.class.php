@@ -42,7 +42,7 @@ class NotaCredito extends BaseNotaCredito
 
     public function save(Doctrine_Connection $conn = null) {
         if ($this->isNew()){
-            $this->setFechaingresoNotaCredito(date('Y-m-d H:i:s', time()));
+            $this->setFechaingresoNotaCredito(date('Y-m-d H:i:s'));
         }
 
         return parent::save($conn);
