@@ -55,10 +55,15 @@ class notacreditoActions extends sfActions
               //EN EL MODELO SE CONFIGURA LA FECHA ACTUAL Y EL ESTADO
               $nota_credito = $form->save();
               
+              
               while(list(, $codigo) = each($datos)) {
                   list(, $id_factura) = each($datos);
                   list(, $cantidad) = each($datos);
+                  //UNIMOS LA NC CON EL DETALLE
+                  $NCD = new NotacreditoDetalle();
+                  $NCD->setNotaCredito($nota_credito);
                   $detalle_activo = Doctrine_Core::getTable('DetalleActivo')->findOneByCodigointernoDetalleActivoAndIdFactura($codigo, $id_factura);
+                  //SI HAY ALGUN ERROR...
                   if($detalle_activo == null){
                       $msgerr = true;
                       throw new Exception('detalle nulo');
@@ -67,9 +72,13 @@ class notacreditoActions extends sfActions
                       $msgerr = true;
                       throw new Exception('superada la cantidad máxima');
                   }
-                  $detalle_activo->setNotaCredito($nota_credito);
-                  $detalle_activo->setCantidadNotaCredito($cantidad);
+                  //UNIMOS LA NC CON EL DETALLE
+                  $NCD->setDetalleActivo($detalle_activo);
+                  //LA CANTIDAD
+                  $detalle_activo->setCantidadNotaCredito($cantidad+$detalle_activo->getCantidadNotaCredito());
+                  //GUARDAMOS
                   $detalle_activo->save();
+                  $NCD->save();
               }
               //SI TODO VA BIEN SE GUARDA
               $conn->commit();
@@ -94,7 +103,7 @@ class notacreditoActions extends sfActions
     $this->datos = array();
     foreach ($productos as $producto){
         $facturas = Doctrine_Query::create()
-                ->select('a.id_factura, a.numero_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura, a.id_notapedido_factura, da.cantidad_detalle_activo, da.cantidad_nota_credito, da.precio_detalle_activo')
+                ->select('a.id_factura, a.numero_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura, a.id_notapedido_factura, da.cantidad_detalle_activo-da.cantidad_nota_credito as cantidad_detalle_activo, da.cantidad_nota_credito, da.precio_detalle_activo')
                 ->from('Factura a')
                 ->where('a.rut_factura = ?', $rut_cliente)
                 ->innerJoin('a.DetalleActivo da')

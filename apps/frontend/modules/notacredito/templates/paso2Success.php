@@ -396,9 +396,9 @@
                                function(data) {
                                    if(data == 'true'){
                                        alert('Nota de Credito ingresada');
-                                       $('input[type=checkbox]:checked').each(function(){
-                                           $(this).parent().parent("tr").remove();
-                                       });
+//                                       $('input[type=checkbox]:checked').each(function(){
+//                                           $(this).parent().parent("tr").remove();
+//                                       });
                                        $( "#dialog-form" ).dialog("close");
                                    }
                                    else{
