@@ -91,9 +91,7 @@ class notacreditoActions extends sfActions
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
     $productos = $this->getUser()->getFlash('productos');
     $rut_cliente = $this->getUser()->getFlash('rut_cliente');
-//    $this->rut = $rut_cliente;
     $this->datos = array();
-    $primerafac = true;
     foreach ($productos as $producto){
         $facturas = Doctrine_Query::create()
                 ->select('a.id_factura, a.numero_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura, a.id_notapedido_factura, da.cantidad_detalle_activo, da.precio_detalle_activo')
@@ -105,11 +103,8 @@ class notacreditoActions extends sfActions
                 ->Andwhere('da.id_nota_credito IS NULL')
                 ->Andwhere('e.nombre_estadofactura = ?', 'Emitida')
                 ->limit(10)
+                ->setHydrationMode(Doctrine::HYDRATE_ARRAY)
                 ->execute();
-        if($facturas[0] != null && $primerafac){
-            $factura = $facturas[0];
-            $primerafac = false;
-        }
         $this->datos[] = $producto->codigo;
         $this->datos[] = $producto->descripcion;
         $this->datos[] = $facturas;

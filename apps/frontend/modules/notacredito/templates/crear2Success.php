@@ -52,9 +52,9 @@
         
          </div>
         <div style="text-align: right">
-            <button onclick="siguiente()">Siguiente</button>
             <button onclick="actualizarlista()">Actualizar</button>
             <button onclick="limpiar()">Limpiar</button>
+            <button onclick="siguiente()">Siguiente</button>
         </div>
     </div>
 </div>

@@ -41,14 +41,14 @@
             </thead>
             <tbody>
             <?php foreach ($facturas as $factura): ?>
-            <?php $detalle = $factura->getDetalleActivo() ?>
+            <?php //$detalle = $factura->getDetalleActivo() ?>
             <tr>
-                <td><?php echo '<b title="Factura Fisica" style="background: yellow; color: black; padding: 1px 2px; font-size: 120%">'.substr($factura->getTipoFactura(),0,1).'</b>'.$factura->getNumeroFactura() ?></td>
-                <td><?php echo $factura->getDateTimeObject('fechaemision_factura')->format('d/m/Y') ?></td>
-                <td><?php echo format_currency($factura->getMontoFactura(),'CLP') ?></td>
-                <td><?php echo $detalle[0]->getCantidadDetalleActivo() ?></td>
-                <td><?php echo $it->render('itfactura['.$factura->getIdFactura().$codigo.']', 0, array('size' => '2', 'style' => 'font-size: 8pt', 'cantmax' => $detalle[0]->getCantidadDetalleActivo(), 'id_it' => $factura->getIdFactura().$codigo), ESC_RAW) ?></td>
-                <td><?php echo $cb->render('cbfactura['.$factura->getIdFactura().$codigo.']', null, array('codigo' => $codigo, 'factura' => $factura->getIdFactura(),'numfactura' => $factura->getNumeroFactura(), 'num_np' => $factura->getIdNotapedidoFactura(), 'cantmax' => $detalle[0]->getCantidadDetalleActivo(), 'precio' => $detalle[0]->getPrecioDetalleActivo()), ESC_RAW) ?></td>
+                <td><?php echo '<b title="Factura Fisica" style="background: yellow; color: black; padding: 1px 2px; font-size: 120%">'.substr($factura["tipo_factura"],0,1).'</b>'.$factura["numero_factura"] ?></td>
+                <td><?php echo date('d/m/Y', strtotime($factura['fechaemision_factura'])) ?></td>
+                <td><?php echo format_currency($factura["monto_factura"],'CLP') ?></td>
+                <td><?php echo $factura["DetalleActivo"][0]["cantidad_detalle_activo"] ?></td>
+                <td><?php echo $it->render('itfactura['.$factura["id_factura"].$codigo.']', 0, array('size' => '2', 'style' => 'font-size: 8pt', 'cantmax' => $factura["DetalleActivo"][0]["cantidad_detalle_activo"], 'id_it' => $factura["id_factura"].$codigo), ESC_RAW) ?></td>
+                <td><?php echo $cb->render('cbfactura['.$factura["id_factura"].$codigo.']', null, array('codigo' => $codigo, 'factura' => $factura["id_factura"],'numfactura' => $factura["numero_factura"], 'num_np' => $factura["id_notapedido_factura"], 'cantmax' => $factura["DetalleActivo"][0]["cantidad_detalle_activo"], 'precio' => $factura["DetalleActivo"][0]["precio_detalle_activo"]), ESC_RAW) ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>
