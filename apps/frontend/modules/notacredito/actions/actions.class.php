@@ -52,6 +52,7 @@ class notacreditoActions extends sfActions
               //INICIO DE LA TRANSACCION
               $conn->beginTransaction();
               
+              //EN EL MODELO SE CONFIGURA LA FECHA ACTUAL Y EL ESTADO
               $nota_credito = $form->save();
               
               while(list(, $codigo) = each($datos)) {

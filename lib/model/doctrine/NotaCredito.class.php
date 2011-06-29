@@ -42,7 +42,11 @@ class NotaCredito extends BaseNotaCredito
 
     public function save(Doctrine_Connection $conn = null) {
         if ($this->isNew()){
+            //SE INGRESA CON LA FECHA ACTUAL
             $this->setFechaingresoNotaCredito(date('Y-m-d H:i:s'));
+            //ESTADO EMITIDA
+            $EEMITIDA = Doctrine::getTable('EstadoNotaCredito')->findOneByNombreEstadoNotaCredito('Emitida');            
+            $this->setEstadoNotaCredito($EEMITIDA);
         }
 
         return parent::save($conn);
