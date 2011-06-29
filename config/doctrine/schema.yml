@@ -1098,6 +1098,10 @@ DetalleActivo:
       local: id_factura
       foreign: id_factura
       type: one
+    NotacreditoDetalle:
+      local: id_detalle_activo
+      foreign: id_detalle_activo
+      type: many
 Division:
   connection: artelamp_1
   tableName: division
@@ -1733,10 +1737,6 @@ Factura:
       local: id_factura
       foreign: id_factura
       type: many
-#    NotacreditoFactura:
-#      local: id_factura
-#      foreign: id_factura
-#      type: many
 FormasPago:
   connection: artelamp
   tableName: formas_pago
@@ -2304,10 +2304,10 @@ NotaCredito:
       local: id_nota_credito
       foreign: id_nota_credito
       type: many
-#    NotacreditoFactura:
-#      local: id_nota_credito
-#      foreign: id_nota_credito
-#      type: many
+    NotacreditoDetalle:
+      local: id_nota_credito
+      foreign: id_nota_credito
+      type: many
 NotaVenta:
   connection: artelamp
   tableName: nota_venta
@@ -2346,31 +2346,31 @@ NotaVenta:
       primary: false
       notnull: true
       autoincrement: false
-#NotacreditoFactura:
-#  connection: artelamp_1
-#  tableName: notacredito_factura
-#  columns:
-#    id_factura:
-#      type: integer(4)
-#      fixed: false
-#      unsigned: false
-#      primary: true
-#      autoincrement: false
-#    id_nota_credito:
-#      type: integer(4)
-#      fixed: false
-#      unsigned: false
-#      primary: true
-#      autoincrement: false
-#  relations:
-#    NotaCredito:
-#      local: id_nota_credito
-#      foreign: id_nota_credito
-#      type: one
-#    Factura:
-#      local: id_factura
-#      foreign: id_factura
-#      type: one
+NotacreditoDetalle:
+  connection: artelamp_1
+  tableName: notacredito_detalle
+  columns:
+    id_detalle_activo:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: true
+      autoincrement: false
+    id_nota_credito:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: true
+      autoincrement: false
+  relations:
+    NotaCredito:
+      local: id_nota_credito
+      foreign: id_nota_credito
+      type: one
+    DetalleActivo:
+      local: id_detalle_activo
+      foreign: id_detalle_activo
+      type: one
 Pago:
   connection: artelamp_1
   tableName: pago

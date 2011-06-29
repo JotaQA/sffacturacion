@@ -29,6 +29,7 @@ Doctrine_Manager::getInstance()->bindComponent('NotaCredito', 'artelamp_1');
  * @property string $comentarior_nota_credito
  * @property EstadoNotaCredito $EstadoNotaCredito
  * @property Doctrine_Collection $DetalleActivo
+ * @property Doctrine_Collection $NotacreditoDetalle
  * 
  * @method integer             getIdNotaCredito()              Returns the current record's "id_nota_credito" value
  * @method integer             getIdEstadoNotaCredito()        Returns the current record's "id_estado_nota_credito" value
@@ -52,6 +53,7 @@ Doctrine_Manager::getInstance()->bindComponent('NotaCredito', 'artelamp_1');
  * @method string              getComentariorNotaCredito()     Returns the current record's "comentarior_nota_credito" value
  * @method EstadoNotaCredito   getEstadoNotaCredito()          Returns the current record's "EstadoNotaCredito" value
  * @method Doctrine_Collection getDetalleActivo()              Returns the current record's "DetalleActivo" collection
+ * @method Doctrine_Collection getNotacreditoDetalle()         Returns the current record's "NotacreditoDetalle" collection
  * @method NotaCredito         setIdNotaCredito()              Sets the current record's "id_nota_credito" value
  * @method NotaCredito         setIdEstadoNotaCredito()        Sets the current record's "id_estado_nota_credito" value
  * @method NotaCredito         setNumeroNotaCredito()          Sets the current record's "numero_nota_credito" value
@@ -74,6 +76,7 @@ Doctrine_Manager::getInstance()->bindComponent('NotaCredito', 'artelamp_1');
  * @method NotaCredito         setComentariorNotaCredito()     Sets the current record's "comentarior_nota_credito" value
  * @method NotaCredito         setEstadoNotaCredito()          Sets the current record's "EstadoNotaCredito" value
  * @method NotaCredito         setDetalleActivo()              Sets the current record's "DetalleActivo" collection
+ * @method NotaCredito         setNotacreditoDetalle()         Sets the current record's "NotacreditoDetalle" collection
  * 
  * @package    sffacturacion
  * @subpackage model
@@ -274,6 +277,10 @@ abstract class BaseNotaCredito extends sfDoctrineRecord
              'foreign' => 'id_estado_nota_credito'));
 
         $this->hasMany('DetalleActivo', array(
+             'local' => 'id_nota_credito',
+             'foreign' => 'id_nota_credito'));
+
+        $this->hasMany('NotacreditoDetalle', array(
              'local' => 'id_nota_credito',
              'foreign' => 'id_nota_credito'));
     }
