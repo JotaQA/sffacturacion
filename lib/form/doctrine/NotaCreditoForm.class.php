@@ -22,9 +22,17 @@ class NotaCreditoForm extends BaseNotaCreditoForm
       $this->widgetSchema['condicionpago_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['oc_nota_credito'] = new sfWidgetFormInputText();
       $this->widgetSchema['responsable_nota_credito'] = new sfWidgetFormChoice(array(
-            'choices'  => Doctrine_Core::getTable('Usuarios')->getUsuariosParaChoice()
+          'choices'  => Doctrine_Core::getTable('Usuarios')->getUsuariosParaChoice()
         ));
-//      $this->widgetSchema['fechaingreso_nota_credito'] = new sfWidgetFormInputText();
+      $this->widgetSchema['neto_nota_credito'] = new sfWidgetFormInputText(array(), array(
+          'readonly' => 'readonly'
+      ));
+      $this->widgetSchema['total_nota_credito'] = new sfWidgetFormInputText(array(), array(
+          'readonly' => 'readonly'
+      ));
+      $this->widgetSchema['id_notapedido_nota_credito'] = new sfWidgetFormInputText(array(), array(
+          'readonly' => 'readonly'
+      ));
       $this->widgetSchema['fechaemision_nota_credito'] = new sfWidgetFormInputText();
 
       $this->widgetSchema->setLabels(array(
@@ -41,11 +49,10 @@ class NotaCreditoForm extends BaseNotaCreditoForm
             'responsable_nota_credito' => 'Vendedor',
             'comentarior_nota_credito' => 'Comentario',
             'numerofactura_nota_credito' => 'Numero Factura',
-//            'fechaingreso_nota_credito' => 'Fec. Ingreso',
             'fechaemision_nota_credito' => 'Fec. Emision',
+            'neto_nota_credito' => 'Neto',
+            'total_nota_credito' => 'Total',
+            'id_notapedido_nota_credito' => 'NP',
         ));      
   }
-//  public function getvalues(){
-//      return $this->taintedValues;
-//  }
 }

@@ -48,7 +48,7 @@
                 <td><?php echo format_currency($factura->getMontoFactura(),'CLP') ?></td>
                 <td><?php echo $detalle[0]->getCantidadDetalleActivo() ?></td>
                 <td><?php echo $it->render('itfactura['.$factura->getIdFactura().$codigo.']', 0, array('size' => '2', 'style' => 'font-size: 8pt', 'cantmax' => $detalle[0]->getCantidadDetalleActivo()), ESC_RAW) ?></td>
-                <td><?php echo $cb->render('cbfactura['.$factura->getIdFactura().$codigo.']', null, array('codigo' => $codigo, 'factura' => $factura->getIdFactura(),'numfactura' => $factura->getNumeroFactura(), 'cantmax' => $detalle[0]->getCantidadDetalleActivo()), ESC_RAW) ?></td>
+                <td><?php echo $cb->render('cbfactura['.$factura->getIdFactura().$codigo.']', null, array('codigo' => $codigo, 'factura' => $factura->getIdFactura(),'numfactura' => $factura->getNumeroFactura(), 'num_np' => $factura->getIdNotapedidoFactura(), 'cantmax' => $detalle[0]->getCantidadDetalleActivo(), 'precio' => $detalle[0]->getPrecioDetalleActivo()), ESC_RAW) ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>
@@ -88,10 +88,13 @@
     function siguiente(){
         datos = new Array();
         numerofacturas="";
+        var neto = 0;
         $('input[type=checkbox]:checked').each(function(i) {
             var codigo = $(this).attr("codigo");
             var id_factura = $(this).attr("factura");
             var cantidad = $('#itfactura_'+id_factura+codigo).val();
+            var precio = $(this).attr("precio");
+            neto += parseInt(precio)*parseInt(cantidad);
 
             datos.push(codigo);
             datos.push(id_factura);
@@ -101,9 +104,13 @@
             else numerofacturas += ','+numF
         });
         
-//        if(superamax) alert('Algunas cantidades superan el maximo')
+        var total = neto * 1.19;
+        //redondeamos
+        total = Math.round(total);
         
         var id_factura = $('input[type=checkbox]:checked:first').attr("factura");
+        var num_np = $('input[type=checkbox]:checked:first').attr("num_np");
+        
         if(id_factura == null) alert('Al menos debe elegir una factura');
         else{
             $.get("<?php echo url_for('notacredito/getFactura') ?>"+'?id_factura='+id_factura, function(data){
@@ -118,12 +125,11 @@
                 $("#nota_credito_oc_nota_credito").val(data.oc_factura);
                 $("#nota_credito_responsable_nota_credito").val(data.responsable_factura.replace(/^\s+|\s+$/g, ''));
                 $("#nota_credito_numerofactura_nota_credito").val(numerofacturas);
-//                $("#nota_credito_fechaingreso_nota_credito").val();
-//                var d=new Date();
-//                if(d.getMonth()+1 < 10) var mes = '0'+(d.getMonth()+1);
-//                else var mes = d.getMonth()+1;
-//                $("#nota_credito_fechaemision_nota_credito").val((new Date().getDate())+'/'+mes+'/'+(new Date().getFullYear())) ;
-    
+                $("#nota_credito_neto_nota_credito").val(neto);
+                $("#nota_credito_total_nota_credito").val(total);
+                $("#nota_credito_id_notapedido_nota_credito").val(num_np);
+                
+
                 $( "#dialog-form" ).dialog( "open" );
             },"json");
         }
@@ -388,6 +394,9 @@
                                function(data) {
                                    if(data == 'true'){
                                        alert('Nota de Credito ingresada');
+                                       $('input[type=checkbox]:checked').each(function(){
+                                           $(this).parent().parent("tr").remove();
+                                       });
                                        $( "#dialog-form" ).dialog("close");
                                    }
                                    else{
