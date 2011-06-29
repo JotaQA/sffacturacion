@@ -47,7 +47,7 @@
                 <td><?php echo $factura->getDateTimeObject('fechaemision_factura')->format('d/m/Y') ?></td>
                 <td><?php echo format_currency($factura->getMontoFactura(),'CLP') ?></td>
                 <td><?php echo $detalle[0]->getCantidadDetalleActivo() ?></td>
-                <td><?php echo $it->render('itfactura['.$factura->getIdFactura().$codigo.']', 0, array('size' => '2', 'style' => 'font-size: 8pt', 'cantmax' => $detalle[0]->getCantidadDetalleActivo()), ESC_RAW) ?></td>
+                <td><?php echo $it->render('itfactura['.$factura->getIdFactura().$codigo.']', 0, array('size' => '2', 'style' => 'font-size: 8pt', 'cantmax' => $detalle[0]->getCantidadDetalleActivo(), 'id_it' => $factura->getIdFactura().$codigo), ESC_RAW) ?></td>
                 <td><?php echo $cb->render('cbfactura['.$factura->getIdFactura().$codigo.']', null, array('codigo' => $codigo, 'factura' => $factura->getIdFactura(),'numfactura' => $factura->getNumeroFactura(), 'num_np' => $factura->getIdNotapedidoFactura(), 'cantmax' => $detalle[0]->getCantidadDetalleActivo(), 'precio' => $detalle[0]->getPrecioDetalleActivo()), ESC_RAW) ?></td>
             </tr>
             <?php endforeach; ?>
@@ -105,7 +105,7 @@
         });
         
         var total = neto * 1.19;
-        //redondeamos
+        //REDONDEAMOS EL TOTAL
         total = Math.round(total);
         
         var id_factura = $('input[type=checkbox]:checked:first').attr("factura");
@@ -185,21 +185,6 @@
                 if(cantidad == 0){
                     input.val(1);
                 }
-//                var cantmax = parseInt($(this).attr("cantmax"));
-//                if(cantidad > cantmax || cantidad < 0){
-//                    $(this).parent().parent().children('td:eq(5)').addClass( "ui-state-error" );                    
-//                    var textoantiguo = $('.head-toolbar').html();
-//                    
-//                    $('.head-toolbar').html("<b>A sobrepasado la cantidada máxima "+cantmax+' o el valor es negativo</b>');
-//                    $('.head-toolbar').addClass("ui-state-highlight");
-//                    $('#itfactura_'+id_factura+codigo).val(0);
-//                    setTimeout(function() {
-//                            $('.head-toolbar').removeClass( "ui-state-highlight");
-//                            $('.head-toolbar').html(textoantiguo);
-//                            
-//                    }, 3500 );                    
-//                }
-//                else $(this).parent().parent().children('td:eq(5)').removeClass("ui-state-error");
             }
         });
         
@@ -222,9 +207,27 @@
                 }, 3500);
             }
             else{
-                //VALIDA EL MAXIMO Y NEGATIVO
-                var cantmax = parseInt($(this).attr("cantmax"));
-                if(cantidad > cantmax || cantidad < 0){                
+                var id_it = input.attr("id_it");
+                var cb = $('#cbfactura_'+id_it);
+                //VALIDA QUE NO SEA CERO CUANDO ESTA CHECK
+                if(cb.is(':checked') && cantidad == 0){
+                    
+                    var textoantiguo = tabletitle.html();
+                    input.addClass( "ui-state-error" );
+
+                    tabletitle.html('<b>No puede dejar la cantidad en cero si esta seleccionado</b>');
+                    tabletitle.addClass("ui-state-highlight");
+                    $(this).val('1');
+
+                    setTimeout(function() {
+                            tabletitle.removeClass( "ui-state-highlight");
+                            tabletitle.html(textoantiguo);
+                            input.removeClass( "ui-state-error" );
+                    }, 3500 );
+                }                
+                //VALIDA EL MAXIMO, NEGATIVO
+                var cantmax = parseInt($(this).attr("cantmax"));                
+                if(cantidad > cantmax || cantidad < 0){
 
 
                     var textoantiguo = tabletitle.html();
@@ -232,7 +235,8 @@
 
                     tabletitle.html('<b>A sobrepasado la cantidada máxima '+cantmax+' o el valor es negativo</b>');
                     tabletitle.addClass("ui-state-highlight");
-                    $(this).val('0');
+                    if(cb.is(':checked')) $(this).val('1');
+                    else $(this).val('0');
 
                     setTimeout(function() {
                             tabletitle.removeClass( "ui-state-highlight");
@@ -262,7 +266,6 @@
 		],
             "bAutoWidth": false
         });
-        
         $("div.head-toolbar").each(function () {
             $(this).append('<b>'+$(this).next('table').attr('title')+'</b>');
         });
