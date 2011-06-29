@@ -11,7 +11,6 @@ Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
  * @property integer $id_boleta
  * @property integer $id_factura
  * @property integer $id_guia
- * @property integer $id_nota_credito
  * @property integer $id_salida
  * @property integer $id_salida_ac
  * @property string $codigointerno_detalle_activo
@@ -23,7 +22,6 @@ Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
  * @property string $id_producto
  * @property string $descripcioninterna_detalle_activo
  * @property string $descripcionexterna_detalle_activo
- * @property NotaCredito $NotaCredito
  * @property Guia $Guia
  * @property Boleta $Boleta
  * @property Factura $Factura
@@ -33,7 +31,6 @@ Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
  * @method integer             getIdBoleta()                          Returns the current record's "id_boleta" value
  * @method integer             getIdFactura()                         Returns the current record's "id_factura" value
  * @method integer             getIdGuia()                            Returns the current record's "id_guia" value
- * @method integer             getIdNotaCredito()                     Returns the current record's "id_nota_credito" value
  * @method integer             getIdSalida()                          Returns the current record's "id_salida" value
  * @method integer             getIdSalidaAc()                        Returns the current record's "id_salida_ac" value
  * @method string              getCodigointernoDetalleActivo()        Returns the current record's "codigointerno_detalle_activo" value
@@ -45,7 +42,6 @@ Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
  * @method string              getIdProducto()                        Returns the current record's "id_producto" value
  * @method string              getDescripcioninternaDetalleActivo()   Returns the current record's "descripcioninterna_detalle_activo" value
  * @method string              getDescripcionexternaDetalleActivo()   Returns the current record's "descripcionexterna_detalle_activo" value
- * @method NotaCredito         getNotaCredito()                       Returns the current record's "NotaCredito" value
  * @method Guia                getGuia()                              Returns the current record's "Guia" value
  * @method Boleta              getBoleta()                            Returns the current record's "Boleta" value
  * @method Factura             getFactura()                           Returns the current record's "Factura" value
@@ -54,7 +50,6 @@ Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
  * @method DetalleActivo       setIdBoleta()                          Sets the current record's "id_boleta" value
  * @method DetalleActivo       setIdFactura()                         Sets the current record's "id_factura" value
  * @method DetalleActivo       setIdGuia()                            Sets the current record's "id_guia" value
- * @method DetalleActivo       setIdNotaCredito()                     Sets the current record's "id_nota_credito" value
  * @method DetalleActivo       setIdSalida()                          Sets the current record's "id_salida" value
  * @method DetalleActivo       setIdSalidaAc()                        Sets the current record's "id_salida_ac" value
  * @method DetalleActivo       setCodigointernoDetalleActivo()        Sets the current record's "codigointerno_detalle_activo" value
@@ -66,7 +61,6 @@ Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
  * @method DetalleActivo       setIdProducto()                        Sets the current record's "id_producto" value
  * @method DetalleActivo       setDescripcioninternaDetalleActivo()   Sets the current record's "descripcioninterna_detalle_activo" value
  * @method DetalleActivo       setDescripcionexternaDetalleActivo()   Sets the current record's "descripcionexterna_detalle_activo" value
- * @method DetalleActivo       setNotaCredito()                       Sets the current record's "NotaCredito" value
  * @method DetalleActivo       setGuia()                              Sets the current record's "Guia" value
  * @method DetalleActivo       setBoleta()                            Sets the current record's "Boleta" value
  * @method DetalleActivo       setFactura()                           Sets the current record's "Factura" value
@@ -109,15 +103,6 @@ abstract class BaseDetalleActivo extends sfDoctrineRecord
              'length' => 4,
              ));
         $this->hasColumn('id_guia', 'integer', 4, array(
-             'type' => 'integer',
-             'fixed' => 0,
-             'unsigned' => false,
-             'primary' => false,
-             'notnull' => false,
-             'autoincrement' => false,
-             'length' => 4,
-             ));
-        $this->hasColumn('id_nota_credito', 'integer', 4, array(
              'type' => 'integer',
              'fixed' => 0,
              'unsigned' => false,
@@ -230,10 +215,6 @@ abstract class BaseDetalleActivo extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('NotaCredito', array(
-             'local' => 'id_nota_credito',
-             'foreign' => 'id_nota_credito'));
-
         $this->hasOne('Guia', array(
              'local' => 'id_guia',
              'foreign' => 'id_guia'));

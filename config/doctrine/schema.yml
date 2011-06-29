@@ -997,12 +997,12 @@ DetalleActivo:
       primary: false
       notnull: false
       autoincrement: false
-    id_nota_credito:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
+#    id_nota_credito:
+#      type: integer(4)
+#      fixed: false
+#      unsigned: false
+#      primary: false
+#      notnull: false
       autoincrement: false
     id_salida:
       type: integer(4)
@@ -1082,10 +1082,10 @@ DetalleActivo:
       notnull: false
       autoincrement: false
   relations:
-    NotaCredito:
-      local: id_nota_credito
-      foreign: id_nota_credito
-      type: one
+#    NotaCredito:
+#      local: id_nota_credito
+#      foreign: id_nota_credito
+#      type: one
     Guia:
       local: id_guia
       foreign: id_guia
@@ -2300,10 +2300,10 @@ NotaCredito:
       local: id_estado_nota_credito
       foreign: id_estado_nota_credito
       type: one
-    DetalleActivo:
-      local: id_nota_credito
-      foreign: id_nota_credito
-      type: many
+#    DetalleActivo:
+#      local: id_nota_credito
+#      foreign: id_nota_credito
+#      type: many
     NotacreditoDetalle:
       local: id_nota_credito
       foreign: id_nota_credito

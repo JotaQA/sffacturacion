@@ -94,13 +94,13 @@ class notacreditoActions extends sfActions
     $this->datos = array();
     foreach ($productos as $producto){
         $facturas = Doctrine_Query::create()
-                ->select('a.id_factura, a.numero_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura, a.id_notapedido_factura, da.cantidad_detalle_activo, da.precio_detalle_activo')
+                ->select('a.id_factura, a.numero_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura, a.id_notapedido_factura, da.cantidad_detalle_activo, da.cantidad_nota_credito, da.precio_detalle_activo')
                 ->from('Factura a')
                 ->where('a.rut_factura = ?', $rut_cliente)
                 ->innerJoin('a.DetalleActivo da')
                 ->innerJoin('a.EstadoFactura e')
                 ->Andwhere('da.codigointerno_detalle_activo = ?', $producto->codigo)
-                ->Andwhere('da.id_nota_credito IS NULL')
+                ->Andwhere('da.cantidad_detalle_activo > da.cantidad_nota_credito')
                 ->Andwhere('e.nombre_estadofactura = ?', 'Emitida')
                 ->limit(10)
                 ->setHydrationMode(Doctrine::HYDRATE_ARRAY)
