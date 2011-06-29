@@ -41,7 +41,6 @@
             </thead>
             <tbody>
             <?php foreach ($facturas as $factura): ?>
-            <?php //$detalle = $factura->getDetalleActivo() ?>
             <tr>
                 <td><?php echo '<b title="Factura Fisica" style="background: yellow; color: black; padding: 1px 2px; font-size: 120%">'.substr($factura["tipo_factura"],0,1).'</b>'.$factura["numero_factura"] ?></td>
                 <td><?php echo date('d/m/Y', strtotime($factura['fechaemision_factura'])) ?></td>

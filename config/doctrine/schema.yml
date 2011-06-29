@@ -1665,6 +1665,34 @@ Factura:
       primary: false
       notnull: false
       autoincrement: false
+    pctje_comision_factura:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    creador_factura:
+      type: string(64)
+      fixed: true
+      unsigned: false
+      primary: false
+      notnull: true
+      autoincrement: false
+    emisor_factura:
+      type: string(64)
+      fixed: true
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    anulador_factura:
+      type: string(64)
+      fixed: true
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
     comentario_factura:
       type: string(512)
       fixed: false
