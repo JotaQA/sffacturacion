@@ -32,6 +32,7 @@ abstract class BaseNotaCreditoFormFilter extends BaseFormFilterDoctrine
       'condicionpago_nota_credito' => new sfWidgetFormFilterInput(),
       'responsable_nota_credito'   => new sfWidgetFormFilterInput(),
       'comentarior_nota_credito'   => new sfWidgetFormFilterInput(),
+      'tipo_nota_credito'          => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
 
     $this->setValidators(array(
@@ -54,6 +55,7 @@ abstract class BaseNotaCreditoFormFilter extends BaseFormFilterDoctrine
       'condicionpago_nota_credito' => new sfValidatorPass(array('required' => false)),
       'responsable_nota_credito'   => new sfValidatorPass(array('required' => false)),
       'comentarior_nota_credito'   => new sfValidatorPass(array('required' => false)),
+      'tipo_nota_credito'          => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('nota_credito_filters[%s]');
@@ -93,6 +95,7 @@ abstract class BaseNotaCreditoFormFilter extends BaseFormFilterDoctrine
       'condicionpago_nota_credito' => 'Text',
       'responsable_nota_credito'   => 'Text',
       'comentarior_nota_credito'   => 'Text',
+      'tipo_nota_credito'          => 'Text',
     );
   }
 }

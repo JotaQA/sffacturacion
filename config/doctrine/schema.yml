@@ -2295,6 +2295,14 @@ NotaCredito:
       primary: false
       notnull: false
       autoincrement: false
+    tipo_nota_credito:
+      type: string(64)
+      fixed: true
+      unsigned: false
+      primary: false
+      default: FISICA
+      notnull: true
+      autoincrement: false
   relations:
     EstadoNotaCredito:
       local: id_estado_nota_credito

@@ -27,6 +27,7 @@ Doctrine_Manager::getInstance()->bindComponent('NotaCredito', 'artelamp_1');
  * @property string $condicionpago_nota_credito
  * @property string $responsable_nota_credito
  * @property string $comentarior_nota_credito
+ * @property string $tipo_nota_credito
  * @property EstadoNotaCredito $EstadoNotaCredito
  * @property Doctrine_Collection $NotacreditoDetalle
  * 
@@ -50,6 +51,7 @@ Doctrine_Manager::getInstance()->bindComponent('NotaCredito', 'artelamp_1');
  * @method string              getCondicionpagoNotaCredito()   Returns the current record's "condicionpago_nota_credito" value
  * @method string              getResponsableNotaCredito()     Returns the current record's "responsable_nota_credito" value
  * @method string              getComentariorNotaCredito()     Returns the current record's "comentarior_nota_credito" value
+ * @method string              getTipoNotaCredito()            Returns the current record's "tipo_nota_credito" value
  * @method EstadoNotaCredito   getEstadoNotaCredito()          Returns the current record's "EstadoNotaCredito" value
  * @method Doctrine_Collection getNotacreditoDetalle()         Returns the current record's "NotacreditoDetalle" collection
  * @method NotaCredito         setIdNotaCredito()              Sets the current record's "id_nota_credito" value
@@ -72,6 +74,7 @@ Doctrine_Manager::getInstance()->bindComponent('NotaCredito', 'artelamp_1');
  * @method NotaCredito         setCondicionpagoNotaCredito()   Sets the current record's "condicionpago_nota_credito" value
  * @method NotaCredito         setResponsableNotaCredito()     Sets the current record's "responsable_nota_credito" value
  * @method NotaCredito         setComentariorNotaCredito()     Sets the current record's "comentarior_nota_credito" value
+ * @method NotaCredito         setTipoNotaCredito()            Sets the current record's "tipo_nota_credito" value
  * @method NotaCredito         setEstadoNotaCredito()          Sets the current record's "EstadoNotaCredito" value
  * @method NotaCredito         setNotacreditoDetalle()         Sets the current record's "NotacreditoDetalle" collection
  * 
@@ -263,6 +266,16 @@ abstract class BaseNotaCredito extends sfDoctrineRecord
              'notnull' => false,
              'autoincrement' => false,
              'length' => 512,
+             ));
+        $this->hasColumn('tipo_nota_credito', 'string', 64, array(
+             'type' => 'string',
+             'fixed' => 1,
+             'unsigned' => false,
+             'primary' => false,
+             'default' => 'FISICA',
+             'notnull' => true,
+             'autoincrement' => false,
+             'length' => 64,
              ));
     }
 

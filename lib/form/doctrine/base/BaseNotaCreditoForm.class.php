@@ -35,6 +35,7 @@ abstract class BaseNotaCreditoForm extends BaseFormDoctrine
       'condicionpago_nota_credito' => new sfWidgetFormTextarea(),
       'responsable_nota_credito'   => new sfWidgetFormTextarea(),
       'comentarior_nota_credito'   => new sfWidgetFormTextarea(),
+      'tipo_nota_credito'          => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -58,6 +59,7 @@ abstract class BaseNotaCreditoForm extends BaseFormDoctrine
       'condicionpago_nota_credito' => new sfValidatorString(array('max_length' => 512, 'required' => false)),
       'responsable_nota_credito'   => new sfValidatorString(array('max_length' => 512, 'required' => false)),
       'comentarior_nota_credito'   => new sfValidatorString(array('max_length' => 512, 'required' => false)),
+      'tipo_nota_credito'          => new sfValidatorString(array('max_length' => 64, 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('nota_credito[%s]');
