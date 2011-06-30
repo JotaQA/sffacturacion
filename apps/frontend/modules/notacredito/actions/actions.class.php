@@ -120,7 +120,16 @@ class notacreditoActions extends sfActions
     }
     $this->cb = new sfWidgetFormInputCheckbox();
     $this->it = new sfWidgetFormInputText();
-    $this->form = new NotaCreditoForm();    
+    $this->form = new NotaCreditoForm();
+//    $today = array(
+//            'year' => 2011,
+//            'month' => 1,
+//            'day'   => 12
+//        );
+    $this->date = new sfWidgetFormDate(array(
+        'format' => '<b>MES:</b>%month%  <b>AÑO:</b>%year%',
+        'can_be_empty' => false
+    ));
   }
   
   public function executeCrear2(sfWebRequest $request)

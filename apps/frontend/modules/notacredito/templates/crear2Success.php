@@ -198,10 +198,6 @@
 //            var jsonStr = JSON.stringify(arrCars);
 //            alert(jsonStr);
             $('#prueba').dataTable( {
-//                "aaData": [
-//                    [ "Trident", "Internet Explorer 4.0", "Win 95+", 4, "X" ],
-//                    [ "Webkit", "Safari 3.0", "OSX.4+", 522.1, "A" ]
-//                ],
                 "aoColumns": [
 			{ "sTitle": "CODIGO" },
 			{ "sTitle": "DESCRIPCION" },

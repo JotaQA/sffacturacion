@@ -248,6 +248,36 @@
             }
         });
         
+        jQuery.fn.dataTableExt.oSort['currency-asc'] = function(a,b) {
+            /* Remove any commas (assumes that if present all strings will have a fixed number of d.p) */
+            var x = a == "-" ? 0 : a.replace( /\./g, "" );
+            var y = b == "-" ? 0 : b.replace( /\./g, "" );
+
+            /* Remove the currency sign */
+            x = x.substring( 1 );
+            y = y.substring( 1 );
+
+            /* Parse and return */
+            x = parseInt( x );
+            y = parseInt( y );
+            return x - y;
+        };
+
+        jQuery.fn.dataTableExt.oSort['currency-desc'] = function(a,b) {
+            /* Remove any commas (assumes that if present all strings will have a fixed number of d.p) */
+            var x = a == "-" ? 0 : a.replace( /\./g, "" );
+            var y = b == "-" ? 0 : b.replace( /\./g, "" );
+
+            /* Remove the currency sign */
+            x = x.substring( 1 );
+            y = y.substring( 1 );
+
+            /* Parse and return */
+            x = parseInt( x );
+            y = parseInt( y );
+            return y - x;
+        };
+        
         
         $('button').button();
         $( "#nota_credito_fechaemision_nota_credito" ).datepicker($.datepicker.regional[ "es" ]);
@@ -260,7 +290,7 @@
             "bFilter": false,
             "sDom": '<"head-toolbar fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"F"ip>',
             "aoColumnDefs": [ 
-			{ "sWidth": "14%", "aTargets": [ 2 ],"sClass": "right" },
+			{ "sWidth": "14%", "aTargets": [ 2 ],"sClass": "right", "sType": "currency" },
 			{ "sWidth": "12%", "aTargets": [ 3 ],"sClass": "center" },
 			{ "sWidth": "12%", "aTargets": [ 4 ],"sClass": "center" },
 			{ "sWidth": "12%", "aTargets": [ 5 ],"sClass": "center" }
@@ -270,8 +300,9 @@
                     "sZeroRecords": "Este producto no tiene facturas disponibles para crear Notas de Credito"
                 }
         });
+        var fdate = '<?php echo preg_replace('/[\n|\r|\n\r]/', ' ',  $date->render('date', 'now' , ESC_RAW)) ?>';
         $("div.head-toolbar").each(function () {
-            $(this).append('<b>'+$(this).next('table').attr('title')+'</b>');
+            $(this).append('<b>'+$(this).next('table').attr('title')+'</b><span style="float: right">'+fdate+'</span>');
         });
         
         
