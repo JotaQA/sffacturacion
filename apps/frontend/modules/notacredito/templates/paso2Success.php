@@ -175,7 +175,7 @@
         });
      
         //AL MENOS DEBE TENER UNO ELEGIDO
-        $('input[type=checkbox]').change( function() {
+        $('table.display input[type=checkbox]').change( function() {
             if($(this).is(':checked')){
                 var codigo = $(this).attr("codigo");
                 var id_factura = $(this).attr("factura");
@@ -187,18 +187,21 @@
             }
         });
         
-        $('tbody input[type=text]').change( function() {
+        $('table.display input[type=text]').change( function() {
             //VAR A OCUPAR
             var tabletitle = $(this).parent().parent().parent().parent().prev('.head-toolbar');
             var input = $(this);
+            var id_it = input.attr("id_it");
+            var cb = $('#cbfactura_'+id_it);
             //VALIDA SI LA CANTIDAD ES NUMERO
             var cantidad = parseInt($(this).val());
-            if(isNaN(parseInt(cantidad, 10))){
+            if(cantidad != Number($(this).val())){
                 var textoantiguo = tabletitle.html();
                 tabletitle.html('<b>Ingrese un número valido</b>');
                 tabletitle.addClass("ui-state-highlight");
                 input.addClass( "ui-state-error" );
-                input.val('0');
+                if(cb.is(':checked')) $(this).val('1');
+                else $(this).val('0');
                 setTimeout(function() {
                     tabletitle.removeClass( "ui-state-highlight");
                     tabletitle.html(textoantiguo);
@@ -206,8 +209,7 @@
                 }, 3500);
             }
             else{
-                var id_it = input.attr("id_it");
-                var cb = $('#cbfactura_'+id_it);
+                
                 //VALIDA QUE NO SEA CERO CUANDO ESTA CHECK
                 if(cb.is(':checked') && cantidad == 0){
                     
@@ -263,7 +265,10 @@
 			{ "sWidth": "12%", "aTargets": [ 4 ],"sClass": "center" },
 			{ "sWidth": "12%", "aTargets": [ 5 ],"sClass": "center" }
 		],
-            "bAutoWidth": false
+            "bAutoWidth": false,
+            "oLanguage": {
+                    "sZeroRecords": "Este producto no tiene facturas disponibles para crear Notas de Credito"
+                }
         });
         $("div.head-toolbar").each(function () {
             $(this).append('<b>'+$(this).next('table').attr('title')+'</b>');
@@ -399,6 +404,7 @@
 //                                       $('input[type=checkbox]:checked').each(function(){
 //                                           $(this).parent().parent("tr").remove();
 //                                       });
+                                       window.location.replace("<?php echo url_for('notacredito/crear2') ?>");
                                        $( "#dialog-form" ).dialog("close");
                                    }
                                    else{
