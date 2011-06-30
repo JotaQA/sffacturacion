@@ -16,7 +16,8 @@ class PagoForm extends BasePagoForm
           $this['fecha_pago']
     );
 
-      $this->widgetSchema['id_cuota']->setAttributes(array('style'=>'display:none'));
+      $this->widgetSchema['id_cuota'] = new sfWidgetFormInputHidden();
+//      $this->widgetSchema['id_cuota']->setAttributes(array('style'=>'display:none'));
 //      $this->widgetSchema['monto_pago']->setAttributes(array('type'=>'hidden'));
       $this->widgetSchema->setLabels(array(
           'id_tipo_pago' => 'TIPO DE PAGO',
