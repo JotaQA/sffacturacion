@@ -12,7 +12,7 @@ class PagoeditForm extends BasePagoForm
 {
   public function configure()
   {
-      $this->widgetSchema['id_cuota']->setAttributes(array('style'=>'display:none'));
+      $this->widgetSchema['id_cuota'] = new sfWidgetFormInputHidden();
       $this->widgetSchema['fecha_pago'] = new sfWidgetFormDateTime(array(
           'date' => array('format' => '%day%/%month%/%year%'),
           'time' => array('format_without_seconds' => '<b>HORA</b>  %hour%:%minute%')
