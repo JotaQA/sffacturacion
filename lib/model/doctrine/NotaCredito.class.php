@@ -47,6 +47,7 @@ class NotaCredito extends BaseNotaCredito
             //ESTADO EMITIDA
             $EEMITIDA = Doctrine::getTable('EstadoNotaCredito')->findOneByNombreEstadoNotaCredito('Emitida');            
             $this->setEstadoNotaCredito($EEMITIDA);
+            $this->setTipoNotaCredito('FISICA');
         }
 
         return parent::save($conn);

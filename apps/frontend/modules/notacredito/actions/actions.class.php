@@ -55,7 +55,7 @@ class notacreditoActions extends sfActions
               //EN EL MODELO SE CONFIGURA LA FECHA ACTUAL Y EL ESTADO
               $nota_credito = $form->save();
               
-              
+
               while(list(, $codigo) = each($datos)) {
                   list(, $id_factura) = each($datos);
                   list(, $cantidad) = each($datos);
@@ -87,8 +87,8 @@ class notacreditoActions extends sfActions
           catch (Exception $e){
               //SI OCURRE UN ERROR NO SE GUARDA NADA
               $conn->rollBack();
-              if($msgerr) return $this->renderText('Error al procesar los datos, '.$e->getMessage());
-              return $this->renderText('Error al procesar los datos');
+//              if($msgerr) return $this->renderText('Error al procesar los datos, '.$e->getMessage());
+              return $this->renderText('Error al procesar los datos: '.$e->getMessage().' '.$aux);
           }
           
       }
