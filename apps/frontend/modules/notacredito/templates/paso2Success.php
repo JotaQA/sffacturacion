@@ -25,12 +25,11 @@
     <div class="midcontent">
     <div class="divmiddle" style="min-height: 530px">
     
-        
         <?php $datos = $sf_data->getRaw('datos') ?>
         <?php while(list(, $codigo) = each($datos)): ?>
         <?php list(, $descripcion) = each($datos) ?>
         <?php list(, $facturas) = each($datos) ?>
-        <table class="display" title="<?php echo $codigo.' '.$descripcion ?>">
+        <table class="display" codigo="<?php echo $codigo ?>" title="<?php echo $codigo.' '.$descripcion ?>">
             <thead>
             <th>Factura</th>
             <th>Emision</th>
@@ -302,7 +301,34 @@
         });
         var fdate = '<?php echo preg_replace('/[\n|\r|\n\r]/', ' ',  $date->render('date', 'now' , ESC_RAW)) ?>';
         $("div.head-toolbar").each(function () {
-            $(this).append('<b>'+$(this).next('table').attr('title')+'</b><span style="float: right">'+fdate+'</span>');
+            var image = '<img id="loader-date" alt="cargando" style="vertical-align: middle; display: none" src="/images1/ajax-loader-headtabla.gif" />';
+            $(this).append('<b>'+$(this).next('table').attr('title')+'</b><span style="float: right">'+image+' '+fdate+'</span>');
+        });
+        
+        $('#date_month, #date_year').change(function() {
+            var loader = $(this).parent().children('#loader-date');
+            loader.show();
+            var mes = $('#date_month').val();
+            var año = $('#date_year').val();
+            var tabla = $(this).parent().parent().next('table');
+            var rut = "<?php echo $rut_cliente  ?>";
+            var codigo = tabla.attr('codigo');
+            $.get("<?php echo url_for('notacredito/facturasByfecha') ?>"+'?mes='+mes+'&año='+año+'&codigo='+codigo+'&rut_cliente='+rut, function(data){
+                tabla.dataTable().fnClearTable();
+                for(i in data){
+                    tabla.fnAddData( [
+                        '<b title="Factura Fisica" style="background: yellow; color: black; padding: 1px 2px; font-size: 120%">F</b>'+data[i].numero_factura,
+                        data[i].fechaemision_factura,
+                        '$'+data[i].monto_factura.replace(/,/g,"."),
+                        data[i].cantidad_detalle_activo,
+                        '<input type="text" name="itfactura['+data[i].id_factura+codigo+']" value="0" size="2" style="font-size: 8pt" cantmax="'+data[i].cantidad_detalle_activo+'" id_it="'+data[i].id_factura+codigo+'" id="itfactura_'+data[i].id_factura+codigo+'" class="ui-widget-content ui-corner-all">',
+                        '<input type="checkbox" name="cbfactura['+data[i].id_factura+codigo+']" codigo="'+codigo+'" factura="'+data[i].id_factura+'" numfactura="'+data[i].numero_factura+'" num_np="'+data[i].id_notapedido_factura+'" cantmax="'+data[i].cantidad_detalle_activo+'" precio="'+data[i].DetalleActivo[0].precio_detalle_activo+'" id="cbfactura_'+data[i].id_factura+codigo+'">'
+                    ]);
+                }
+                loader.hide();
+//                alert(data[0].DetalleActivo[0].id_detalle_activo);
+            },"json");
+//            $('.display').dataTable().fnClearTable();
         });
         
         

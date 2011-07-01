@@ -286,7 +286,7 @@ class pagoActions extends sfActions
           //CONSULTA COCHINA QUE NO RETORNA VALORES
           $cuotas = Doctrine_Core::getTable('Cuota')
                ->createQuery('a')
-               ->where('true = ?',false);
+               ->where('1=0');
       }
 
       
@@ -348,7 +348,7 @@ class pagoActions extends sfActions
           }          
 
           $cuotas =  Doctrine_Query::create()
-          ->select('a.*')
+          ->select('a.*, f.*')
           ->from('Cuota a')
           ->innerJoin('a.Factura f')
           ->innerJoin('f.EstadoFactura e')
@@ -360,6 +360,7 @@ class pagoActions extends sfActions
       }
       else{
           $cuotas = Doctrine_Query::create()
+          ->select('a.*, f.*')
           ->from('Cuota a')
           ->innerJoin('a.Factura f')
           ->innerJoin('f.EstadoFactura e')
@@ -396,13 +397,40 @@ class pagoActions extends sfActions
     $total = 0;
     $deuda = 0;
     $pagado = 0;
+    $ncredito = 0;
     $cuotas2 = $cuotas;
     $cuotas2 = $cuotas2->execute();
+    $id_facturas = array();
 
     foreach ($cuotas2 as $cuota){
         $total += $cuota->getMontoCuota();
         $deuda += $cuota->getMontoCuota() - $cuota->getMontopagadoCuota();
         $pagado += $cuota->getMontopagadoCuota();
+        if(!in_array($cuota->getFactura()->getIdFactura(), $id_facturas)) {
+            $id_facturas[] = $cuota->getFactura()->getIdFactura();
+        }
+    }
+    
+    if(count($id_facturas)==0){
+        $ncs = Doctrine_Query::create()
+            ->select('DISTINCT nc.id_nota_credito, nc.total_nota_credito')
+            ->from('NotaCredito nc')
+            ->where('1=0')
+            ->execute();
+    }
+    else{
+        $ncs = Doctrine_Query::create()
+            ->select('DISTINCT nc.id_nota_credito, nc.total_nota_credito')
+            ->from('NotaCredito nc')
+            ->innerJoin('nc.NotacreditoDetalle ncd')
+            ->innerJoin('ncd.DetalleActivo da')
+            ->innerJoin('da.Factura f')
+            ->whereIn('f.id_factura', $id_facturas)
+            ->execute();
+    }
+    
+    foreach ($ncs as $nc){
+        $ncredito += $nc->getTotalNotaCredito();
     }
       
 
@@ -422,7 +450,7 @@ class pagoActions extends sfActions
                 return $this->renderText('No hay Resultados...');
             }
 //            $this->tiempo = $tiempo_fin - $tiempo_inicio;
-            return $this->renderPartial('pago/listafecha', array('pager' =>  $this->pager, 'deuda' => $deuda, 'pagado' => $pagado, 'total' => $total));
+            return $this->renderPartial('pago/listafecha', array('pager' =>  $this->pager, 'deuda' => $deuda-$ncredito, 'pagado' => $pagado, 'total' => $total-$ncredito, 'ncredito' => $ncredito));
       }
 
   }
@@ -438,9 +466,9 @@ class pagoActions extends sfActions
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
     $this->getUser()->setAttribute('empresa', 'artelamp_1');
 
-    $cuotas = Doctrine_Core::getTable('Cuota')
-    ->createQuery('a')
-    ->select('a.*')
+    $cuotas = Doctrine_Query::create()
+    ->select('a.id_cuota, a.monto_cuota, a.montopagado_cuota, f.id_factura')
+    ->from('Cuota a')
     ->innerJoin('a.Factura f')
     ->innerJoin('f.EstadoFactura e')
     ->where('DATE(a.fechavencimiento_cuota) >= ?',$fecha1)
@@ -451,15 +479,46 @@ class pagoActions extends sfActions
     $this->deuda = 0;
     $this->pagado = 0;
     $this->total = 0;
+    $this->ncredito = 0;
     $cuotas2 = $cuotas;
     $cuotas2->execute();
+    $id_facturas = array();
 
     foreach ($cuotas2 as $cuota){
         $this->total += $cuota->getMontoCuota();
         $this->deuda += $cuota->getMontoCuota() - $cuota->getMontopagadoCuota();
         $this->pagado += $cuota->getMontopagadoCuota();
+        if(!in_array($cuota->getFactura()->getIdFactura(), $id_facturas)) {
+            $id_facturas[] = $cuota->getFactura()->getIdFactura();
+        }
     }
-
+    
+    if(count($id_facturas)==0){
+        $ncs = Doctrine_Query::create()
+            ->select('DISTINCT nc.id_nota_credito, nc.total_nota_credito')
+            ->from('NotaCredito nc')
+            ->where('1=0')
+            ->execute();
+    }
+    else{
+        $ncs = Doctrine_Query::create()
+            ->select('DISTINCT nc.id_nota_credito, nc.total_nota_credito')
+            ->from('NotaCredito nc')
+            ->innerJoin('nc.NotacreditoDetalle ncd')
+            ->innerJoin('ncd.DetalleActivo da')
+            ->innerJoin('da.Factura f')
+            ->whereIn('f.id_factura', $id_facturas)
+            ->execute();
+    }
+    
+    
+    foreach ($ncs as $nc){
+        $this->ncredito += $nc->getTotalNotaCredito();
+    }
+    
+    //SE LE RESTA LA NC A LA DEUDA Y FACTURA
+    $this->deuda = $this->deuda - $this->ncredito;
+    $this->total = $this->total - $this->ncredito;
 
 
     $this->pager = new sfDoctrinePager(

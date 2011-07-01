@@ -26,7 +26,6 @@
     <div class="midcontent">
     <div class="divmiddle">
 <!--    <h1>Administrador Estructura Bodega</h1>-->
-
 <table width="100%">
   <thead>
     <tr>
@@ -46,8 +45,6 @@
       <?php if($cuota->getMontoCuota() == $cuota->getMontopagadoCuota()){ ?>
       <?php $cuota->ValidarEstado() ?>
       <tr class="<?php echo 'cuota'.$cuota->getIdCuota()?>" style="cursor: pointer; background: rgb(235,235,235)" onclick="mostrar_pagos(<?php echo $cuota->getIdCuota() ?>)">
-<!--              <td><a href="<?php echo url_for('cuota/show?id_cuota='.$cuota->getIdCuota()) ?>"><?php echo $cuota->getIdCuota() ?></a></td>-->
-<!--              <td><?php echo $cuota->getIdFactura() ?></td>-->
               <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
   'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'))).$cuota->getFactura()->getNumeroFactura() ?></td>
               <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo $cuota->getFactura()->getNombreFactura() ?></td>
@@ -308,12 +305,16 @@
                     <div class="divmiddle1">
                         <table>
                             <tr>
-                                <td style="font-weight: bolder; color: #09c; font-size: 7pt">FACTURADO</td>
+                                <td style="font-weight: bolder; color: #09c; font-size: 7pt">FACTURA</td>
                                 <td id="total"  style="font-weight: bolder; font-size: 8pt"><?php echo format_currency($total,'CLP') ?></td>
                             </tr>
                             <tr>
-                                <td style="font-weight: bolder; color: #00cc00; font-size: 7pt">PAGADO</td>
+                                <td style="font-weight: bolder; color: #00cc00; font-size: 7pt">PAGO</td>
                                 <td id="pagado"  style="font-weight: bolder; font-size: 8pt"><?php echo format_currency($pagado,'CLP') ?></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bolder; color: #ff6600; font-size: 7pt">N.CREDITO</td>
+                                <td id="ncredito"  style="font-weight: bolder; font-size: 8pt"><?php echo format_currency($ncredito,'CLP') ?></td>
                             </tr>
                             <tr>
                                 <td style="font-weight: bolder; color: red; font-size: 7pt">DEUDA</td>
@@ -349,6 +350,7 @@
                             <br />
                             <br />
                             <button id="buscarfecha" onclick="buscarfecha()">Buscar</button>
+                            <img id="loader-search" alt="cargando" style="vertical-align: middle; display: none" src="/images1/ajax-loader-white.gif" />
                             <br />
                             <br />
                             <br />

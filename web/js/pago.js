@@ -228,11 +228,13 @@ function filtro_listafecha(textoFecha1,textoFecha2,id_vendedor,pag,tipocuota,emp
                     }
                 }
             });
+            $('#loader-search').hide();
     }
     );
 }
 
 function buscarfecha(){
+    $('#loader-search').show();
     var textoFecha1 = $('#datepicker1').val();
     var textoFecha2 = $('#datepicker2').val();
     var id_vendedor = $('#vendedor').val();
@@ -242,7 +244,7 @@ function buscarfecha(){
 
     if(textoFecha1 != '' && textoFecha2 != ''){
         filtro_listafecha(textoFecha1,textoFecha2,id_vendedor,1,'#',empresa);
-    }
+    }    
 }
 
 function buscarEmpresa(){

@@ -3,6 +3,7 @@
 <script type="text/javascript">
     $('#total').text('<?php echo format_currency($total,'CLP') ?>');
     $('#deuda').text('<?php echo format_currency($deuda,'CLP').' ['.(round($deuda/$total*10000)/100).'%]' ?>');
+    $('#ncredito').text('<?php echo format_currency($ncredito,'CLP') ?>')
     $('#pagado').text('<?php echo format_currency($pagado,'CLP') ?>')
 </script>
 <table width="100%">

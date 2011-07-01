@@ -10,6 +10,29 @@
  */
 class notacreditoActions extends sfActions
 {
+  
+  public function executeFacturasByfecha(sfWebRequest $request)
+  {
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      $mes = $request->getParameter('mes');
+      $año = $request->getParameter('año');
+      $codigo = $request->getParameter('codigo');
+      $rut_cliente = $request->getParameter('rut_cliente');
+      $facturas = Doctrine_Query::create()
+            ->select('a.id_factura, a.numero_factura, DATE_FORMAT(a.fechaemision_factura, "%d/%m/%Y" ) as fechaemision_factura , a.tipo_factura, FORMAT(a.monto_factura,"es_CL") as monto_factura, a.id_notapedido_factura, da.cantidad_detalle_activo-da.cantidad_nota_credito as cantidad_detalle_activo, da.cantidad_nota_credito, da.precio_detalle_activo')
+            ->from('Factura a')
+            ->where('a.rut_factura = ?', $rut_cliente)
+            ->Andwhere('YEAR(a.fechaemision_factura) = ?', $año)
+            ->Andwhere('MONTH(a.fechaemision_factura) = ?', $mes)
+            ->innerJoin('a.DetalleActivo da')
+            ->innerJoin('a.EstadoFactura e')
+            ->Andwhere('da.codigointerno_detalle_activo = ?', $codigo)
+            ->Andwhere('da.cantidad_detalle_activo > da.cantidad_nota_credito')
+            ->Andwhere('e.nombre_estadofactura = ?', 'Emitida')
+            ->setHydrationMode(Doctrine::HYDRATE_ARRAY)
+            ->execute();
+      return $this->renderText(json_encode($facturas));
+  }
   public function executeVerificarnumNC(sfWebRequest $request)
   {
       Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
@@ -88,7 +111,7 @@ class notacreditoActions extends sfActions
               //SI OCURRE UN ERROR NO SE GUARDA NADA
               $conn->rollBack();
 //              if($msgerr) return $this->renderText('Error al procesar los datos, '.$e->getMessage());
-              return $this->renderText('Error al procesar los datos: '.$e->getMessage().' '.$aux);
+              return $this->renderText('Error al procesar los datos: '.$e->getMessage());
           }
           
       }
@@ -106,12 +129,13 @@ class notacreditoActions extends sfActions
                 ->select('a.id_factura, a.numero_factura, a.fechaemision_factura, a.tipo_factura, a.monto_factura, a.id_notapedido_factura, da.cantidad_detalle_activo-da.cantidad_nota_credito as cantidad_detalle_activo, da.cantidad_nota_credito, da.precio_detalle_activo')
                 ->from('Factura a')
                 ->where('a.rut_factura = ?', $rut_cliente)
+                ->Andwhere('YEAR(a.fechaemision_factura) = ?', date('Y'))
+                ->Andwhere('MONTH(a.fechaemision_factura) = ?', date('m'))
                 ->innerJoin('a.DetalleActivo da')
                 ->innerJoin('a.EstadoFactura e')
                 ->Andwhere('da.codigointerno_detalle_activo = ?', $producto->codigo)
                 ->Andwhere('da.cantidad_detalle_activo > da.cantidad_nota_credito')
                 ->Andwhere('e.nombre_estadofactura = ?', 'Emitida')
-                ->limit(10)
                 ->setHydrationMode(Doctrine::HYDRATE_ARRAY)
                 ->execute();
         $this->datos[] = $producto->codigo;
@@ -121,11 +145,8 @@ class notacreditoActions extends sfActions
     $this->cb = new sfWidgetFormInputCheckbox();
     $this->it = new sfWidgetFormInputText();
     $this->form = new NotaCreditoForm();
-//    $today = array(
-//            'year' => 2011,
-//            'month' => 1,
-//            'day'   => 12
-//        );
+    $this->rut_cliente = $rut_cliente;
+
     $this->date = new sfWidgetFormDate(array(
         'format' => '<b>MES:</b>%month%  <b>AÑO:</b>%year%',
         'can_be_empty' => false
