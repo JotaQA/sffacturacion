@@ -229,6 +229,7 @@ function filtro_listafecha(textoFecha1,textoFecha2,id_vendedor,pag,tipocuota,emp
                 }
             });
             $('#loader-search').hide();
+            $('#loader-page').hide();
     }
     );
 }
@@ -284,6 +285,12 @@ function mostrar_pagos(id){
         else $('.cuota'+id).css({backgroundColor: 'rgb(235,235,235)'});
     }
 
+}
+
+
+function paginar(index){
+    $('#loader-page').show();
+    filtro_listafecha('#','#','#',index,'#','#');
 }
 
 

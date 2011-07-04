@@ -201,6 +201,7 @@
 
 <?php if ($pager->haveToPaginate()): ?>
   <div class="pagination">
+    <img id="loader-page" alt="cargando" style="vertical-align: middle;display: none" src="/images1/ajax-loader-white.gif" />
     <a href="#" onclick="filtro_listafecha(getFechaActual(-1),getFechaActual(3),'#',1,'#','#')">
       <img src="/images1/first.png" alt="Primera página" title="Primera página" />
     </a>

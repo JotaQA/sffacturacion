@@ -179,7 +179,8 @@
 
 <?php if ($pager->haveToPaginate()): ?>
   <div class="pagination">
-    <a href="#" onclick="filtro_listafecha('#','#','#',1,'#','#')">
+    <img id="loader-page" alt="cargando" style="vertical-align: middle; display: none" src="/images1/ajax-loader-white.gif" />
+    <a href="#" onclick="paginar(1)">
       <img src="/images1/first.png" alt="Primera pagina" title="Primera pagina" />
     </a>
 
