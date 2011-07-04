@@ -174,7 +174,7 @@
         });
      
         //AL MENOS DEBE TENER UNO ELEGIDO
-        $('table.display input[type=checkbox]').change( function() {
+        $('table.display input[type=checkbox]').live('change', function() {
             if($(this).is(':checked')){
                 var codigo = $(this).attr("codigo");
                 var id_factura = $(this).attr("factura");
@@ -186,7 +186,8 @@
             }
         });
         
-        $('table.display input[type=text]').change( function() {
+        
+        $('table.display input[type=text]').live('change', function() {
             //VAR A OCUPAR
             var tabletitle = $(this).parent().parent().parent().parent().prev('.head-toolbar');
             var input = $(this);
@@ -305,7 +306,7 @@
             $(this).append('<b>'+$(this).next('table').attr('title')+'</b><span style="float: right">'+image+' '+fdate+'</span>');
         });
         
-        $('#date_month, #date_year').change(function() {
+        $('#date_month, #date_year').live('change', function() {
             var loader = $(this).parent().children('#loader-date');
             loader.show();
             var mes = $('#date_month').val();
