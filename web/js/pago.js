@@ -3,14 +3,14 @@ $(function() {
     $('#cliente').keyup(function(e) {
 //	alert(e.keyCode);
 	if(e.keyCode == 13) {
-            $('td[title]').qtip("destroy");
+            $('td[title],a[title],b[title]').qtip("destroy");
 //		alert('Enter key was pressed.');
             var cliente = $(this).val();
             $('.divmiddle').load(
                 $('#jspago').text()+"/filtro_cliente",
                 {cliente: cliente, empresa: empresaAntigua},
                 function(){
-                    $('td[title]').qtip({
+                    $('td[title],a[title],b[title]').qtip({
                         content: $(this).attr('title'),
                         style: {
                             name: 'blue' // Inherit from preset style
@@ -54,14 +54,14 @@ $(function() {
     $('#numero_factura').keyup(function(e) {
 //	alert(e.keyCode);
 	if(e.keyCode == 13) {
-            $('td[title]').qtip("destroy");
+            $('td[title],a[title],b[title]').qtip("destroy");
 //		alert('Enter key was pressed.');
             var numero = $(this).val();
             $('.divmiddle').load(
                 $('#jspago').text()+"/filtro_numerofactura",
                 {numero: numero, empresa: empresaAntigua},
                 function(){
-                    $('td[title]').qtip({
+                    $('td[title],a[title],b[title]').qtip({
                         content: $(this).attr('title'),
                         style: {
                             name: 'blue' // Inherit from preset style
@@ -103,7 +103,7 @@ $(function() {
 
 
 
-    $('td[title]').qtip({
+    $('td[title],a[title],b[title]').qtip({
         content: $(this).attr('title'),
         style: {
             name: 'blue' // Inherit from preset style
@@ -169,7 +169,7 @@ var id_vendedorAntigua='';
 var empresaAntigua=0;
 
 function filtro_listafecha(textoFecha1,textoFecha2,id_vendedor,pag,tipocuota,empresa){
-     $('td[title]').qtip("destroy");
+     $('.qtip').qtip("hide");
 
      if(pag == "#") pag=paginaAntigua;
      else paginaAntigua=pag;
@@ -189,14 +189,14 @@ function filtro_listafecha(textoFecha1,textoFecha2,id_vendedor,pag,tipocuota,emp
      if(empresa == "#") empresa = empresaAntigua;
      else empresaAntigua = empresa;
 
-//     alert(pag);
 
      $('.divmiddle').load(
     $('#jspago').text()+"/filtro_listafecha",
     {fecha1: textoFecha1, fecha2: textoFecha2, id_vendedor: id_vendedor, pagina: pag, tipocuota: tipocuota, empresa: empresa},
     function() {
-        $('td[title]').qtip({
-                content: $(this).attr('title'),
+        $('.qtip').qtip({
+//                content: $(this).attr('title'),}
+                tip: true,
                 style: {
                     name: 'blue' // Inherit from preset style
                 },
@@ -211,7 +211,7 @@ function filtro_listafecha(textoFecha1,textoFecha2,id_vendedor,pag,tipocuota,emp
                     when: {
                         event: 'mouseover'
                     },
-                    delay: 400,
+                    delay: 350,
                     effect: {
                         type: 'grow',
                         length: 300

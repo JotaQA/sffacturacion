@@ -12,12 +12,54 @@
  */
 class Factura extends BaseFactura
 {
+    public function getNotasCredito(){
+        $ncs = Doctrine_Query::create()
+          ->select('nc.*')
+          ->from('NotaCredito nc')
+          ->innerJoin('nc.NotacreditoDetalle ncd')
+          ->innerJoin('ncd.DetalleActivo da')
+          ->where('da.id_factura = ?',  $this->getIdFactura())
+          ->execute();
+        return $ncs;
+    }
+    
+    public function getCountNCS(){
+        $ncs = Doctrine_Query::create()
+          ->select('COUNT(nc.id_nota_credito)')
+          ->from('NotaCredito nc')
+          ->innerJoin('nc.NotacreditoDetalle ncd')
+          ->innerJoin('ncd.DetalleActivo da')
+          ->where('da.id_factura = ?',  $this->getIdFactura())
+          ->setHydrationMode(Doctrine::HYDRATE_ARRAY)
+          ->execute();
+        return $ncs[0];
+    }
+    
+    public function getNumNCbyFac(){
+        $ncs = Doctrine_Query::create()
+          ->select('nc.numero_nota_credito')
+          ->from('NotaCredito nc')
+          ->innerJoin('nc.NotacreditoDetalle ncd')
+          ->innerJoin('ncd.DetalleActivo da')
+          ->where('da.id_factura = ?',  $this->getIdFactura())
+          ->execute();
+        $numNC = "";
+        foreach ($ncs as $nc){
+            $numNC .= $nc->getNumeroNotaCredito().',';
+        }
+        return substr($numNC, 0, strlen($numNC)-1);
+    }
+        
+
+
+
+
     public function getNumeroFacturaTipo(){
         return $this->getFacturaTipo().$this->getNumeroFactura();
     }
 
     public function getFacturaTipo(){
-        if($this->getTipoFactura() == 'FISICA') return '<b style="background: yellow; color: black; padding: 1px 2px; font-size: 120%" title="Factura Fisica">F</b>';
+        if($this->getTipoFactura() == 'FISICA') return '<b style="background: yellow; color: black; padding: 1px 2px; font-size: 120%" title="Factura Física">F</b>';
         else return '<b style="background: blue; color: white; padding: 1px 2px; font-size: 120%" title="Factura Electronica">E</b>';
     }
 

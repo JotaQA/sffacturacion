@@ -6,6 +6,7 @@
     $('#ncredito').text('<?php echo format_currency($ncredito,'CLP') ?>')
     $('#pagado').text('<?php echo format_currency($pagado,'CLP') ?>')
 </script>
+
 <table width="100%">
   <thead>
     <tr>
@@ -21,12 +22,13 @@
   </thead>
   <tbody>
     <?php foreach ($pager->getResults() as $cuota): ?>
+      <?php $ncs = $cuota->getFactura()->getNotasCredito() ?>
       <?php if($cuota->getMontoCuota() == $cuota->getMontopagadoCuota()){ ?>
-      <?php $cuota->ValidarEstado() ?>
+      <?php $cuota->ValidarEstado() ?>      
       <tr class="<?php echo 'cuota'.$cuota->getIdCuota()?>" style="cursor: pointer; background: rgb(235,235,235)" onclick="mostrar_pagos(<?php echo $cuota->getIdCuota() ?>)">
-              <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
-  'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'))).$cuota->getFactura()->getNumeroFactura() ?></td>
-              <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo $cuota->getFactura()->getNombreFactura() ?></td>
+              <td><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
+  'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'), 'title' => $cuota->getFactura()->getDatosCliente(), 'class' => 'qtip')).$cuota->getFactura()->getNumeroFactura().(($cuota->getFactura()->getCountNCS()->getRaw('COUNT') > 0)?'<b class="qtip" title="Numero de NC: '.$cuota->getFactura()->getNumNCbyFac().'" style="background: #6666ff; color: black; padding: 1px 2px; font-size: 120%">NC</b>':"") ?></td>
+              <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>" class="qtip" ><?php echo $cuota->getFactura()->getNombreFactura() ?></td>
               <td style="font-weight: 800;background-color: #a0ff9d"><?php echo $cuota->getEstadoCuota()->getNombreEstadoCuota() ?></td>
               <td><?php echo format_currency($cuota->getMontoCuota(),'CLP') ?></td>
               <td><?php echo format_currency($cuota->getMontopagadoCuota(),'CLP') ?></td>
@@ -86,9 +88,9 @@
          <tr class="<?php echo 'cuota'.$cuota->getIdCuota()?>" style="cursor: pointer; background: rgb(235,235,235)" onclick="mostrar_pagos(<?php echo $cuota->getIdCuota() ?>)">
 <!--              <td><a href="<?php echo url_for('cuota/show?id_cuota='.$cuota->getIdCuota()) ?>"><?php echo $cuota->getIdCuota() ?></a></td>-->
 <!--              <td><?php echo $cuota->getIdFactura() ?></td>-->
-              <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
-  'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'))).$cuota->getFactura()->getNumeroFactura() ?></td>
-              <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo $cuota->getFactura()->getNombreFactura() ?></td>
+              <td><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
+  'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'), 'title' => $cuota->getFactura()->getDatosCliente(), 'class' => 'qtip')).$cuota->getFactura()->getNumeroFactura().(($cuota->getFactura()->getCountNCS()->getRaw('COUNT') > 0)?'<b class="qtip" title="Numero de NC: '.$cuota->getFactura()->getNumNCbyFac().'" style="background: #6666ff; color: black; padding: 1px 2px; font-size: 120%">NC</b>':"") ?></td>
+              <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>" class="qtip"><?php echo $cuota->getFactura()->getNombreFactura() ?></td>
               <td <?php if($cuota->estaVencido()) echo "style='font-weight: 800;background-color: #ff6633')";
                       else echo "style='font-weight: 800;background-color: #ffcc00'"; ?> ><?php echo $cuota->getEstadoCuota()->getNombreEstadoCuota() ?></td>
               <td><?php echo format_currency($cuota->getMontoCuota(),'CLP') ?></td>
@@ -149,9 +151,9 @@
          ?>
          <tr>
 <!--              <td><a href="<?php echo url_for('cuota/show?id_cuota='.$cuota->getIdCuota()) ?>"><?php echo $cuota->getIdCuota() ?></a></td>-->
-               <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
-  'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'))).$cuota->getFactura()->getNumeroFactura() ?></td>
-               <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo $cuota->getFactura()->getNombreFactura() ?></td>
+               <td><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
+  'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'), 'title' => $cuota->getFactura()->getDatosCliente(), 'class' => 'qtip')).$cuota->getFactura()->getNumeroFactura().(($cuota->getFactura()->getCountNCS()->getRaw('COUNT') > 0)?'<b class="qtip" title="Numero de NC: '.$cuota->getFactura()->getNumNCbyFac().'" style="background: #6666ff; color: black; padding: 1px 2px; font-size: 120%">NC</b>':"") ?></td>
+               <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>" class="qtip"><?php echo $cuota->getFactura()->getNombreFactura() ?></td>
               <td <?php if($cuota->estaVencido()) echo "style='font-weight: 800;background-color: #ff6633')";
                       else echo "style='font-weight: 800;background-color: #ffcc00'"; ?> ><?php echo $cuota->getEstadoCuota()->getNombreEstadoCuota() ?></td>
               <td><?php echo format_currency($cuota->getMontoCuota(),'CLP') ?></td>
