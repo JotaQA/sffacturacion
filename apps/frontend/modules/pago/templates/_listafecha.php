@@ -184,7 +184,7 @@
       <img src="/images1/first.png" alt="Primera pagina" title="Primera pagina" />
     </a>
 
-    <a href="#" onclick="filtro_listafecha('#','#','#',<?php echo $pager->getPreviousPage() ?>,'#','#')">
+    <a href="#" onclick="paginar(<?php echo $pager->getPreviousPage() ?>)">
       <img src="/images1/previous.png" alt="Página anterior" title="Página anterior" />
     </a>
 
@@ -192,16 +192,15 @@
       <?php if ($page == $pager->getPage()): ?>
         <?php echo $page ?>
       <?php else: ?>
-<!--        <a href="<?php echo url_for('pago/index') ?>?page=<?php echo $page ?>&fecha="><?php echo $page ?></a>-->
-            <a href="#" onclick="filtro_listafecha('#','#','#',<?php echo $page ?>,'#','#')"><?php echo $page ?></a>
+            <a href="#" onclick="paginar(<?php echo $page ?>)"><?php echo $page ?></a>
       <?php endif; ?>
     <?php endforeach; ?>
 
-    <a href="#" onclick="filtro_listafecha('#','#','#',<?php echo $pager->getNextPage() ?>,'#','#')">
+    <a href="#" onclick="paginar(<?php echo $pager->getNextPage() ?>)">
       <img src="/images1/next.png" alt="Siguiente página" title="Siguiente página" />
     </a>
 
-    <a href="#" onclick="filtro_listafecha('#','#','#',<?php echo $pager->getLastPage() ?>,'#','#')">
+    <a href="#" onclick="paginar(<?php echo $pager->getLastPage() ?>)">
       <img src="/images1/last.png" alt="Última página" title="Última página" />
     </a>
   </div>

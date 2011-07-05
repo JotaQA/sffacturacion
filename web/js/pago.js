@@ -1,16 +1,18 @@
 $(function() {
 
     $('#cliente').keyup(function(e) {
+        
 //	alert(e.keyCode);
 	if(e.keyCode == 13) {
-            $('td[title],a[title],b[title]').qtip("destroy");
+            $('#loader-cliente').show();
+            $('.qtip').qtip("hide");
 //		alert('Enter key was pressed.');
             var cliente = $(this).val();
             $('.divmiddle').load(
                 $('#jspago').text()+"/filtro_cliente",
                 {cliente: cliente, empresa: empresaAntigua},
                 function(){
-                    $('td[title],a[title],b[title]').qtip({
+                    $('.qtip').qtip({
                         content: $(this).attr('title'),
                         style: {
                             name: 'blue' // Inherit from preset style
@@ -43,6 +45,7 @@ $(function() {
                             }
                         }
                     });
+                    $('#loader-cliente').hide();
                 }
             );
 
@@ -52,16 +55,18 @@ $(function() {
     
 
     $('#numero_factura').keyup(function(e) {
+        
 //	alert(e.keyCode);
 	if(e.keyCode == 13) {
-            $('td[title],a[title],b[title]').qtip("destroy");
+            $('#loader-numerofactura').show();
+            $('.qtip').qtip("hide");
 //		alert('Enter key was pressed.');
             var numero = $(this).val();
             $('.divmiddle').load(
                 $('#jspago').text()+"/filtro_numerofactura",
                 {numero: numero, empresa: empresaAntigua},
                 function(){
-                    $('td[title],a[title],b[title]').qtip({
+                    $('.qtip').qtip({
                         content: $(this).attr('title'),
                         style: {
                             name: 'blue' // Inherit from preset style
@@ -94,6 +99,7 @@ $(function() {
                             }
                         }
                     });
+                    $('#loader-numerofactura').hide();
                 }
             );
 
@@ -103,7 +109,7 @@ $(function() {
 
 
 
-    $('td[title],a[title],b[title]').qtip({
+    $('.qtip').qtip({
         content: $(this).attr('title'),
         style: {
             name: 'blue' // Inherit from preset style
@@ -291,6 +297,11 @@ function mostrar_pagos(id){
 function paginar(index){
     $('#loader-page').show();
     filtro_listafecha('#','#','#',index,'#','#');
+}
+
+function filtro_tipo(tipo){
+    $('#loader-search').show();
+    filtro_listafecha('#','#','#',1,tipo,'#');
 }
 
 

@@ -170,7 +170,6 @@
      else{
          ?>
          <tr>
-<!--              <td><a href="<?php echo url_for('cuota/show?id_cuota='.$cuota->getIdCuota()) ?>"><?php echo $cuota->getIdCuota() ?></a></td>-->
                <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
   'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'))).$cuota->getFactura()->getNumeroFactura() ?></td>
                <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo $cuota->getFactura()->getNombreFactura() ?></td>
@@ -202,11 +201,11 @@
 <?php if ($pager->haveToPaginate()): ?>
   <div class="pagination">
     <img id="loader-page" alt="cargando" style="vertical-align: middle;display: none" src="/images1/ajax-loader-white.gif" />
-    <a href="#" onclick="filtro_listafecha(getFechaActual(-1),getFechaActual(3),'#',1,'#','#')">
+    <a href="#" onclick="paginar(1)">
       <img src="/images1/first.png" alt="Primera página" title="Primera página" />
     </a>
 
-    <a href="#" onclick="filtro_listafecha(getFechaActual(-1),getFechaActual(3),'#',<?php echo $pager->getPreviousPage() ?>,'#','#')">
+    <a href="#" onclick="paginar(<?php echo $pager->getPreviousPage() ?>)">
       <img src="/images1/previous.png" alt="Página anterior" title="Página anterior" />
     </a>
 
@@ -214,16 +213,15 @@
       <?php if ($page == $pager->getPage()): ?>
         <?php echo $page ?>
       <?php else: ?>
-<!--        <a href="<?php echo url_for('pago/index') ?>?page=<?php echo $page ?>&fecha="><?php echo $page ?></a>-->
-            <a href="#" onclick="filtro_listafecha(getFechaActual(-1),getFechaActual(3),'#',<?php echo $page ?>,'#','#')"><?php echo $page ?></a>
+            <a href="#" onclick="paginar(<?php echo $page ?>)"><?php echo $page ?></a>
       <?php endif; ?>
     <?php endforeach; ?>
 
-    <a href="#" onclick="filtro_listafecha(getFechaActual(-1),getFechaActual(3),'#',<?php echo $pager->getNextPage() ?>,'#','#')">
+    <a href="#" onclick="paginar(<?php echo $pager->getNextPage() ?>)">
       <img src="/images1/next.png" alt="Siguiente página" title="Siguiente página" />
     </a>
 
-    <a href="#" onclick="filtro_listafecha(getFechaActual(-1),getFechaActual(3),'#',<?php echo $pager->getLastPage() ?>,'#','#')">
+    <a href="#" onclick="paginar(<?php echo $pager->getLastPage() ?>)">
       <img src="/images1/last.png" alt="Última página" title="Última página" />
     </a>
   </div>
@@ -281,9 +279,11 @@
                     <div class="divmiddle1">
                         <h2>NUMERO FACTURA</h2>
                         <input type="text" value="" name="query" id="numero_factura" />
+                        <img id="loader-numerofactura" alt="cargando" style="vertical-align: middle;display: none" src="/images1/ajax-loader-white.gif" />
                         <br />                        
                         <h2>CLIENTE</h2>
                         <input type="text" value="" name="query" id="cliente" />
+                        <img id="loader-cliente" alt="cargando" style="vertical-align: middle;display: none" src="/images1/ajax-loader-white.gif" />
                         <br />
                         <i>Notar que estos filtros son <b>independientes</b> de la fecha, vendedor y estado cuota</i>
                     </div>
@@ -354,24 +354,25 @@
                             <img id="loader-search" alt="cargando" style="vertical-align: middle; display: none" src="/images1/ajax-loader-white.gif" />
                             <br />
                             <br />
-                            <br />
-                            <table >
+                            
+                            <table>
                                 <tr>
-                                    <td style="background-color: #a0ff9d; font-weight: 800; padding: 4px"><label style="padding: 4px 14px 4px 0"><input onclick="filtro_listafecha('#','#','#',1,1,'#')" type="radio" name="filtroradio" value="1">PAGADA</label</td>
+                                    <td style="background-color: #a0ff9d; font-weight: 800; padding: 4px"><label style="padding: 4px 14px 4px 0"><input onclick="filtro_tipo(1)" type="radio" name="filtroradio" value="1">PAGADA</label</td>
                                 </tr>
                                 <tr>
-                                    <td style="background-color: #ffcc00; font-weight: 800; padding: 4px"><label style="padding: 4px 0px"><input onclick="filtro_listafecha('#','#','#',1,2,'#')" type="radio" name="filtroradio" value="2">POR PAGAR</label></td>
+                                    <td style="background-color: #ffcc00; font-weight: 800; padding: 4px"><label style="padding: 4px 0px"><input onclick="filtro_tipo(2)" type="radio" name="filtroradio" value="2">POR PAGAR</label></td>
                                 </tr>
                                 <tr>
-                                    <td style="background-color: #ff6633; font-weight: 800; padding: 4px"><label style="padding: 4px 14px 4px 0"><input onclick="filtro_listafecha('#','#','#',1,3,'#')" type="radio" name="filtroradio" value="3">VENCIDA</label></td>
+                                    <td style="background-color: #ff6633; font-weight: 800; padding: 4px"><label style="padding: 4px 14px 4px 0"><input onclick="filtro_tipo(3)" type="radio" name="filtroradio" value="3">VENCIDA</label></td>
                                 </tr>
                                 <tr>
-                                    <td style="background-color: #cccccc; font-weight: 800; padding: 4px"><label style="padding: 4px 18px 4px 0"><input checked onclick="filtro_listafecha('#','#','#',1,4,'#')" type="radio" name="filtroradio" value="4">TODOS</label></td>
+                                    <td style="background-color: #cccccc; font-weight: 800; padding: 4px"><label style="padding: 4px 18px 4px 0"><input checked onclick="filtro_tipo(4)" type="radio" name="filtroradio" value="4">TODOS</label></td>
                                 </tr>
                                 <tr>
-                                    <td style="background-color: khaki; font-weight: 800; padding: 4px"><label style="padding: 4px 15px 4px 0"><input onclick="filtro_listafecha('#','#','#',1,5,'#')" type="radio" name="filtroradio" value="5">FACTORING</label></td>
+                                    <td style="background-color: khaki; font-weight: 800; padding: 4px"><label style="padding: 4px 15px 4px 0"><input onclick="filtro_tipo(5)" type="radio" name="filtroradio" value="5">FACTORING</label></td>
                                 </tr>
-                            </table>                            
+                            </table>
+                            
                     </div>
             </div>
             <br />
