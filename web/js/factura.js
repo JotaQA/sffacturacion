@@ -9,7 +9,7 @@ $(function() {
         }
         if(this.value == ''){
             rut_clienteAntiguo = '#';
-            mostrarFacturas('#','#','#','#');
+            mostrarFacturas('#','#','#','#','#');
         }
     });
 
@@ -67,15 +67,15 @@ $(function() {
 });
 
 function actualizar(){
-    mostrarFacturas('#','#','#','#');
+    mostrarFacturas('#','#','#','#','#');
 }
 
-
+var paginaAntigua=1;
 var rut_clienteAntiguo = '#';
 var empresaAntigua2=0;
 var textoFecha1Antigua=getFechaActual(-1);
 var textoFecha2Antigua=getFechaActual(3);
-function mostrarFacturas(textoFecha1,textoFecha2,rut_cliente,empresa){
+function mostrarFacturas(textoFecha1,textoFecha2,rut_cliente,empresa,pag){
     $('td[title]').qtip("destroy");
 
     if(textoFecha1 == "#") textoFecha1= textoFecha1Antigua;
@@ -89,12 +89,15 @@ function mostrarFacturas(textoFecha1,textoFecha2,rut_cliente,empresa){
 
     if(empresa == "#") empresa=empresaAntigua2;
     else empresaAntigua2=empresa;
+    
+    if(pag == "#") pag=paginaAntigua;
+    else paginaAntigua=pag;
 
 //    alert(textoFecha1+' '+textoFecha2+' '+rut_cliente+' '+empresa);
 
     $('.divmiddle').load(
     $('#jsfactura').text()+"/mostrarfacturas",
-    {textoFecha1: textoFecha1, textoFecha2: textoFecha2, rut_cliente: rut_cliente, empresa: empresa},
+    {textoFecha1: textoFecha1, textoFecha2: textoFecha2, rut_cliente: rut_cliente, empresa: empresa, pagina: pag},
     function() {
             $('td[title]').qtip({
                 content: $(this).attr('title'),
@@ -129,17 +132,18 @@ function mostrarFacturas(textoFecha1,textoFecha2,rut_cliente,empresa){
                     }
                 }
             });
+            $('#loader-fecha').hide();
     }
     );
 }
 
 
 function filtro(){
+    $('#loader-fecha').show();
     var empresa = $('#empresa_nombre_empresa').val();
     var textoFecha1 = $('#datepicker1').val();
     var textoFecha2 = $('#datepicker2').val();
-//    alert(empresa);
-    mostrarFacturas(textoFecha1,textoFecha2,'#',empresa);
+    mostrarFacturas(textoFecha1,textoFecha2,'#',empresa,1);
 }
 
 function anular(id_factura,numero){
@@ -150,11 +154,11 @@ function anular(id_factura,numero){
             function(data) {
                 if(data == 'true'){
                     alert('Factura '+numero+' Anulada');
-                    mostrarFacturas('#','#','#','#');
+                    mostrarFacturas('#','#','#','#','#');
                 }
                 else{
                      alert('Se produjo un Error: '+data);
-                     mostrarFacturas('#','#','#','#');
+                     mostrarFacturas('#','#','#','#','#');
                 }
             }
             );           
@@ -162,6 +166,11 @@ function anular(id_factura,numero){
     else{
     }
     
+}
+
+function paginar(index){
+    $('#loader-page').show();
+    mostrarFacturas('#','#','#','#',index)
 }
 
 

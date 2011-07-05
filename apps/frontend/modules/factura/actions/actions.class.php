@@ -89,11 +89,17 @@ class facturaActions extends sfActions
            $facturas = $facturas
                 ->AndWhere('DATE(a.fechaemision_factura) >= ?',$fecha1)
                 ->AndWhere('DATE(a.fechaemision_factura) <= ?',$fecha2)
-                ->AndWhere('a.fechaemision_factura != ?','NULL')
-                ->execute();
+                ->AndWhere('a.fechaemision_factura != ?','NULL');
+//                ->execute();
 
 
-           //FALTA PAGINADOR
+        $this->pager = new sfDoctrinePager(//0.11
+                        'Factura',
+                        15
+        );
+        $this->pager->setQuery($facturas);
+        $this->pager->setPage($request->getParameter('pagina', 1));
+        $this->pager->init();
 
 
 
@@ -104,7 +110,7 @@ class facturaActions extends sfActions
               return $this->renderText('No hay Resultados...');
             }
 
-            return $this->renderPartial('factura/listfactura', array('facturas' => $facturas ));
+            return $this->renderPartial('factura/listfactura', array('pager' =>  $this->pager));
           }
 
   }
@@ -176,15 +182,24 @@ class facturaActions extends sfActions
       $ndias2 = 3;
       $fecha2 = date("Y-m-d",mktime(0,0,0) + $ndias2 * 24 * 60 * 60);
 
-      $this->facturas = Doctrine_Core::getTable('Factura')
+      $facturas = Doctrine_Core::getTable('Factura')
               ->createQuery('a')
               ->innerJoin('a.EstadoFactura e')
               ->Where('DATE(a.fechaemision_factura) >= ?',$fecha1)
               ->AndWhere('DATE(a.fechaemision_factura) <= ?',$fecha2)
               ->AndWhere('e.nombre_estadofactura != ?','Anulada')
               ->AndWhere('a.fechaemision_factura != ?','NULL')
-              ->AndWhere('e.nombre_estadofactura != ?','Pagada')
-              ->execute();
+              ->AndWhere('e.nombre_estadofactura != ?','Pagada');
+//              ->execute();
+      
+      $this->pager = new sfDoctrinePager(//0.11
+                        'Factura',
+                        15
+        );
+      $this->pager->setQuery($facturas);
+      $this->pager->setPage($request->getParameter('pagina', 1));
+      $this->pager->init();
+      
       $this->empresa = new empresabdForm(null, array('buscarEmpresa' => 'filtro()', 'empresa' => 'artelamp_1'));
   }
 
