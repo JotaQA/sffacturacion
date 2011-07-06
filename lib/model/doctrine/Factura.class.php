@@ -12,6 +12,14 @@
  */
 class Factura extends BaseFactura
 {
+    public function getNetoCalculado(){
+        $neto = 0;
+        foreach ($factura->getDetalleActivo() as $detalle){
+            $neto += $detalle->getPrecioDetalleActivo()*$detalle->getCantidadDetalleActivo();
+        }
+        return $neto;
+    }
+    
     public function getNotasCredito(){
         $ncs = Doctrine_Query::create()
           ->select('nc.*')

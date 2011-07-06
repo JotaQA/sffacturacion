@@ -21,8 +21,10 @@ search_fecha:
   param: { module: pago, action: search_fecha }
 
 test:
-  url:   /pago/test
-  param: { module: pago, action: test }
+  url:   /dte/factura.:sf_format
+  param: { module: dte, action: genDoc }
+  requirements:
+    sf_format: (?:xml|txt)
 
 
 default:
