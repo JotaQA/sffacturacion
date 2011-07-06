@@ -9,13 +9,13 @@ all:
       username: root
       password: null
       persistent: true
-#  artelamp_2:
-#    class: sfDoctrineDatabase
-#    param:
-#      dsn: 'mysql:host=localhost;dbname=artelamp_2'
-#      username: root
-#      password: null
-#      persistent: true
+  artelamp_2:
+    class: sfDoctrineDatabase
+    param:
+      dsn: 'mysql:host=localhost;dbname=artelamp_2'
+      username: root
+      password: null
+      persistent: true
   artelamp:
     class: sfDoctrineDatabase
     param:

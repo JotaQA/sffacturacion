@@ -13,7 +13,8 @@ class notacreditoActions extends sfActions
   
   public function executeFacturasByfecha(sfWebRequest $request)
   {
-      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
+      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
       $mes = $request->getParameter('mes');
       $año = $request->getParameter('año');
       $codigo = $request->getParameter('codigo');
@@ -35,7 +36,8 @@ class notacreditoActions extends sfActions
   }
   public function executeVerificarnumNC(sfWebRequest $request)
   {
-      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
+      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
       $numeroNC = $request->getParameter('numeroNC');
       $factura = Doctrine_Core::getTable('NotaCredito')->findOneByNumeroNotaCredito($numeroNC);
       if($factura == null) return $this->renderText('false');
@@ -43,7 +45,8 @@ class notacreditoActions extends sfActions
   }
   public function executeGetFactura(sfWebRequest $request)
   {
-      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
+      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
       $id_factura = $request->getParameter('id_factura');
       $factura = Doctrine_Core::getTable('Factura')->find($id_factura);
       return $this->renderText(json_encode($factura->toArray()));
@@ -51,7 +54,8 @@ class notacreditoActions extends sfActions
   public function executeIngresarNC2(sfWebRequest $request)
   {
       $this->forward404Unless($request->isMethod(sfRequest::POST));
-      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
+      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
       $form = new NotaCreditoForm();
 
       
@@ -120,7 +124,8 @@ class notacreditoActions extends sfActions
     
   public function executePaso2(sfWebRequest $request)
   {
-    Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+    $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
+    Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
     $productos = $this->getUser()->getFlash('productos');
     $rut_cliente = $this->getUser()->getFlash('rut_cliente');
     $this->datos = array();
@@ -160,18 +165,14 @@ class notacreditoActions extends sfActions
     $this->cb = new sfWidgetFormInputCheckbox();
     $this->it = new sfWidgetFormInputText();
     $this->form = new NotaCreditoForm();
-//    $nf = new sfNumberFormat('es_CL');
-//    $this->aux = $nf->format(3000, 'c', 'CLP', 'UTF-8');
   }
   
   public function executeGuardarproductos(sfWebRequest $request){
-//      $this->vdatos = json_decode($request->getParameter('datos'));
-//      Doctrine_Core::getTable('NotaCredito')->datos = "hola mundo";
       $this->getUser()->setFlash('productos', json_decode($request->getParameter('productos')));
       $this->getUser()->setFlash('rut_cliente', $request->getParameter('rut_cliente'));
-      
-      return $this->renderText('hola');
-//      return sfView::NONE;
+      $this->getUser()->setAttribute('empresa', 'artelamp_'.$request->getParameter('empresa'));
+      return sfView::NONE;
+//      return $this->renderText('listo');
   }
   
   public function executeSearch_cliente(sfWebRequest $request){
@@ -183,6 +184,7 @@ class notacreditoActions extends sfActions
 
           $clientes = Doctrine_Core::getTable('Cliente')
                   ->createQuery('a')
+                  ->select('a.rut_cliente, a.id_empresa')
                   ->where('a.nombre_cliente LIKE ?','%'.$query.'%')
                   ->orWhere('a.descripcion_cliente LIKE ?','%'.$query.'%')
                   ->orWhere('a.rut_cliente LIKE ?','%'.$query.'%');
@@ -191,7 +193,8 @@ class notacreditoActions extends sfActions
       }
       else{
           $clientes = Doctrine_Core::getTable('Cliente')
-                  ->createQuery('a');
+                  ->createQuery('a')
+                  ->select('a.rut_cliente, a.id_empresa');
           for($j=0;$j<count($querys);$j++){
                     $clientes = $clientes
                   ->orwhere('a.nombre_cliente LIKE ?','%'.$query[$j].'%')
@@ -214,24 +217,20 @@ class notacreditoActions extends sfActions
   }
   
   
-  public function executeSearch_producto(sfWebRequest $request){
-      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+  public function executeSearch_producto(sfWebRequest $request){      
       $query = $request->getParameter('query');
       $rut_cliente = $request->getParameter('rut_cliente');
+      $empresa = $request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
       $querys = explode('+',$query);
       $limit=10;
-      
-      
-      
 
       if(count($querys) < 2){
 
           $productos = Doctrine_Query::create()
                   ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo')
                   ->from('DetalleActivo a')
-                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$query.'%', '%'.$query.'%', '%'.$query.'%'));
-//                  ->orWhere('a.descripcionexterna_detalle_activo LIKE ?','%'.$query.'%')
-//                  ->orWhere('a.id_producto LIKE ?','%'.$query.'%');   
+                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$query.'%', '%'.$query.'%', '%'.$query.'%')); 
       }
       else{
           $productos = Doctrine_Query::create()
@@ -239,17 +238,17 @@ class notacreditoActions extends sfActions
                   ->from('DetalleActivo a');
           for($j=0;$j<count($querys);$j++){
               $productos = $productos
-                  ->orwhere('a.codigointerno_detalle_activo LIKE ?','%'.$query[$j].'%')
-                  ->orWhere('a.descripcionexterna_detalle_activo LIKE ?','%'.$query[$j].'%')
-                  ->orWhere('a.id_producto LIKE ?','%'.$query[$j].'%');
+                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$querys[$j].'%', '%'.$querys[$j].'%', '%'.$querys[$j].'%')); 
           }
       }
       
       $productos = $productos->innerJoin('a.Factura f')
               ->Andwhere('f.rut_factura = ?',$rut_cliente);
-//              ->AndWhere('a.id_factura IS NOT NULL');
 //      return $this->renderText($productos->getSqlQuery());
-      $productos = $productos->limit($limit)->execute(array(), Doctrine_Core::HYDRATE_SCALAR);  
+      $productos = $productos->limit($limit)->execute(array(), Doctrine_Core::HYDRATE_SCALAR);
+      
+      
+      
       
 
       if ($request->isXmlHttpRequest())

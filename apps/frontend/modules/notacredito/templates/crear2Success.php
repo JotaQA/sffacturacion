@@ -1,4 +1,3 @@
-<div id="jsnotacredito" style="display: none"><?php echo url_for('notacredito/') ?></div>
 <div id="divmid">
 
 <!--    <h1>Existencias</h1>-->
@@ -33,16 +32,6 @@
         <div id="dialog-form" title="Datos de Nota de Credito">
             <p class="validateTips">Ingrese los datos de la Nota de Credito</p>
             
-<!--            <form>
-                <fieldset>
-                    <label for="name">Name</label>
-                    <input type="text" name="name" id="name" class="ui-widget-content ui-corner-all" /><br />
-                    <label for="email">Email</label>
-                    <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" /><br />
-                    <label for="password">Password</label>
-                    <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
-                </fieldset>
-            </form>-->
             <?php include_partial('IngresoNCpopup', array('form' => $form)) ?>
         </div>
         
@@ -79,11 +68,6 @@
         <div class="divmiddle2">
                     <div class="divmiddle1">
                         <br />
-<!--                        <h2>FECHA EMISION</h2>
-                            <input type="text" id="datepicker1" size="9" readonly value="<?php echo date('d/m/Y',time() - 1 * 24 * 60 * 60) ?>"> ->
-                            <input type="text" id="datepicker2" size="9" readonly value="<?php echo date('d/m/Y',time() + 3 * 24 * 60 * 60) ?>">
-                            <br />
-                            <br />-->
                             <h2>CLIENTE</h2>                            
                             <input type="text" value="<?php echo $sf_request->getParameter('query') ?>" name="query" id="search_cliente" />
                             
@@ -111,6 +95,7 @@
         var id_detalle;
         var id_factura = "<?php echo (count($detalle_activos)>0 ? $detalle_activos[0]->getIdFactura():'null') ?>";
         var rut_cliente = "";
+        var empresa = 1;
         var productos = new Array();
         
         var giCount = 1;
@@ -120,18 +105,10 @@
         
         
         function siguiente(){
-//            id_detalle = new Array();
-//            $('table.detalle input[type=checkbox]:checked').each(function() {
-//                var id = $(this).attr("id").substring(11);
-//                id_detalle.push(id);                
-//                id_detalle.push($('#icantidad'+id).val());
-//            });            
-//            $( "#dialog-form" ).dialog( "open" );
             var jsonStr = JSON.stringify(productos);
-            var url = "<?php echo url_for('notacredito/guardarproductos') ?>"+'?productos='+jsonStr+'&rut_cliente='+rut_cliente;
+            var url = "<?php echo url_for('notacredito/guardarproductos') ?>"+'?productos='+jsonStr+'&rut_cliente='+rut_cliente+'&empresa='+empresa;
             
             $.post(url, function(dato) {
-//                  alert("success"+dato+'&rut_cliente='+rut_cliente);
                   window.location = "<?php echo url_for('notacredito/paso2') ?>";
                 });
 //                .success(function() { alert("second success");})
@@ -141,11 +118,18 @@
         }
         
         
-        function mostrarProductos(_rut_cliente){
+        function mostrarProductos(_rut_cliente, _empresa){
             if(_rut_cliente != rut_cliente){
                 limpiar();
             }
             rut_cliente = _rut_cliente;
+            if(_empresa != 'null' && !isNaN(_empresa)) empresa = parseInt(_empresa)+1;
+            else{
+                if(confirm("No se encuentra la empresa a la que pertenece el cliente, ¿Desea usar ARTELAMP?, en caso contrario se usara ARTRETAIL")){
+                    empresa = 1;
+                }
+                else empresa = 2;
+            }
             $('#cajaproductos').show();
         }
         
@@ -223,19 +207,6 @@
                     "sZeroRecords": "Ningún producto cargado..."
                 }
             });
-        
-        
-//        var Michi = new Gato("Michifu", "azul", 2);
-//        var Luna = new Gato("luna", "negra",40);
-//        var arr = new Array();
-//        arr.push(Michi, Luna);
-//        arr[1].comer();
-        
-        
-            
-            
-            
-            
             
             
             $( "#nota_credito_fechaingreso_nota_credito" ).datepicker($.datepicker.regional[ "es" ]);
@@ -261,7 +232,7 @@
                 if (this.value.length >= 3){
                     $('#productos').load(
                     "<?php echo url_for('notacredito/search_producto') ?>",
-                    {query: this.value, rut_cliente: rut_cliente},
+                    {query: this.value, rut_cliente: rut_cliente, empresa: empresa},
                     function() { }
                     );
                 }
