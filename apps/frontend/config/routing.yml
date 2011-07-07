@@ -21,7 +21,7 @@ search_fecha:
   param: { module: pago, action: search_fecha }
 
 test:
-  url:   /dte/factura.:sf_format
+  url:   /dte/docelectronico.:sf_format
   param: { module: dte, action: genDoc }
   requirements:
     sf_format: (?:xml|txt)

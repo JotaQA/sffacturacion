@@ -10,7 +10,6 @@
                 <TipoDTE><?php echo $tipo ?></TipoDTE>
                 <Folio><?php echo $tipo ?></Folio>
                 <FchEmis><?php echo $factura->getDateTimeObject('fechaemision_factura')->format('Y-m-d') ?></FchEmis>
-                <FchVenc>PENDIENTE</FchVenc>
                 <TipoDespacho>0</TipoDespacho>
                 <IndTraslado>0</IndTraslado>
             </IdDoc>
@@ -82,7 +81,6 @@
                 <TipoDTE><?php echo $tipo ?></TipoDTE>
                 <Folio><?php echo $tipo ?></Folio>
                 <FchEmis><?php echo $boleta->getDateTimeObject('fechaemision_boleta')->format('Y-m-d') ?></FchEmis>
-                <FchVenc>PENDIENTE</FchVenc>
                 <TipoDespacho>0</TipoDespacho>
                 <IndTraslado>0</IndTraslado>
             </IdDoc>
@@ -104,6 +102,14 @@
                 <CmnaRecep><?php echo $boleta->getComunaBoleta() ?></CmnaRecep>
                 <CiudadRecep><?php echo $boleta->getCiudadBoleta() ?></CiudadRecep>
             </Receptor>
+            <Totales>
+                <?php $NETO = $boleta->getNetoCalculado() ?>
+                <MntNeto><?php echo $NETO ?></MntNeto>
+                <MntExe>0</MntExe>
+                <TasaIVA><?php echo $TasaIVA ?></TasaIVA>
+                <IVA><?php $IVA = round($NETO*$TasaIVA/100); echo $IVA ?></IVA>
+                <MntTotal><?php echo ($IVA+$NETO)  ?></MntTotal>
+            </Totales>
         </Encabezado>
 
         <?php break; ?>
@@ -114,7 +120,6 @@
                 <TipoDTE><?php echo $tipo ?></TipoDTE>
                 <Folio><?php echo $tipo ?></Folio>
                 <FchEmis><?php echo $guia->getDateTimeObject('fechaemision_guia')->format('Y-m-d') ?></FchEmis>
-                <FchVenc>PENDIENTE</FchVenc>
                 <TipoDespacho><?php echo $TipoDespacho ?></TipoDespacho>
                 <IndTraslado><?php echo $IndTraslado ?></IndTraslado>
             </IdDoc>

@@ -12,5 +12,12 @@
  */
 class Boleta extends BaseBoleta
 {
+    public function getNetoCalculado(){
+        $neto = 0;
+        foreach ($this->getDetalleActivo() as $detalle){
+            $neto += $detalle->getPrecioDetalleActivo()*$detalle->getCantidadDetalleActivo();
+        }
+        return $neto;
+    }
 
 }

@@ -30,9 +30,9 @@ class dteActions extends sfActions
 
 //        $this->forward404Unless($id = $request->getParameter('id'));
         Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
-        $id = 746;
+        $id = 7;
         $empresa = Doctrine_Core::getTable('Empresa')->find(0);
-        $this->tipo = 52;
+        $this->tipo = 39;
         $this->RUTEmisor = $empresa->getRutEmpresa();
         $this->RznSoc = $empresa->getRazonSocial();
         $this->GiroEmis = $empresa->getRubro();
@@ -63,6 +63,15 @@ class dteActions extends sfActions
                 $this->factura = $facturas[0];
                 break;
             case 39://BOLETA
+                $bolestas = Doctrine_Query::create()
+                    ->select('b.*, da.*')
+                    ->from('Boleta b')
+//                    ->innerJoin('f.EstadoFactura e')
+                    ->innerJoin('b.DetalleActivo da')
+                    ->where('b.id_boleta = ?', $id)
+                    ->execute();
+                if(count($bolestas) == 0) return $this->renderText('ERROR: NINGUNA BOLETA ENCONTRADA');
+                $this->boleta = $bolestas[0];
                 break;
             case 52://GUIA
                 $guias = Doctrine_Query::create()
