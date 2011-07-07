@@ -12,5 +12,12 @@
  */
 class Guia extends BaseGuia
 {
+    public function getNetoCalculado(){
+        $neto = 0;
+        foreach ($this->getDetalleActivo() as $detalle){
+            $neto += $detalle->getPrecioDetalleActivo()*$detalle->getCantidadDetalleActivo();
+        }
+        return $neto;
+    }
 
 }

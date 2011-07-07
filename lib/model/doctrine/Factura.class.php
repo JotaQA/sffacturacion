@@ -14,7 +14,7 @@ class Factura extends BaseFactura
 {
     public function getNetoCalculado(){
         $neto = 0;
-        foreach ($factura->getDetalleActivo() as $detalle){
+        foreach ($this->getDetalleActivo() as $detalle){
             $neto += $detalle->getPrecioDetalleActivo()*$detalle->getCantidadDetalleActivo();
         }
         return $neto;

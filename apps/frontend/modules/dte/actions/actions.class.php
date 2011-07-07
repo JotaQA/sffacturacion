@@ -29,8 +29,10 @@ class dteActions extends sfActions
 //        61 NOTA DE CREDITO ELECTRONICA
 
 //        $this->forward404Unless($id = $request->getParameter('id'));
+        Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+        $id = 746;
         $empresa = Doctrine_Core::getTable('Empresa')->find(0);
-        $this->tipo = 33;
+        $this->tipo = 52;
         $this->RUTEmisor = $empresa->getRutEmpresa();
         $this->RznSoc = $empresa->getRazonSocial();
         $this->GiroEmis = $empresa->getRubro();
@@ -39,23 +41,57 @@ class dteActions extends sfActions
         $this->CiudadOrigen = $empresa->getCiudad();
         $parametros = Doctrine_Core::getTable('Parametro')->findAll();
         foreach ($parametros as $parametro){
-            if($parametro->getNombreParametro() == 'IVA') $this->TasaIVA = 
+            if($parametro->getNombreParametro() == 'IVA'){
+                $this->TasaIVA = $parametro->getValorParametro()*100;
+                break;
+            }
         }
-        $this->TasaIVA = $empresa->getRutEmpresa();
-        $this->TpoCodigo = $empresa->getRutEmpresa();
-        $this->GlosaDR = $empresa->getRutEmpresa();
+        $this->TpoCodigo = 'INT1';
+        $this->GlosaDR = 'Descto';
         
 
         switch ($this->tipo){
-            case 33:
-                $factura = Doctrine_Query::create()
+            case 33://FACTURA
+                $facturas = Doctrine_Query::create()
                     ->select('f.*, da.*')
-                    >from('Factura f')
-                    ->innerJoin('f.EstadoFactura e')
+                    ->from('Factura f')
+//                    ->innerJoin('f.EstadoFactura e')
                     ->innerJoin('f.DetalleActivo da')
                     ->where('f.id_factura = ?', $id)
                     ->execute();
-                $this->factura = $factura[0];
+                if(count($facturas) == 0) return $this->renderText('ERROR: NINGUNA FACTURA ENCONTRADA');
+                $this->factura = $facturas[0];
+                break;
+            case 39://BOLETA
+                break;
+            case 52://GUIA
+                $guias = Doctrine_Query::create()
+                    ->select('g.*, da.*')
+                    ->from('Guia g')
+//                    ->innerJoin('f.EstadoFactura e')
+                    ->innerJoin('g.DetalleActivo da')
+                    ->where('g.id_guia = ?', $id)
+                    ->execute();
+                if(count($guias) == 0) return $this->renderText('ERROR: NINGUNA GUIA ENCONTRADA');
+                $this->guia = $guias[0];
+                
+//                0: Sin Despacho.
+//                1: Despacho por cuenta del receptor del documento (cliente o vendedor en caso de
+//                Facturas de compra.)
+//                2: Despacho por cuenta del emisor a instalaciones del cliente
+//                3: Despacho por cuenta del emisor a otras instalaciones (Ejemplo: entrega en Obra)
+                $this->TipoDespacho = 2;
+                
+//                0: Sin Traslado.
+//                1: Operación constituye venta.
+//                2: Ventas por efectuar.
+//                3: Consignaciones.
+//                4: Entrega gratuita.
+//                5: Traslados internos.
+//                6: Otros traslados no venta.
+//                7: Guía de devolución.
+                $this->IndTraslado = 1;
+                break;
         }
         
     }
