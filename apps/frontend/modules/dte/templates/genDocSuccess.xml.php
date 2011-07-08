@@ -216,29 +216,32 @@
             </Totales>
         </Encabezado>
         <?php $NroLinDet = 1 ?>
-        <?php foreach ($nc->getDetalleActivo() as $detalle): ?>
+        <?php foreach ($nc->getNotacreditoDetalle() as $ncd): ?>
         <Detalle>
             <NroLinDet><?php echo $NroLinDet ?></NroLinDet>
             <CdgItem>
                 <TpoCodigo><?php echo $TpoCodigo ?></TpoCodigo>
-                <VlrCodigo><?php echo $detalle->getCodigoexternoDetalleActivo() ?></VlrCodigo>
+                <VlrCodigo><?php echo $ncd->getDetalleActivo()->getCodigoexternoDetalleActivo() ?></VlrCodigo>
             </CdgItem>
-            <NmbItem><?php echo $detalle->getDescripcionexternaDetalleActivo() ?></NmbItem>
-            <QtyItem><?php echo $detalle->getCantidadDetalleActivo() ?></QtyItem>
-            <PrcItem><?php echo $detalle->getPrecioDetalleActivo() ?></PrcItem>
-            <MontoItem><?php echo ($detalle->getCantidadDetalleActivo() * $detalle->getPrecioDetalleActivo()) ?></MontoItem>
+            <NmbItem><?php echo $ncd->getDetalleActivo()->getDescripcionexternaDetalleActivo() ?></NmbItem>
+            <QtyItem><?php echo $ncd->getDetalleActivo()->getCantidadDetalleActivo() ?></QtyItem>
+            <PrcItem><?php echo $ncd->getDetalleActivo()->getPrecioDetalleActivo() ?></PrcItem>
+            <MontoItem><?php echo ($ncd->getDetalleActivo()->getCantidadDetalleActivo() * $ncd->getDetalleActivo()->getPrecioDetalleActivo()) ?></MontoItem>
         </Detalle>
         <?php $NroLinDet++ ?>
         <?php endforeach; ?>
+        <?php $NroLinRef = 1 ?>
+        <?php foreach ($facturas as $factura): ?>
         <Referencia>
-            <NroLinRef>1</NroLinRef>
+            <NroLinRef><?php echo $NroLinRef ?></NroLinRef>
             <TpoDocRef><?php echo $TpoDocRef ?></TpoDocRef>
-            <FolioRef><?php echo $FolioRef ?></FolioRef>
-            <FchRef><?php echo $FchRef ?></FchRef>
+            <FolioRef><?php echo $factura->getNumeroFactura() ?></FolioRef>
+            <FchRef><?php echo $factura->getFechaemisionFactura() ?></FchRef>
             <CodRef><?php echo $CodRef ?></CodRef>
             <RazonRef><?php echo $RazonRef ?></RazonRef>
         </Referencia>
-        
+        <?php $NroLinRef++ ?>
+        <?php endforeach; ?>
         <?php break; ?>
         <?php endswitch; ?>
         

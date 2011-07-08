@@ -30,9 +30,9 @@ class dteActions extends sfActions
 
 //        $this->forward404Unless($id = $request->getParameter('id'));
         Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
-        $id = 7;
+        $id = 9;
         $empresa = Doctrine_Core::getTable('Empresa')->find(0);
-        $this->tipo = 39;
+        $this->tipo = 61;
         $this->RUTEmisor = $empresa->getRutEmpresa();
         $this->RznSoc = $empresa->getRazonSocial();
         $this->GiroEmis = $empresa->getRubro();
@@ -103,18 +103,36 @@ class dteActions extends sfActions
                 break;
             case 61://NOTA DE CREDITO ELECTRONICA
                 $ncs = Doctrine_Query::create()
-                    ->select('nc.*, da.*')
+                    ->select('nc.*, da.*, ncd.*')
                     ->from('NotaCredito nc')
 //                    ->innerJoin('f.EstadoFactura e')
-                    ->innerJoin('nc.DetalleActivo da')
-                    ->where('g.id_guia = ?', $id)
+                    ->innerJoin('nc.NotacreditoDetalle ncd')
+                    ->innerJoin('ncd.DetalleActivo da')
+                    ->where('nc.id_nota_credito = ?', $id)
                     ->execute();
                 if(count($ncs) == 0) return $this->renderText('ERROR: NINGUNA NOTA DE CREDITO ENCONTRADA');
                 $this->nc = $ncs[0];
                 $id_facturas = array();
-                foreach ($this->nc->getDetalleActivo() as $detalle){
-                    if(!in_array($detalle->getIdFactura(), $id_facturas)) $id_facturas[] = $detalle->getIdFactura();
+                foreach ($ncs as $nc){
+                    foreach ($nc->getNotacreditoDetalle() as $ncd){
+                        if(!in_array($ncd->getDetalleActivo()->getIdFactura(), $id_facturas)) $id_facturas[] = $ncd->getDetalleActivo()->getIdFactura();
+                    }
                 }
+                $facturas = Doctrine_Query::create()
+                    ->select('f.*')
+                    ->from('Factura f')
+//                    ->innerJoin('f.EstadoFactura e')
+                    ->whereIn('f.id_factura', $id_facturas)
+                    ->execute();
+                $this->facturas = $facturas;
+                //NC PARA FACTURA
+                $this->TpoDocRef = 33;
+//                CodRef: Indica los distintos casos de referencia, los cuales pueden ser:
+//                1: Anula Documento de Referencia.
+//                2: Corrige Texto Documento de Referencia.
+//                3: Corrige Montos.
+                $this->CodRef = 1;
+                $this->RazonRef = 'Anula Documento Ref.';
                 break;
         }
         
