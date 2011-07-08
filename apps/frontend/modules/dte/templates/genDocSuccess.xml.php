@@ -182,6 +182,63 @@
         <?php break; ?>
         <?php case 61: ?>
 <!--        NOTA DE CREDITO ELECTRONICA-->
+        <Encabezado>
+            <IdDoc>
+                <TipoDTE><?php echo $tipo ?></TipoDTE>
+                <Folio><?php echo $tipo ?></Folio>
+                <FchEmis><?php echo $nc->getDateTimeObject('fechaemision_nota_credito')->format('Y-m-d') ?></FchEmis>
+            </IdDoc>
+            <Emisor>
+                <RUTEmisor><?php echo $RUTEmisor ?></RUTEmisor>
+                <RznSoc><?php echo $RznSoc ?></RznSoc>
+                <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
+                <Acteco>PENDIENTE</Acteco>
+                <DirOrigen><?php echo $DirOrigen ?></DirOrigen>
+                <CmnaOrigen><?php echo $CmnaOrigen ?></CmnaOrigen>
+                <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>
+            </Emisor>
+            <Receptor>
+                <RUTRecep><?php echo $nc->getRutNotaCredito() ?></RUTRecep>
+                <RznSocRecep><?php echo $nc->getNombreNotaCredito() ?></RznSocRecep>
+                <GiroRecep><?php echo $nc->getGiroNotaCredito() ?></GiroRecep>
+<!--                <Contacto></Contacto>-->
+                <DirRecep><?php echo $nc->getDireccionNotaCredito() ?></DirRecep>
+                <CmnaRecep><?php echo $nc->getComunaNotaCredito() ?></CmnaRecep>
+                <CiudadRecep><?php echo $nc->getCiudadNotaCredito() ?></CiudadRecep>
+            </Receptor>
+            <Totales>
+                <?php $NETO = $nc->getNetoCalculado() ?>
+                <MntNeto><?php echo $NETO ?></MntNeto>
+                <MntExe>0</MntExe>
+                <TasaIVA><?php echo $TasaIVA ?></TasaIVA>
+                <IVA><?php $IVA = round($NETO*$TasaIVA/100); echo $IVA ?></IVA>
+                <MntTotal><?php echo ($IVA+$NETO)  ?></MntTotal>
+            </Totales>
+        </Encabezado>
+        <?php $NroLinDet = 1 ?>
+        <?php foreach ($nc->getDetalleActivo() as $detalle): ?>
+        <Detalle>
+            <NroLinDet><?php echo $NroLinDet ?></NroLinDet>
+            <CdgItem>
+                <TpoCodigo><?php echo $TpoCodigo ?></TpoCodigo>
+                <VlrCodigo><?php echo $detalle->getCodigoexternoDetalleActivo() ?></VlrCodigo>
+            </CdgItem>
+            <NmbItem><?php echo $detalle->getDescripcionexternaDetalleActivo() ?></NmbItem>
+            <QtyItem><?php echo $detalle->getCantidadDetalleActivo() ?></QtyItem>
+            <PrcItem><?php echo $detalle->getPrecioDetalleActivo() ?></PrcItem>
+            <MontoItem><?php echo ($detalle->getCantidadDetalleActivo() * $detalle->getPrecioDetalleActivo()) ?></MontoItem>
+        </Detalle>
+        <?php $NroLinDet++ ?>
+        <?php endforeach; ?>
+        <Referencia>
+            <NroLinRef>1</NroLinRef>
+            <TpoDocRef><?php echo $TpoDocRef ?></TpoDocRef>
+            <FolioRef><?php echo $FolioRef ?></FolioRef>
+            <FchRef><?php echo $FchRef ?></FchRef>
+            <CodRef><?php echo $CodRef ?></CodRef>
+            <RazonRef><?php echo $RazonRef ?></RazonRef>
+        </Referencia>
+        
         <?php break; ?>
         <?php endswitch; ?>
         

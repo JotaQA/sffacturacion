@@ -101,6 +101,21 @@ class dteActions extends sfActions
 //                7: Guía de devolución.
                 $this->IndTraslado = 1;
                 break;
+            case 61://NOTA DE CREDITO ELECTRONICA
+                $ncs = Doctrine_Query::create()
+                    ->select('nc.*, da.*')
+                    ->from('NotaCredito nc')
+//                    ->innerJoin('f.EstadoFactura e')
+                    ->innerJoin('nc.DetalleActivo da')
+                    ->where('g.id_guia = ?', $id)
+                    ->execute();
+                if(count($ncs) == 0) return $this->renderText('ERROR: NINGUNA NOTA DE CREDITO ENCONTRADA');
+                $this->nc = $ncs[0];
+                $id_facturas = array();
+                foreach ($this->nc->getDetalleActivo() as $detalle){
+                    if(!in_array($detalle->getIdFactura(), $id_facturas)) $id_facturas[] = $detalle->getIdFactura();
+                }
+                break;
         }
         
     }

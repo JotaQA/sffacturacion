@@ -39,6 +39,14 @@ class NotaCredito extends BaseNotaCredito
 //            $this->setEstadoNotaCredito($EEMITIDA);//ESTADO EMITIDA
 //        }
 //    }
+    
+    public function getNetoCalculado(){
+        $neto = 0;
+        foreach ($this->getDetalleActivo() as $detalle){
+            $neto += $detalle->getPrecioDetalleActivo()*$detalle->getCantidadDetalleActivo();
+        }
+        return $neto;
+    }
 
     public function save(Doctrine_Connection $conn = null) {
         if ($this->isNew()){
