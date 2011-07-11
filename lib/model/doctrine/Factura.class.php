@@ -225,8 +225,8 @@ class Factura extends BaseFactura
 
 
     public function getEstado(){
-        $this->ValidarSaldo();
-        $this->ValidarEstado();
+//        $this->ValidarSaldo();
+//        $this->ValidarEstado();
         return $this->getEstadoFactura()->getNombreEstadofactura();
     }
 

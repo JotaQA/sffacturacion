@@ -29,10 +29,10 @@ class dteActions extends sfActions
 //        61 NOTA DE CREDITO ELECTRONICA
 
 //        $this->forward404Unless($id = $request->getParameter('id'));
-        Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
-        $id = 9;
-        $empresa = Doctrine_Core::getTable('Empresa')->find(0);
-        $this->tipo = 61;
+        Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_2');
+        $id = 1011;
+        $empresa = Doctrine_Core::getTable('Empresa')->find(1);
+        $this->tipo = 33;
         $this->RUTEmisor = $empresa->getRutEmpresa();
         $this->RznSoc = $empresa->getRazonSocial();
         $this->GiroEmis = $empresa->getRubro();

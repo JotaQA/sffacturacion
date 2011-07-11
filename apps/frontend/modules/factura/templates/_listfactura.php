@@ -1,5 +1,19 @@
 <?php use_helper('Number') ?>
 <?php $sf_user->setCulture('es_CL') ?>
+<?php //$time = $sf_data->getRaw('time') ?>
+<?php 
+
+public function getFacturaTipo($tipo){
+    if($tipo == 'FISICA') return '<b style="background: yellow; color: black; padding: 1px 2px; font-size: 120%" title="Factura Física">F</b>';
+    else return '<b style="background: blue; color: white; padding: 1px 2px; font-size: 120%" title="Factura Electronica">E</b>';
+}
+
+
+$time = array();
+$timer = new sfTimer('test');
+$timer->startTimer();
+          ?>
+
 <table width="100%">
   <thead>
     <tr>
@@ -16,24 +30,18 @@
     </tr>
   </thead>
   <tbody>
-    <?php foreach ($pager->getResults() as $factura): ?>
+    <?php foreach ($pager->getResults(ESC_RAW) as $factura): ?>
     <tr>
-      <td><?php echo link_to($factura->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$factura->getIdFactura(), array(
+      <td><?php echo link_to(getFacturaTipo($factura['tipo_factura']), 'factura/cambiartipo?id_factura='.$factura['id_factura'], array(
   'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'))).$factura->getNumeroFactura() ?></td>
-      <td><?php echo $factura->getEstado() ?></td>
-      <td title="<?php echo $factura->getDatosCliente() ?>"><?php echo $factura->getNombreFacturaCorto(17) ?></td>
-      <td><?php echo $factura->getNombreVendedor() ?></td>
-      <td><?php echo $factura->getFechaemisionFacturaCustom() ?></td>
-      <td><?php echo format_currency($factura->getMontoFactura(),'CLP') ?></td>
-      <td><?php echo format_currency($factura->getMontoFactura()-$factura->getSaldoFactura(),'CLP') ?></td>
 
-      <?php echo $factura->getComentarioFacturaTD(ESC_RAW) ?>
-      <td><button onclick="anular('<?php echo $factura->getIdFactura() ?>','<?php echo $factura->getNumeroFactura() ?>');">Anular</button>
-      </td>
     </tr>
     <?php endforeach; ?>
   </tbody>
 </table>
+
+<?php $time[] = $timer->addTime(); ?>
+<?php $timer->startTimer(); ?>
 
 <?php if ($pager->haveToPaginate()): ?>
   <div class="pagination">
@@ -63,3 +71,15 @@
     </a>
   </div>
 <?php endif; ?>
+
+<?php $time[] = $timer->addTime(); ?>
+<?php $timer->startTimer(); ?>
+<?php $time[] = $timer->getElapsedTime(); ?>
+
+<table>
+    <?php foreach ($time as $t): ?>
+    <tr>
+        <td><?php echo $t ?></td>
+    </tr>
+    <?php endforeach; ?>    
+</table>

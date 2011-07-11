@@ -45,12 +45,13 @@ class facturaActions extends sfActions
       $DM->setCurrentConnection('artelamp_'.$empresa);
       $this->getUser()->setAttribute('empresa', 'artelamp_'.$empresa);
 
-      if($rut_cliente != '#'){
+      if($rut_cliente != '#'){          
           $notas = Doctrine_Query::create()//0.311 -> 0.27
           ->select('a.id_salida')
           ->from('Salida a')
           ->where('a.id_cliente = ?',$rut_cliente)
           ->execute();
+          
 
 
             if(count($notas) != 0){
@@ -79,8 +80,11 @@ class facturaActions extends sfActions
 
       }
       else{
+          
           $facturas = Doctrine_Core::getTable('Factura')
            ->createQuery('a')
+           ->select('a.id_factura, a.id_estadofactura, a.numero_factura, a.fechaemision_factura, a.monto_factura, a.saldo_factura, a.rut_factura, a.telefono_factura, a.nombre_factura, a.direccion_factura, a.comuna_factura, a.ciudad_factura, a.giro_factura, a.responsable_factura, a.tipo_factura')
+           ->addSelect('e.nombre_estadofactura')
            ->innerJoin('a.EstadoFactura e')
            ->Where('e.nombre_estadofactura != ?','Anulada')
            ->AndWhere('e.nombre_estadofactura != ?','Pagada');
@@ -89,8 +93,8 @@ class facturaActions extends sfActions
            $facturas = $facturas
                 ->AndWhere('DATE(a.fechaemision_factura) >= ?',$fecha1)
                 ->AndWhere('DATE(a.fechaemision_factura) <= ?',$fecha2)
-                ->AndWhere('a.fechaemision_factura != ?','NULL');
-//                ->execute();
+                ->AndWhere('a.fechaemision_factura != ?','NULL')
+                ->setHydrationMode(Doctrine::HYDRATE_ARRAY);
 
 
         $this->pager = new sfDoctrinePager(//0.11
@@ -100,7 +104,6 @@ class facturaActions extends sfActions
         $this->pager->setQuery($facturas);
         $this->pager->setPage($request->getParameter('pagina', 1));
         $this->pager->init();
-
 
 
           if ($request->isXmlHttpRequest())

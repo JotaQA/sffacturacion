@@ -26,13 +26,12 @@
                 <RUTRecep><?php echo $factura->getRutFactura() ?></RUTRecep>
                 <RznSocRecep><?php echo $factura->getNombreFactura() ?></RznSocRecep>
                 <GiroRecep><?php echo $factura->getGiroFactura() ?></GiroRecep>
-<!--                <Contacto></Contacto>-->
                 <DirRecep><?php echo $factura->getDireccionFactura() ?></DirRecep>
                 <CmnaRecep><?php echo $factura->getComunaFactura() ?></CmnaRecep>
                 <CiudadRecep><?php echo $factura->getCiudadFactura() ?></CiudadRecep>
             </Receptor>
             <Totales>
-                <?php $NETO = $factura->getNetoCalculado() ?>
+                <?php $NETO = $factura->getNetoCalculado()*(1-$factura->getDescuentoFactura()/100) ?>
                 <MntNeto><?php echo $NETO ?></MntNeto>
                 <MntExe>0</MntExe>
                 <TasaIVA><?php echo $TasaIVA ?></TasaIVA>
@@ -59,16 +58,16 @@
             <NroLinDR>1</NroLinDR>
             <TpoMov>D</TpoMov>
             <GlosaDR><?php echo $GlosaDR ?></GlosaDR>
-            <TpoValor>$</TpoValor>
+            <TpoValor>%</TpoValor>
             <ValorDR><?php echo $factura->getDescuentoFactura() ?></ValorDR>
         </DscRcgGlobal>
         <Adicional>
             <NodosA>
-                <A1><?php echo $factura->getResponsableFactura() ?></A1>
-                <A2><?php echo $factura->getTelefonoFactura() ?></A2>
-                <A3><?php echo $factura->getCondicionpagoFactura() ?></A3>
+                <A1><?php echo $factura->getCondicionpagoFactura() ?></A1>
+                <A2><?php echo $factura->getResponsableFactura() ?></A2>
+                <A3><?php echo $factura->getTelefonoFactura() ?></A3>
                 <A4><?php echo $factura->getOcFactura() ?></A4>
-                <A5></A5>
+                <A5><?php echo $factura->getIdNotapedidoFactura() ?></A5>
                 <A6><?php echo $factura->getComentarioFactura() ?></A6>
             </NodosA>
         </Adicional>
