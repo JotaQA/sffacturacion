@@ -1,6 +1,0 @@
-# You can find more information about this file on the symfony website:
-# http://www.symfony-project.org/reference/1_4/en/13-View
-
-all:
-  javascripts:    [jquery-ui-1.8.9.custom.min.js, jquery.ui.datepicker-es.js, cliente.js]
-  stylesheets:    [ui-lightness/jquery-ui-1.8.9.custom.css]
