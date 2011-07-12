@@ -1,6 +1,4 @@
 <div id="divmid">
-
-<!--    <h1>Existencias</h1>-->
     <div class="triangle">
     <div class="triangleblue">
     <div style="margin-left: 15px; padding-top: 3px; padding-bottom: 3px; text-align: left;"><span class="headerwhite">
@@ -26,17 +24,6 @@
         <table width="100%"  id="prueba" class="display">
             
         </table>
-        
-        
-        
-        <div id="dialog-form" title="Datos de Nota de Credito">
-            <p class="validateTips">Ingrese los datos de la Nota de Credito</p>
-            
-            <?php include_partial('IngresoNCpopup', array('form' => $form)) ?>
-        </div>
-        
-        
-        
         
         
          </div>
@@ -189,7 +176,6 @@
                             "sTitle": "ACCION",
                             "sClass": "center",
                             "sWidth": "15%"
-//                            "fnRender": "<button onclick='alert('hola')'>B</button>"
                         }                     
 		],
                 "bJQueryUI": true,
@@ -197,11 +183,8 @@
                 "bLengthChange": false,
                 "bInfo": false,
                 "bPaginate": false,
-//                "bLengthChange": 10,
                 "aaSorting": [],
                 "sScrollY": 400,
-//		"bScrollCollapse": true,
-//                "bScrollInfinite": true,
                 "oLanguage": {
                     "sSearch": "Buscar:",
                     "sZeroRecords": "Ningún producto cargado..."

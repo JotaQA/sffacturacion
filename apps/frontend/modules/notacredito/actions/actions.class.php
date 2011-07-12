@@ -164,7 +164,6 @@ class notacreditoActions extends sfActions
     $this->detalle_activos = array();
     $this->cb = new sfWidgetFormInputCheckbox();
     $this->it = new sfWidgetFormInputText();
-    $this->form = new NotaCreditoForm();
   }
   
   public function executeGuardarproductos(sfWebRequest $request){
