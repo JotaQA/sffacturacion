@@ -140,7 +140,7 @@ ActivosSimples:
       notnull: true
       autoincrement: false
 Boleta:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: boleta
   columns:
     id_boleta:
@@ -835,7 +835,7 @@ CotizacionesProducto:
       notnull: true
       autoincrement: false
 Cuota:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: cuota
   columns:
     id_cuota:
@@ -967,7 +967,7 @@ Despacho:
       notnull: true
       autoincrement: false
 DetalleActivo:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: detalle_activo
   columns:
     id_detalle_activo:
@@ -1107,7 +1107,7 @@ DetalleActivo:
       foreign: id_detalle_activo
       type: many
 Division:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: division
   columns:
     id_division:
@@ -1328,7 +1328,7 @@ EstadoComponente:
       notnull: true
       autoincrement: false
 EstadoCuota:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: estado_cuota
   columns:
     id_estado_cuota:
@@ -1357,7 +1357,7 @@ EstadoCuota:
       foreign: id_estado_cuota
       type: many
 EstadoBoleta:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: estado_boleta
   columns:
     id_estadoboleta:
@@ -1386,7 +1386,7 @@ EstadoBoleta:
       foreign: id_estadoboleta
       type: many
 EstadoNotaDebito:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: estado_nota_debito
   columns:
     id_estado_nota_debito:
@@ -1415,7 +1415,7 @@ EstadoNotaDebito:
       foreign: id_estado_nota_debito
       type: many
 EstadoFactura:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: estado_factura
   columns:
     id_estadofactura:
@@ -1444,7 +1444,7 @@ EstadoFactura:
       foreign: id_estadofactura
       type: many
 EstadoGuia:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: estado_guia
   columns:
     id_estadoguia:
@@ -1473,7 +1473,7 @@ EstadoGuia:
       foreign: id_estadoguia
       type: many
 EstadoNotaCredito:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: estado_nota_credito
   columns:
     id_estado_nota_credito:
@@ -1552,7 +1552,7 @@ Existencia:
       foreign: id_espacio
       type: one
 Factura:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: factura
   columns:
     id_factura:
@@ -1795,7 +1795,7 @@ FormasPago:
       notnull: true
       autoincrement: false
 Guia:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: guia
   columns:
     id_guia:
@@ -1944,7 +1944,7 @@ Guia:
       foreign: id_guia
       type: many
 HistCuota:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: hist_cuota
   columns:
     id_hist_cuota:
@@ -2005,7 +2005,7 @@ HistCuota:
       foreign: id_hist_cuota
       type: many
 HistPago:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: hist_pago
   columns:
     id_hist_pago:
@@ -2186,7 +2186,7 @@ Nivel:
       foreign: id_nivel
       type: many
 NotaCredito:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: nota_credito
   columns:
     id_nota_credito:
@@ -2346,7 +2346,7 @@ NotaCredito:
       foreign: id_nota_credito
       type: many
 NotaDebito:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: nota_debito
   columns:
     id_nota_debito:
@@ -2544,7 +2544,7 @@ NotaVenta:
       notnull: true
       autoincrement: false
 NotacreditoDetalle:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: notacredito_detalle
   columns:
     id_detalle_activo:
@@ -2569,7 +2569,7 @@ NotacreditoDetalle:
       foreign: id_detalle_activo
       type: one
 NotadebitoDetalle:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: notadebito_detalle
   columns:
     id_detalle_activo:
@@ -2594,7 +2594,7 @@ NotadebitoDetalle:
       foreign: id_detalle_activo
       type: one
 Pago:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: pago
   columns:
     id_pago:
@@ -3419,7 +3419,7 @@ Sucursal:
       notnull: true
       autoincrement: false
 TipoPago:
-  connection: artelamp_1
+#  connection: artelamp_1
   tableName: tipo_pago
   columns:
     id_tipo_pago:

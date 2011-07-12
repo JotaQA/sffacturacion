@@ -1,6 +1,4 @@
 <?php
-// Connection Component Binding
-Doctrine_Manager::getInstance()->bindComponent('HistPago', 'artelamp_1');
 
 /**
  * BaseHistPago

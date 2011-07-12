@@ -1,6 +1,4 @@
 <?php
-// Connection Component Binding
-Doctrine_Manager::getInstance()->bindComponent('HistCuota', 'artelamp_1');
 
 /**
  * BaseHistCuota

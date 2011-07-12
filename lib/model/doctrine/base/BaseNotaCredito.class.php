@@ -1,6 +1,4 @@
 <?php
-// Connection Component Binding
-//Doctrine_Manager::getInstance()->bindComponent('NotaCredito', 'artelamp_1');
 
 /**
  * BaseNotaCredito

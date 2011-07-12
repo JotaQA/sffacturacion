@@ -1,6 +1,4 @@
 <?php
-// Connection Component Binding
-//Doctrine_Manager::getInstance()->bindComponent('DetalleActivo', 'artelamp_1');
 
 /**
  * BaseDetalleActivo
@@ -26,6 +24,7 @@
  * @property Boleta $Boleta
  * @property Factura $Factura
  * @property Doctrine_Collection $NotacreditoDetalle
+ * @property Doctrine_Collection $NotadebitoDetalle
  * 
  * @method integer             getIdDetalleActivo()                   Returns the current record's "id_detalle_activo" value
  * @method integer             getIdBoleta()                          Returns the current record's "id_boleta" value
@@ -46,6 +45,7 @@
  * @method Boleta              getBoleta()                            Returns the current record's "Boleta" value
  * @method Factura             getFactura()                           Returns the current record's "Factura" value
  * @method Doctrine_Collection getNotacreditoDetalle()                Returns the current record's "NotacreditoDetalle" collection
+ * @method Doctrine_Collection getNotadebitoDetalle()                 Returns the current record's "NotadebitoDetalle" collection
  * @method DetalleActivo       setIdDetalleActivo()                   Sets the current record's "id_detalle_activo" value
  * @method DetalleActivo       setIdBoleta()                          Sets the current record's "id_boleta" value
  * @method DetalleActivo       setIdFactura()                         Sets the current record's "id_factura" value
@@ -65,6 +65,7 @@
  * @method DetalleActivo       setBoleta()                            Sets the current record's "Boleta" value
  * @method DetalleActivo       setFactura()                           Sets the current record's "Factura" value
  * @method DetalleActivo       setNotacreditoDetalle()                Sets the current record's "NotacreditoDetalle" collection
+ * @method DetalleActivo       setNotadebitoDetalle()                 Sets the current record's "NotadebitoDetalle" collection
  * 
  * @package    sffacturacion
  * @subpackage model
@@ -228,6 +229,10 @@ abstract class BaseDetalleActivo extends sfDoctrineRecord
              'foreign' => 'id_factura'));
 
         $this->hasMany('NotacreditoDetalle', array(
+             'local' => 'id_detalle_activo',
+             'foreign' => 'id_detalle_activo'));
+
+        $this->hasMany('NotadebitoDetalle', array(
              'local' => 'id_detalle_activo',
              'foreign' => 'id_detalle_activo'));
     }
