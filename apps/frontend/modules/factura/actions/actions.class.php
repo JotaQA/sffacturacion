@@ -44,6 +44,9 @@ class facturaActions extends sfActions
       $DM = Doctrine_Manager::getInstance();
       $DM->setCurrentConnection('artelamp_'.$empresa);
       $this->getUser()->setAttribute('empresa', 'artelamp_'.$empresa);
+//      $time = array();
+//    $timer = new sfTimer('test');
+//    $timer->startTimer();
 
       if($rut_cliente != '#'){          
           $notas = Doctrine_Query::create()//0.311 -> 0.27
@@ -71,19 +74,15 @@ class facturaActions extends sfActions
             else{
               //CONSULTA COCHINA QUE NO RETORNA VALORES
               $facturas = Doctrine_Core::getTable('Factura')
-               ->createQuery('a')
-               ->innerJoin('a.EstadoFactura e')
-               ->Where('e.nombre_estadofactura != ?','Anulada')
-               ->AndWhere('e.nombre_estadofactura != ?','Pagada')
-               ->where('true = ?',false);
+               ->createQuery('a')               
+               ->where('1=0');
             }
 
       }
       else{
-          
           $facturas = Doctrine_Core::getTable('Factura')
            ->createQuery('a')
-           ->select('a.id_factura, a.id_estadofactura, a.numero_factura, a.fechaemision_factura, a.monto_factura, a.saldo_factura, a.rut_factura, a.telefono_factura, a.nombre_factura, a.direccion_factura, a.comuna_factura, a.ciudad_factura, a.giro_factura, a.responsable_factura, a.tipo_factura')
+           ->select('a.id_factura, a.id_estadofactura, a.numero_factura, DATE_FORMAT(a.fechaemision_factura, "%d/%m/%Y") as fechaemision_factura, a.monto_factura, a.saldo_factura, a.rut_factura, a.telefono_factura, a.nombre_factura, a.direccion_factura, a.comuna_factura, a.ciudad_factura, a.giro_factura, a.responsable_factura, a.comentario_factura, a.tipo_factura')
            ->addSelect('e.nombre_estadofactura')
            ->innerJoin('a.EstadoFactura e')
            ->Where('e.nombre_estadofactura != ?','Anulada')
@@ -96,15 +95,19 @@ class facturaActions extends sfActions
                 ->AndWhere('a.fechaemision_factura != ?','NULL')
                 ->setHydrationMode(Doctrine::HYDRATE_ARRAY);
 
-
         $this->pager = new sfDoctrinePager(//0.11
                         'Factura',
-                        15
+                        20
         );
         $this->pager->setQuery($facturas);
         $this->pager->setPage($request->getParameter('pagina', 1));
         $this->pager->init();
 
+//        $time[] = $timer->addTime();
+//        $timer->startTimer();
+//        
+//
+//        $time[] = $timer->getElapsedTime();
 
           if ($request->isXmlHttpRequest())
           {

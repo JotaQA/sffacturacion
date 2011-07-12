@@ -14,7 +14,7 @@ $(function() {
     });
 
 
-    $('td[title]').qtip({
+    $('.qtip').qtip({
         content: $(this).attr('title'),
         style: {
             name: 'blue' // Inherit from preset style
@@ -76,7 +76,7 @@ var empresaAntigua2=0;
 var textoFecha1Antigua=getFechaActual(-1);
 var textoFecha2Antigua=getFechaActual(3);
 function mostrarFacturas(textoFecha1,textoFecha2,rut_cliente,empresa,pag){
-    $('td[title]').qtip("destroy");
+    $('.qtip').qtip("hide");
 
     if(textoFecha1 == "#") textoFecha1= textoFecha1Antigua;
     else textoFecha1Antigua=textoFecha1;
@@ -99,7 +99,7 @@ function mostrarFacturas(textoFecha1,textoFecha2,rut_cliente,empresa,pag){
     $('#jsfactura').text()+"/mostrarfacturas",
     {textoFecha1: textoFecha1, textoFecha2: textoFecha2, rut_cliente: rut_cliente, empresa: empresa, pagina: pag},
     function() {
-            $('td[title]').qtip({
+            $('.qtip').qtip({
                 content: $(this).attr('title'),
                 style: {
                     name: 'blue' // Inherit from preset style

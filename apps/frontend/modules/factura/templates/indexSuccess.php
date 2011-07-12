@@ -7,7 +7,7 @@
     <div class="triangle">
     <div class="triangleblue">
     <div style="margin-left: 15px; padding-top: 3px; padding-bottom: 3px; text-align: left;"><span class="headerwhite">
-    LISTA FACTURAS <span style="font-size: smaller">v1.1</span>
+    LISTA FACTURAS <span style="font-size: smaller">v1.2</span>
     </span>
     </div>
     </div>

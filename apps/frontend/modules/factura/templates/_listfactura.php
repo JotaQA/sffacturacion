@@ -1,17 +1,54 @@
 <?php use_helper('Number') ?>
-<?php $sf_user->setCulture('es_CL') ?>
-<?php //$time = $sf_data->getRaw('time') ?>
-<?php 
+<?php $sf_user->setCulture('es_CL'); ?>
 
-public function getFacturaTipo($tipo){
+<?php
+
+function getFacturaTipo($tipo){
     if($tipo == 'FISICA') return '<b style="background: yellow; color: black; padding: 1px 2px; font-size: 120%" title="Factura Física">F</b>';
     else return '<b style="background: blue; color: white; padding: 1px 2px; font-size: 120%" title="Factura Electronica">E</b>';
 }
+function getDatosCliente($factura){    
+    $retorno = "<table id='tooltip'>";
+    $retorno = $retorno."<tr>";
+    $retorno = $retorno."<td>Emision:</td><td>".$factura['fechaemision_factura']."</td>";
+    $retorno = $retorno."</tr>";
+    $retorno = $retorno."<tr>";
+    $retorno = $retorno."<td>RUT:</td><td>".$factura['rut_factura']."</td>";
+    $retorno = $retorno."</tr>";
+    $retorno = $retorno."<tr>";
+    $retorno = $retorno."<td>Nombre:</td><td>".$factura['nombre_factura']."</td>";
+    $retorno = $retorno."</tr>";
+    $retorno = $retorno."<tr>";
+    $retorno = $retorno."<td>Telefono:</td><td>".$factura['telefono_factura']."</td>";
+    $retorno = $retorno."</tr>";
+    $retorno = $retorno."<tr>";
+    $retorno = $retorno."<td>Dirección:</td><td>".$factura['direccion_factura']."</td>";
+    $retorno = $retorno."</tr>";
+    $retorno = $retorno."<tr>";
+    $retorno = $retorno."<td>Comuna:</td><td>".$factura['comuna_factura']."</td>";
+    $retorno = $retorno."</tr>";
+    $retorno = $retorno."<tr>";
+    $retorno = $retorno."<td>Ciudad:</td><td>".$factura['ciudad_factura']."</td>";
+    $retorno = $retorno."</tr>";
+    $retorno = $retorno."</table>";
+    return $retorno;
+}
 
+function getNombreFacturaCorto($factura, $largo){
+    if(strlen($factura['nombre_factura']) > $largo) return substr($factura['nombre_factura'], 0, $largo).'...';
+    else return $factura['nombre_factura'];
+}
 
-$time = array();
-$timer = new sfTimer('test');
-$timer->startTimer();
+function  getComentarioFacturaTD($factura) {
+    if($factura['comentario_factura'] != ''){
+        $td = '<td class="qtip" title="'.$factura['comentario_factura'].'" align="center"><img alt="comentario" width="20px" src="/images1/comentario.jpg" /></td>';
+    }
+    else{
+        $td = '<td></td>';
+    }
+    return $td;
+}
+
           ?>
 
 <table width="100%">
@@ -33,15 +70,22 @@ $timer->startTimer();
     <?php foreach ($pager->getResults(ESC_RAW) as $factura): ?>
     <tr>
       <td><?php echo link_to(getFacturaTipo($factura['tipo_factura']), 'factura/cambiartipo?id_factura='.$factura['id_factura'], array(
-  'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'))).$factura->getNumeroFactura() ?></td>
+  'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'), 'title' => getDatosCliente($factura), 'class' => 'qtip')).$factura['numero_factura'] ?></td>
+      <td><?php echo $factura['EstadoFactura']['nombre_estadofactura'] ?></td>
+      <td title="<?php echo getDatosCliente($factura) ?>" class="qtip"><?php echo getNombreFacturaCorto($factura, 17) ?></td>
+      <td><?php echo $factura['responsable_factura'] ?></td>
+      <td><?php echo $factura['fechaemision_factura'] ?></td>
+      <td><?php echo format_currency($factura['monto_factura'],'CLP') ?></td>
+      <td><?php echo format_currency($factura['monto_factura']-$factura['saldo_factura'],'CLP') ?></td>
+      <?php echo getComentarioFacturaTD($factura) ?>
+      <td style="padding: 1px"><button onclick="anular('<?php echo $factura['id_factura'] ?>','<?php echo $factura[''] ?>');">Anular</button></td>
 
     </tr>
     <?php endforeach; ?>
   </tbody>
 </table>
 
-<?php $time[] = $timer->addTime(); ?>
-<?php $timer->startTimer(); ?>
+
 
 <?php if ($pager->haveToPaginate()): ?>
   <div class="pagination">
@@ -71,15 +115,3 @@ $timer->startTimer();
     </a>
   </div>
 <?php endif; ?>
-
-<?php $time[] = $timer->addTime(); ?>
-<?php $timer->startTimer(); ?>
-<?php $time[] = $timer->getElapsedTime(); ?>
-
-<table>
-    <?php foreach ($time as $t): ?>
-    <tr>
-        <td><?php echo $t ?></td>
-    </tr>
-    <?php endforeach; ?>    
-</table>
