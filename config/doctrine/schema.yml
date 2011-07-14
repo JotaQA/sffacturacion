@@ -1046,6 +1046,13 @@ DetalleActivo:
       primary: false
       notnull: false
       autoincrement: false
+    cantidad_nota_debito:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
     precio_detalle_activo:
       type: integer(4)
       fixed: false

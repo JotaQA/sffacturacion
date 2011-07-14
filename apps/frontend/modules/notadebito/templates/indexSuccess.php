@@ -73,9 +73,15 @@
 <script type="text/javascript">
     //VAR GLOBALES
     var rut_cliente = "";
+    var empresa = 1;
+    var productos = new Array();
     
     function siguiente(){
-        
+        var jsonStr = JSON.stringify(productos);
+        var url = "<?php echo url_for('notadebito/guardarproductos') ?>";
+        $.post(url,{productos: jsonStr, rut_cliente: rut_cliente, empresa: empresa}, function() {
+            window.location = "<?php echo url_for('notadebito/paso2') ?>";
+        });
     }
     function mostrarProductos(_rut_cliente, _empresa){
         if(_rut_cliente != rut_cliente){
@@ -91,8 +97,41 @@
         }
         $('#cajaproductos').show();
     }
+    function cargarProducto(codigo, descripcion){
+        var bool = true;
+        for(i in productos){
+            if(productos[i].codigo == codigo) bool = false;
+        }
+        if(bool) productos.push(new Producto(codigo, descripcion));
+        actualizarlista();
+    }
+    function borrarRow(index){            
+        productos.splice(index,1);
+        $('#tabla').dataTable().fnDeleteRow(index);
+        actualizarlista();
+    }
+    function actualizarlista(){
+//            productos.push(new Producto('123', '123', 10));
+        $('#tabla').dataTable().fnClearTable();
+        for(i in productos){                
+            $('#tabla').dataTable().fnAddData( [
+                productos[i].codigo,
+                productos[i].descripcion,
+                "<button onclick=borrarRow("+i+")>borrar</button>"
+            ]);
+        }
+        $('button').button();
+    }
+    function limpiar(){
+        $('#tabla').dataTable().fnClearTable();
+        productos = new Array();
+    }
+    var Producto = function(codigo, descripcion){
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+    }
     $(document).ready(function(){
-        $('#prueba').dataTable( {
+        $('#tabla').dataTable( {
             "aoColumns": [
                     { "sTitle": "CODIGO" },
                     { "sTitle": "DESCRIPCION" },
@@ -126,6 +165,18 @@
                 rut_cliente = "";
                 $('#cajaproductos').hide();
                 $('#clientes').html('');
+            }
+        });
+        $('#search_productos').keyup(function(key){
+            if (this.value.length >= 3){
+                $('#productos').load(
+                "<?php echo url_for('notadebito/search_producto') ?>",
+                {query: this.value, rut_cliente: rut_cliente, empresa: empresa},
+                function() { }
+                );
+            }
+            if(this.value == ''){
+                $('#productos').html('');
             }
         });
     });

@@ -39,8 +39,8 @@ class notacreditoActions extends sfActions
       $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
       Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
       $numeroNC = $request->getParameter('numeroNC');
-      $factura = Doctrine_Core::getTable('NotaCredito')->findOneByNumeroNotaCredito($numeroNC);
-      if($factura == null) return $this->renderText('false');
+      $NC = Doctrine_Core::getTable('NotaCredito')->findOneByNumeroNotaCredito($numeroNC);
+      if($NC == null) return $this->renderText('false');
       else return $this->renderText('true');
   }
   public function executeGetFactura(sfWebRequest $request)

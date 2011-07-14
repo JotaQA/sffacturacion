@@ -15,6 +15,7 @@
  * @property string $codigoexterno_detalle_activo
  * @property integer $cantidad_detalle_activo
  * @property integer $cantidad_nota_credito
+ * @property integer $cantidad_nota_debito
  * @property integer $precio_detalle_activo
  * @property timestamp $fechaingreso_detalle_activo
  * @property string $id_producto
@@ -36,6 +37,7 @@
  * @method string              getCodigoexternoDetalleActivo()        Returns the current record's "codigoexterno_detalle_activo" value
  * @method integer             getCantidadDetalleActivo()             Returns the current record's "cantidad_detalle_activo" value
  * @method integer             getCantidadNotaCredito()               Returns the current record's "cantidad_nota_credito" value
+ * @method integer             getCantidadNotaDebito()                Returns the current record's "cantidad_nota_debito" value
  * @method integer             getPrecioDetalleActivo()               Returns the current record's "precio_detalle_activo" value
  * @method timestamp           getFechaingresoDetalleActivo()         Returns the current record's "fechaingreso_detalle_activo" value
  * @method string              getIdProducto()                        Returns the current record's "id_producto" value
@@ -56,6 +58,7 @@
  * @method DetalleActivo       setCodigoexternoDetalleActivo()        Sets the current record's "codigoexterno_detalle_activo" value
  * @method DetalleActivo       setCantidadDetalleActivo()             Sets the current record's "cantidad_detalle_activo" value
  * @method DetalleActivo       setCantidadNotaCredito()               Sets the current record's "cantidad_nota_credito" value
+ * @method DetalleActivo       setCantidadNotaDebito()                Sets the current record's "cantidad_nota_debito" value
  * @method DetalleActivo       setPrecioDetalleActivo()               Sets the current record's "precio_detalle_activo" value
  * @method DetalleActivo       setFechaingresoDetalleActivo()         Sets the current record's "fechaingreso_detalle_activo" value
  * @method DetalleActivo       setIdProducto()                        Sets the current record's "id_producto" value
@@ -158,6 +161,15 @@ abstract class BaseDetalleActivo extends sfDoctrineRecord
              'length' => 4,
              ));
         $this->hasColumn('cantidad_nota_credito', 'integer', 4, array(
+             'type' => 'integer',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => false,
+             'autoincrement' => false,
+             'length' => 4,
+             ));
+        $this->hasColumn('cantidad_nota_debito', 'integer', 4, array(
              'type' => 'integer',
              'fixed' => 0,
              'unsigned' => false,

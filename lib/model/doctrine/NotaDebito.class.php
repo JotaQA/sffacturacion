@@ -12,5 +12,17 @@
  */
 class NotaDebito extends BaseNotaDebito
 {
+    public function save(Doctrine_Connection $conn = null) {
+        if ($this->isNew()){
+            //SE INGRESA CON LA FECHA ACTUAL
+            $this->setFechaingresoNotaDebito(date('Y-m-d H:i:s'));
+            //ESTADO EMITIDA
+            $EEMITIDA = Doctrine::getTable('EstadoNotaDebito')->findOneByNombreEstadoNotaDebito('Emitida');            
+            $this->setEstadoNotaDebito($EEMITIDA);
+            $this->setTipoNotaDebito('FISICA');
+        }
+
+        return parent::save($conn);
+    }
 
 }
