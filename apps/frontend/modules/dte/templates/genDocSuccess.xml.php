@@ -1,4 +1,9 @@
 <?php echo '<?xml version="1.0" encoding="ISO-8859-1"?>' ?>
+<?php
+function formatRut($rut){
+    return str_replace('.','',$rut);
+}
+?>
 
 <DTE>
     <Documento>
@@ -8,13 +13,13 @@
         <Encabezado>
             <IdDoc>
                 <TipoDTE><?php echo $tipo ?></TipoDTE>
-                <Folio><?php echo $tipo ?></Folio>
+                <Folio><?php echo $factura->getNumeroFactura() ?></Folio>
                 <FchEmis><?php echo $factura->getDateTimeObject('fechaemision_factura')->format('Y-m-d') ?></FchEmis>
                 <TipoDespacho>0</TipoDespacho>
                 <IndTraslado>0</IndTraslado>
             </IdDoc>
             <Emisor>
-                <RUTEmisor><?php echo $RUTEmisor ?></RUTEmisor>
+                <RUTEmisor><?php echo formatRut($RUTEmisor) ?></RUTEmisor>
                 <RznSoc><?php echo $RznSoc ?></RznSoc>
                 <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
                 <Acteco>PENDIENTE</Acteco>
@@ -23,7 +28,7 @@
                 <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>
             </Emisor>
             <Receptor>
-                <RUTRecep><?php echo $factura->getRutFactura() ?></RUTRecep>
+                <RUTRecep><?php echo formatRut($factura->getRutFactura()) ?></RUTRecep>
                 <RznSocRecep><?php echo $factura->getNombreFactura() ?></RznSocRecep>
                 <GiroRecep><?php echo $factura->getGiroFactura() ?></GiroRecep>
                 <DirRecep><?php echo $factura->getDireccionFactura() ?></DirRecep>
@@ -78,13 +83,13 @@
         <Encabezado>
             <IdDoc>
                 <TipoDTE><?php echo $tipo ?></TipoDTE>
-                <Folio><?php echo $tipo ?></Folio>
+                <Folio><?php echo $boleta->getNumeroBoleta() ?></Folio>
                 <FchEmis><?php echo $boleta->getDateTimeObject('fechaemision_boleta')->format('Y-m-d') ?></FchEmis>
                 <TipoDespacho>0</TipoDespacho>
                 <IndTraslado>0</IndTraslado>
             </IdDoc>
             <Emisor>
-                <RUTEmisor><?php echo $RUTEmisor ?></RUTEmisor>
+                <RUTEmisor><?php echo formatRut($RUTEmisor) ?></RUTEmisor>
                 <RznSoc><?php echo $RznSoc ?></RznSoc>
                 <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
                 <Acteco>PENDIENTE</Acteco>
@@ -93,10 +98,9 @@
                 <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>
             </Emisor>
             <Receptor>
-                <RUTRecep><?php echo $boleta->getRutBoleta() ?></RUTRecep>
+                <RUTRecep><?php echo formatRut($boleta->getRutBoleta()) ?></RUTRecep>
                 <RznSocRecep><?php echo $boleta->getNombreBoleta() ?></RznSocRecep>
                 <GiroRecep><?php echo $boleta->getGiroBoleta() ?></GiroRecep>
-<!--                <Contacto></Contacto>-->
                 <DirRecep><?php echo $boleta->getDireccionBoleta() ?></DirRecep>
                 <CmnaRecep><?php echo $boleta->getComunaBoleta() ?></CmnaRecep>
                 <CiudadRecep><?php echo $boleta->getCiudadBoleta() ?></CiudadRecep>
@@ -117,13 +121,13 @@
         <Encabezado>
             <IdDoc>
                 <TipoDTE><?php echo $tipo ?></TipoDTE>
-                <Folio><?php echo $tipo ?></Folio>
+                <Folio><?php echo $guia->getNumeroGuia() ?></Folio>
                 <FchEmis><?php echo $guia->getDateTimeObject('fechaemision_guia')->format('Y-m-d') ?></FchEmis>
                 <TipoDespacho><?php echo $TipoDespacho ?></TipoDespacho>
                 <IndTraslado><?php echo $IndTraslado ?></IndTraslado>
             </IdDoc>
             <Emisor>
-                <RUTEmisor><?php echo $RUTEmisor ?></RUTEmisor>
+                <RUTEmisor><?php echo formatRut($RUTEmisor) ?></RUTEmisor>
                 <RznSoc><?php echo $RznSoc ?></RznSoc>
                 <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
                 <Acteco>PENDIENTE</Acteco>
@@ -132,10 +136,9 @@
                 <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>
             </Emisor>
             <Receptor>
-                <RUTRecep><?php echo $guia->getRutGuia() ?></RUTRecep>
+                <RUTRecep><?php echo formatRut($guia->getRutGuia()) ?></RUTRecep>
                 <RznSocRecep><?php echo $guia->getNombreGuia() ?></RznSocRecep>
                 <GiroRecep><?php echo $guia->getGiroGuia() ?></GiroRecep>
-<!--                <Contacto></Contacto>-->
                 <DirRecep><?php echo $guia->getDireccionGuia() ?></DirRecep>
                 <CmnaRecep><?php echo $guia->getComunaGuia() ?></CmnaRecep>
                 <CiudadRecep><?php echo $guia->getCiudadGuia() ?></CiudadRecep>
@@ -184,11 +187,11 @@
         <Encabezado>
             <IdDoc>
                 <TipoDTE><?php echo $tipo ?></TipoDTE>
-                <Folio><?php echo $tipo ?></Folio>
+                <Folio><?php echo $nc->getNumeroNotaCredito() ?></Folio>
                 <FchEmis><?php echo $nc->getDateTimeObject('fechaemision_nota_credito')->format('Y-m-d') ?></FchEmis>
             </IdDoc>
             <Emisor>
-                <RUTEmisor><?php echo $RUTEmisor ?></RUTEmisor>
+                <RUTEmisor><?php echo formatRut($RUTEmisor) ?></RUTEmisor>
                 <RznSoc><?php echo $RznSoc ?></RznSoc>
                 <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
                 <Acteco>PENDIENTE</Acteco>
@@ -197,10 +200,9 @@
                 <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>
             </Emisor>
             <Receptor>
-                <RUTRecep><?php echo $nc->getRutNotaCredito() ?></RUTRecep>
+                <RUTRecep><?php echo formatRut($nc->getRutNotaCredito()) ?></RUTRecep>
                 <RznSocRecep><?php echo $nc->getNombreNotaCredito() ?></RznSocRecep>
                 <GiroRecep><?php echo $nc->getGiroNotaCredito() ?></GiroRecep>
-<!--                <Contacto></Contacto>-->
                 <DirRecep><?php echo $nc->getDireccionNotaCredito() ?></DirRecep>
                 <CmnaRecep><?php echo $nc->getComunaNotaCredito() ?></CmnaRecep>
                 <CiudadRecep><?php echo $nc->getCiudadNotaCredito() ?></CiudadRecep>
@@ -235,7 +237,7 @@
             <NroLinRef><?php echo $NroLinRef ?></NroLinRef>
             <TpoDocRef><?php echo $TpoDocRef ?></TpoDocRef>
             <FolioRef><?php echo $factura->getNumeroFactura() ?></FolioRef>
-            <FchRef><?php echo $factura->getFechaemisionFactura() ?></FchRef>
+            <FchRef><?php echo $factura->getDateTimeObject('fechaemision_factura')->format('Y-m-d') ?></FchRef>
             <CodRef><?php echo $CodRef ?></CodRef>
             <RazonRef><?php echo $RazonRef ?></RazonRef>
         </Referencia>

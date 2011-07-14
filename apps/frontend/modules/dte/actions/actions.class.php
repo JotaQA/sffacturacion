@@ -30,7 +30,7 @@ class dteActions extends sfActions
 
 //        $this->forward404Unless($id = $request->getParameter('id'));
         Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_2');
-        $id = 1011;
+        $id = 960;
         $empresa = Doctrine_Core::getTable('Empresa')->find(1);
         $this->tipo = 33;
         $this->RUTEmisor = $empresa->getRutEmpresa();
@@ -138,70 +138,4 @@ class dteActions extends sfActions
         
     }
 
-  public function executeIndex(sfWebRequest $request)
-  {
-    $this->clientes = Doctrine_Core::getTable('Cliente')
-      ->createQuery('a')
-      ->execute();
-  }
-
-  public function executeShow(sfWebRequest $request)
-  {
-    $this->cliente = Doctrine_Core::getTable('Cliente')->find(array($request->getParameter('id_cliente')));
-    $this->forward404Unless($this->cliente);
-  }
-
-  public function executeNew(sfWebRequest $request)
-  {
-    $this->form = new ClienteForm();
-  }
-
-  public function executeCreate(sfWebRequest $request)
-  {
-    $this->forward404Unless($request->isMethod(sfRequest::POST));
-
-    $this->form = new ClienteForm();
-
-    $this->processForm($request, $this->form);
-
-    $this->setTemplate('new');
-  }
-
-  public function executeEdit(sfWebRequest $request)
-  {
-    $this->forward404Unless($cliente = Doctrine_Core::getTable('Cliente')->find(array($request->getParameter('id_cliente'))), sprintf('Object cliente does not exist (%s).', $request->getParameter('id_cliente')));
-    $this->form = new ClienteForm($cliente);
-  }
-
-  public function executeUpdate(sfWebRequest $request)
-  {
-    $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($cliente = Doctrine_Core::getTable('Cliente')->find(array($request->getParameter('id_cliente'))), sprintf('Object cliente does not exist (%s).', $request->getParameter('id_cliente')));
-    $this->form = new ClienteForm($cliente);
-
-    $this->processForm($request, $this->form);
-
-    $this->setTemplate('edit');
-  }
-
-  public function executeDelete(sfWebRequest $request)
-  {
-    $request->checkCSRFProtection();
-
-    $this->forward404Unless($cliente = Doctrine_Core::getTable('Cliente')->find(array($request->getParameter('id_cliente'))), sprintf('Object cliente does not exist (%s).', $request->getParameter('id_cliente')));
-    $cliente->delete();
-
-    $this->redirect('cliente/index');
-  }
-
-  protected function processForm(sfWebRequest $request, sfForm $form)
-  {
-    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
-    if ($form->isValid())
-    {
-      $cliente = $form->save();
-
-      $this->redirect('cliente/edit?id_cliente='.$cliente->getIdCliente());
-    }
-  }
 }
