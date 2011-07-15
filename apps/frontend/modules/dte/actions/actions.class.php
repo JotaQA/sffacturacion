@@ -36,6 +36,7 @@ class dteActions extends sfActions
         $this->RUTEmisor = $empresa->getRutEmpresa();
         $this->RznSoc = $empresa->getRazonSocial();
         $this->GiroEmis = $empresa->getRubro();
+        $this->Acteco = 519000;
         $this->DirOrigen = $empresa->getDireccion();
         $this->CmnaOrigen = $empresa->getComuna();
         $this->CiudadOrigen = $empresa->getCiudad();

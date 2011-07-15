@@ -339,23 +339,61 @@ class notacreditoActions extends sfActions
     $nota_credito->save();
     
     return $this->renderText('ready');
-//    
-//    return $this->renderText(count($vectordatos));
-
-//    $this->forward404Unless($factura = Doctrine_Core::getTable('Factura')->find(array($request->getParameter('id_factura'))), sprintf('Object factura does not exist (%s).', $request->getParameter('id_factura')));
-//    $resultado = $factura->anular();
-//
-//    if($resultado == 'true') return $this->renderText('true');
-//    else return $this->renderText($resultado);
   }
+  
+  
+  public function executeSearch_documento(sfWebRequest $request){
+      $query = $request->getParameter('query');
+      $empresa = $request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
+      $tipodoc = $request->getParameter('tipodoc');
+      $limit=10;
+
+      switch ($tipodoc){
+          case 33:
+              $docs = Doctrine_Core::getTable('Factura')
+                  ->createQuery('a')
+                  ->select('a.numero_factura, a.fechaemision_factura, a.monto_factura')
+                  ->where('a.numero_factura LIKE ?','%'.$query.'%')
+                  ->orWhere('a.rut_factura LIKE ?','%'.$query.'%')
+                  ->orWhere('a.id_notapedido_factura LIKE ?','%'.$query.'%');
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+
+
+     
+
+
+      $docs = $docs->limit($limit)->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+
+      if ($request->isXmlHttpRequest())
+      {
+        if ('' == $query || count($docs)==0)
+        {
+          return $this->renderText('No hay Resultados...');
+        }
+
+        return $this->renderPartial('notacredito/listdocumento', array('docs' => $docs, 'tipo' => $tipodoc));
+      }
+  }
+  
   
   public function executeIndex(sfWebRequest $request)
   {
     Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
     $this->getUser()->setAttribute('empresa', 'artelamp_1');
-    $this->nota_creditos = Doctrine_Core::getTable('NotaCredito')
-        ->createQuery('a')
-        ->execute();
+    $this->codrefchoice  = new sfWidgetFormChoice(array(
+        'choices' => Doctrine_Core::getTable('NotaCredito')->getCodRefs(),
+    ));
+    $this->tipodocchoice  = new sfWidgetFormChoice(array(
+        'choices' => Doctrine_Core::getTable('NotaCredito')->getTipoDoc(),
+    ));
   }
 
   public function executeNew(sfWebRequest $request)

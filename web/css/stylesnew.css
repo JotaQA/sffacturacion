@@ -201,7 +201,7 @@ margin-left: 2px;
 } 
 .triangle3 {
 background-color : #6898d0;
-width : 120px;
+/*width : 120px;*/
 top : 20px; 
 right : 10px;
 z-index : 1; 

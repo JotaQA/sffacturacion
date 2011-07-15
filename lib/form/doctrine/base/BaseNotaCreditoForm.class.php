@@ -17,6 +17,7 @@ abstract class BaseNotaCreditoForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id_nota_credito'            => new sfWidgetFormInputHidden(),
       'id_estado_nota_credito'     => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('EstadoNotaCredito'), 'add_empty' => true)),
+      'codref_nota_credito'        => new sfWidgetFormInputText(),
       'numero_nota_credito'        => new sfWidgetFormInputText(),
       'numerofactura_nota_credito' => new sfWidgetFormInputText(),
       'fechaingreso_nota_credito'  => new sfWidgetFormDateTime(),
@@ -41,6 +42,7 @@ abstract class BaseNotaCreditoForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id_nota_credito'            => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id_nota_credito')), 'empty_value' => $this->getObject()->get('id_nota_credito'), 'required' => false)),
       'id_estado_nota_credito'     => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('EstadoNotaCredito'), 'required' => false)),
+      'codref_nota_credito'        => new sfValidatorInteger(),
       'numero_nota_credito'        => new sfValidatorInteger(),
       'numerofactura_nota_credito' => new sfValidatorString(array('max_length' => 128, 'required' => false)),
       'fechaingreso_nota_credito'  => new sfValidatorDateTime(array('required' => false)),

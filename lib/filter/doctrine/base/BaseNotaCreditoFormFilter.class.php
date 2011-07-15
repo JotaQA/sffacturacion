@@ -14,6 +14,7 @@ abstract class BaseNotaCreditoFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'id_estado_nota_credito'     => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('EstadoNotaCredito'), 'add_empty' => true)),
+      'codref_nota_credito'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'numero_nota_credito'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'numerofactura_nota_credito' => new sfWidgetFormFilterInput(),
       'fechaingreso_nota_credito'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate())),
@@ -37,6 +38,7 @@ abstract class BaseNotaCreditoFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'id_estado_nota_credito'     => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('EstadoNotaCredito'), 'column' => 'id_estado_nota_credito')),
+      'codref_nota_credito'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'numero_nota_credito'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'numerofactura_nota_credito' => new sfValidatorPass(array('required' => false)),
       'fechaingreso_nota_credito'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
@@ -77,6 +79,7 @@ abstract class BaseNotaCreditoFormFilter extends BaseFormFilterDoctrine
     return array(
       'id_nota_credito'            => 'Number',
       'id_estado_nota_credito'     => 'ForeignKey',
+      'codref_nota_credito'        => 'Number',
       'numero_nota_credito'        => 'Number',
       'numerofactura_nota_credito' => 'Text',
       'fechaingreso_nota_credito'  => 'Date',

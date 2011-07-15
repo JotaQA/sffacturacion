@@ -997,13 +997,6 @@ DetalleActivo:
       primary: false
       notnull: false
       autoincrement: false
-#    id_nota_credito:
-#      type: integer(4)
-#      fixed: false
-#      unsigned: false
-#      primary: false
-#      notnull: false
-      autoincrement: false
     id_salida:
       type: integer(4)
       fixed: false
@@ -1054,6 +1047,20 @@ DetalleActivo:
       notnull: false
       autoincrement: false
     precio_detalle_activo:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    precio_nota_credito:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    precio_nota_debito:
       type: integer(4)
       fixed: false
       unsigned: false
@@ -2209,6 +2216,14 @@ NotaCredito:
       primary: false
       notnull: false
       autoincrement: false
+    codref_nota_credito:
+      type: integer(1)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: true
+      autoincrement: false
+      comment: '1: Anula Documento de Referencia, 2: Corrige Texto Documento de Referencia, 3: Corrige Montos'
     numero_nota_credito:
       type: integer(4)
       fixed: false
@@ -2369,6 +2384,14 @@ NotaDebito:
       primary: false
       notnull: false
       autoincrement: false
+    codref_nota_debito:
+      type: integer(1)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: true
+      autoincrement: false
+      comment: '1: Anula Documento de Referencia, 2: Corrige Texto Documento de Referencia, 3: Corrige Montos'
     numero_nota_debito:
       type: integer(4)
       fixed: false

@@ -17,6 +17,7 @@ abstract class BaseNotaDebitoForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id_nota_debito'            => new sfWidgetFormInputHidden(),
       'id_estado_nota_debito'     => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('EstadoNotaDebito'), 'add_empty' => true)),
+      'codref_nota_debito'        => new sfWidgetFormInputText(),
       'numero_nota_debito'        => new sfWidgetFormInputText(),
       'numerofactura_nota_debito' => new sfWidgetFormInputText(),
       'fechaingreso_nota_debito'  => new sfWidgetFormDateTime(),
@@ -41,6 +42,7 @@ abstract class BaseNotaDebitoForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id_nota_debito'            => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id_nota_debito')), 'empty_value' => $this->getObject()->get('id_nota_debito'), 'required' => false)),
       'id_estado_nota_debito'     => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('EstadoNotaDebito'), 'required' => false)),
+      'codref_nota_debito'        => new sfValidatorInteger(),
       'numero_nota_debito'        => new sfValidatorInteger(),
       'numerofactura_nota_debito' => new sfValidatorString(array('max_length' => 128, 'required' => false)),
       'fechaingreso_nota_debito'  => new sfValidatorDateTime(array('required' => false)),

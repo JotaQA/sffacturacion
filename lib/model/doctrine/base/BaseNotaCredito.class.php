@@ -7,6 +7,7 @@
  * 
  * @property integer $id_nota_credito
  * @property integer $id_estado_nota_credito
+ * @property integer $codref_nota_credito
  * @property integer $numero_nota_credito
  * @property string $numerofactura_nota_credito
  * @property timestamp $fechaingreso_nota_credito
@@ -31,6 +32,7 @@
  * 
  * @method integer             getIdNotaCredito()              Returns the current record's "id_nota_credito" value
  * @method integer             getIdEstadoNotaCredito()        Returns the current record's "id_estado_nota_credito" value
+ * @method integer             getCodrefNotaCredito()          Returns the current record's "codref_nota_credito" value
  * @method integer             getNumeroNotaCredito()          Returns the current record's "numero_nota_credito" value
  * @method string              getNumerofacturaNotaCredito()   Returns the current record's "numerofactura_nota_credito" value
  * @method timestamp           getFechaingresoNotaCredito()    Returns the current record's "fechaingreso_nota_credito" value
@@ -54,6 +56,7 @@
  * @method Doctrine_Collection getNotacreditoDetalle()         Returns the current record's "NotacreditoDetalle" collection
  * @method NotaCredito         setIdNotaCredito()              Sets the current record's "id_nota_credito" value
  * @method NotaCredito         setIdEstadoNotaCredito()        Sets the current record's "id_estado_nota_credito" value
+ * @method NotaCredito         setCodrefNotaCredito()          Sets the current record's "codref_nota_credito" value
  * @method NotaCredito         setNumeroNotaCredito()          Sets the current record's "numero_nota_credito" value
  * @method NotaCredito         setNumerofacturaNotaCredito()   Sets the current record's "numerofactura_nota_credito" value
  * @method NotaCredito         setFechaingresoNotaCredito()    Sets the current record's "fechaingreso_nota_credito" value
@@ -102,6 +105,16 @@ abstract class BaseNotaCredito extends sfDoctrineRecord
              'notnull' => false,
              'autoincrement' => false,
              'length' => 4,
+             ));
+        $this->hasColumn('codref_nota_credito', 'integer', 1, array(
+             'type' => 'integer',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => true,
+             'autoincrement' => false,
+             'comment' => '1: Anula Documento de Referencia, 2: Corrige Texto Documento de Referencia, 3: Corrige Montos',
+             'length' => 1,
              ));
         $this->hasColumn('numero_nota_credito', 'integer', 4, array(
              'type' => 'integer',

@@ -14,6 +14,7 @@ abstract class BaseNotaDebitoFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'id_estado_nota_debito'     => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('EstadoNotaDebito'), 'add_empty' => true)),
+      'codref_nota_debito'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'numero_nota_debito'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'numerofactura_nota_debito' => new sfWidgetFormFilterInput(),
       'fechaingreso_nota_debito'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate())),
@@ -37,6 +38,7 @@ abstract class BaseNotaDebitoFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'id_estado_nota_debito'     => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('EstadoNotaDebito'), 'column' => 'id_estado_nota_debito')),
+      'codref_nota_debito'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'numero_nota_debito'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'numerofactura_nota_debito' => new sfValidatorPass(array('required' => false)),
       'fechaingreso_nota_debito'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
@@ -77,6 +79,7 @@ abstract class BaseNotaDebitoFormFilter extends BaseFormFilterDoctrine
     return array(
       'id_nota_debito'            => 'Number',
       'id_estado_nota_debito'     => 'ForeignKey',
+      'codref_nota_debito'        => 'Number',
       'numero_nota_debito'        => 'Number',
       'numerofactura_nota_debito' => 'Text',
       'fechaingreso_nota_debito'  => 'Date',

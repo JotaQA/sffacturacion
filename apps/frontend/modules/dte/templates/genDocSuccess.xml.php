@@ -22,7 +22,7 @@ function formatRut($rut){
                 <RUTEmisor><?php echo formatRut($RUTEmisor) ?></RUTEmisor>
                 <RznSoc><?php echo $RznSoc ?></RznSoc>
                 <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
-                <Acteco>PENDIENTE</Acteco>
+                <Acteco><?php echo $Acteco ?></Acteco>
                 <DirOrigen><?php echo $DirOrigen ?></DirOrigen>
                 <CmnaOrigen><?php echo $CmnaOrigen ?></CmnaOrigen>
                 <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>

@@ -7,6 +7,7 @@
  * 
  * @property integer $id_nota_debito
  * @property integer $id_estado_nota_debito
+ * @property integer $codref_nota_debito
  * @property integer $numero_nota_debito
  * @property string $numerofactura_nota_debito
  * @property timestamp $fechaingreso_nota_debito
@@ -31,6 +32,7 @@
  * 
  * @method integer             getIdNotaDebito()              Returns the current record's "id_nota_debito" value
  * @method integer             getIdEstadoNotaDebito()        Returns the current record's "id_estado_nota_debito" value
+ * @method integer             getCodrefNotaDebito()          Returns the current record's "codref_nota_debito" value
  * @method integer             getNumeroNotaDebito()          Returns the current record's "numero_nota_debito" value
  * @method string              getNumerofacturaNotaDebito()   Returns the current record's "numerofactura_nota_debito" value
  * @method timestamp           getFechaingresoNotaDebito()    Returns the current record's "fechaingreso_nota_debito" value
@@ -54,6 +56,7 @@
  * @method Doctrine_Collection getNotadebitoDetalle()         Returns the current record's "NotadebitoDetalle" collection
  * @method NotaDebito          setIdNotaDebito()              Sets the current record's "id_nota_debito" value
  * @method NotaDebito          setIdEstadoNotaDebito()        Sets the current record's "id_estado_nota_debito" value
+ * @method NotaDebito          setCodrefNotaDebito()          Sets the current record's "codref_nota_debito" value
  * @method NotaDebito          setNumeroNotaDebito()          Sets the current record's "numero_nota_debito" value
  * @method NotaDebito          setNumerofacturaNotaDebito()   Sets the current record's "numerofactura_nota_debito" value
  * @method NotaDebito          setFechaingresoNotaDebito()    Sets the current record's "fechaingreso_nota_debito" value
@@ -102,6 +105,16 @@ abstract class BaseNotaDebito extends sfDoctrineRecord
              'notnull' => false,
              'autoincrement' => false,
              'length' => 4,
+             ));
+        $this->hasColumn('codref_nota_debito', 'integer', 1, array(
+             'type' => 'integer',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => true,
+             'autoincrement' => false,
+             'comment' => '1: Anula Documento de Referencia, 2: Corrige Texto Documento de Referencia, 3: Corrige Montos',
+             'length' => 1,
              ));
         $this->hasColumn('numero_nota_debito', 'integer', 4, array(
              'type' => 'integer',

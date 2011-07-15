@@ -17,5 +17,23 @@ class NotaCreditoTable extends Doctrine_Table
         return Doctrine_Core::getTable('NotaCredito');
     }
     
-    public $datos = "hola";
+    static public $CodRef = array(
+    '1' => 'Anula Doc de Referencia',
+    '2' => 'Corrige Texto Doc de Ref',
+    '3' => 'Corrige Montos',
+    );
+    static public $TipoDoc = array(
+    '33' => '33 FACTURA ELEC.',
+    '39' => '39 BOLETA ELEC.',
+    '56' => '56 NOTA DEBITO ELEC.',
+    );
+ 
+      public function getCodRefs()
+      {
+        return self::$CodRef;
+      }
+      public function getTipoDoc()
+      {
+        return self::$TipoDoc;
+      }
 }
