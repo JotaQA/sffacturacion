@@ -347,16 +347,17 @@ class notacreditoActions extends sfActions
       $empresa = $request->getParameter('empresa');
       Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
       $tipodoc = $request->getParameter('tipodoc');
+      $rut_cliente = $request->getParameter('rut_cliente');
+      
       $limit=10;
 
       switch ($tipodoc){
           case 33:
               $docs = Doctrine_Core::getTable('Factura')
                   ->createQuery('a')
-                  ->select('a.numero_factura, a.fechaemision_factura, a.monto_factura')
-                  ->where('a.numero_factura LIKE ?','%'.$query.'%')
-                  ->orWhere('a.rut_factura LIKE ?','%'.$query.'%')
-                  ->orWhere('a.id_notapedido_factura LIKE ?','%'.$query.'%');
+                  ->select('a.id_factura, a.numero_factura, a.fechaemision_factura, a.monto_factura')
+                  ->where('a.rut_factura = ?',$rut_cliente)
+                  ->andWhere('a.numero_factura LIKE ? OR a.id_notapedido_factura LIKE ?',array('%'.$query.'%', '%'.$query.'%'));
               break;
           case 39:
 //              $tipodoc = 'Boleta';

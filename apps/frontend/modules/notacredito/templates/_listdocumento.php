@@ -1,8 +1,8 @@
-<table id="tabladoc" style="background-color: white; border-style:solid;">
+<table id="tabladocumento" style="background-color: white; border-style:solid;">
     <?php switch ($tipo):         
     case 33:?>
     <?php foreach ($docs as $doc): ?>
-    <tr class="cliente" onclick='DocumentoSeleccionado(<?php echo $doc['numero_factura'] ?>)' style="cursor: pointer">
+    <tr class="cliente" onclick='DocumentoSeleccionado(<?php echo $doc['id_factura'] ?>,"[33]FACTURA ELECTRONICA", <?php echo $doc['numero_factura'] ?>, "<?php echo $doc['fechaemision_factura'] ?>")' style="cursor: pointer">
       <td><?php echo $doc['numero_factura'] ?></td>
       <td><?php echo $doc['fechaemision_factura'] ?></td>
       <td><?php echo $doc['monto_factura'] ?></td>

@@ -23,9 +23,9 @@ class NotaCreditoTable extends Doctrine_Table
     '3' => 'Corrige Montos',
     );
     static public $TipoDoc = array(
-    '33' => '33 FACTURA ELEC.',
-    '39' => '39 BOLETA ELEC.',
-    '56' => '56 NOTA DEBITO ELEC.',
+    '33' => '[33]FACTURA ELEC.',
+    '39' => '[39]BOLETA ELEC.',
+    '56' => '[56]NOTA DEBITO ELEC.',
     );
  
       public function getCodRefs()

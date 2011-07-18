@@ -100,9 +100,9 @@
         <div class="divmiddle2">
             <div class="divmiddle1">
                 <br />
-                <H2>NUMERO/RUT/NP:</H2>
+                <H2>NUMERO/NP:</H2>
                 <input type="text" id="search_documento" />
-                <div id="documentos"></div>
+                <div id="documentos" style="position:absolute" autocomplete="off"></div>
                 <br />
             </div>
         </div>
@@ -115,6 +115,7 @@
     var rut_cliente = "";
     var empresa = 1;
     var productos = new Array();
+    var documentos = new Array();
     
     function ClienteSeleccionado(_rut_cliente, descripcion, _empresa){
         rut_cliente = _rut_cliente;
@@ -131,8 +132,43 @@
         $('#tablacliente').hide();
     }
     
-    function DocumentoSeleccionado(numdoc){
-        alert(numdoc);
+    function DocumentoSeleccionado(id,tipodocumento,numdocumento,fecha){
+        var bool = true;
+        for(i in documentos){
+            if(documentos[i].id == id) bool = false;
+        }
+        if(bool) documentos.push(new Documento(id, tipodocumento, numdocumento, fecha));
+        //FALTA VER LOS CASOS DE CODREF
+        if(true && bool){
+            
+        }
+        actualizarlistadoc();
+    }
+    
+    function actualizarlistadoc(){
+        $('#tabladoc').dataTable().fnClearTable();
+        for(i in documentos){                
+            $('#tabladoc').dataTable().fnAddData( [
+                documentos[i].tipodocumento,
+                documentos[i].numdocumento,
+                documentos[i].fecha,
+                "<button onclick=borrarRow("+i+")>borrar</button>"
+            ]);
+        }
+        $('button').button();
+    }
+    
+    function borrarRow(index){            
+        documentos.splice(index,1);
+        $('#tabladoc').dataTable().fnDeleteRow(index);
+        actualizarlistadoc();
+    }
+    
+    var Documento = function(id, tipodocumento, numdocumento, fecha){
+        this.id = id;
+        this.tipodocumento = tipodocumento;
+        this.numdocumento = numdocumento;
+        this.fecha = fecha;
     }
     
     $(document).ready(function(){
@@ -141,15 +177,15 @@
             "aoColumns": [
                     { 
                         "sTitle": "DOCUMENTO",
-                        "sWidth": "20%"
+                        "sWidth": "30%"
                     },
                     { "sTitle": "FOLIO" },
                     { "sTitle": "FECHA" },
-                    { "sTitle": "RAZON" },
+//                    { "sTitle": "RAZON" },
                     { 
                         "sTitle": "ACCION",
                         "sClass": "center",
-                        "sWidth": "60px"
+                        "sWidth": "70px"
                     }
             ],
             "bJQueryUI": true,
@@ -215,15 +251,12 @@
                 var tipodoc = $('#tipodocchoice').val();
                 $('#documentos').load(
                 "<?php echo url_for('notacredito/search_documento') ?>",
-                {query: this.value, empresa: empresa, tipodoc: tipodoc},
+                {query: this.value, empresa: empresa, tipodoc: tipodoc, rut_cliente: rut_cliente},
                 function() { /*$('#loader').hide();*/ }
                 );
             }
             if(this.value.length < 2){
-//                rut_cliente = "";
-//                $('#search_cliente').css('border-color','#A6C9E2');
-//                $('#search_cliente').css('border-width','1px');
-//                $('#tablacliente').hide();
+                $('#tabladocumento').hide();
             }
         });
 //        $('#search_cliente').keydown (function(event){
