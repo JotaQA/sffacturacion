@@ -216,67 +216,21 @@ class notacreditoActions extends sfActions
   }
   
   
-  public function executeSearch_producto(sfWebRequest $request){      
-      $query = $request->getParameter('query');
-      $rut_cliente = $request->getParameter('rut_cliente');
-      $empresa = $request->getParameter('empresa');
-      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
-      $querys = explode('+',$query);
-      $limit=10;
-
-      if(count($querys) < 2){
-
-          $productos = Doctrine_Query::create()
-                  ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo')
-                  ->from('DetalleActivo a')
-                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$query.'%', '%'.$query.'%', '%'.$query.'%')); 
-      }
-      else{
-          $productos = Doctrine_Query::create()
-                  ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo, a.id_producto')
-                  ->from('DetalleActivo a');
-          for($j=0;$j<count($querys);$j++){
-              $productos = $productos
-                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$querys[$j].'%', '%'.$querys[$j].'%', '%'.$querys[$j].'%')); 
-          }
-      }
-      
-      $productos = $productos->innerJoin('a.Factura f')
-              ->Andwhere('f.rut_factura = ?',$rut_cliente);
-//      return $this->renderText($productos->getSqlQuery());
-      $productos = $productos->limit($limit)->execute(array(), Doctrine_Core::HYDRATE_SCALAR);
-      
-      
-      
-      
-
-      if ($request->isXmlHttpRequest())
-      {
-        if ('' == $query || count($productos)==0)
-        {
-          return $this->renderText('No hay Resultados...');
-        }
-
-        return $this->renderPartial('notacredito/listproducto', array('productos' => $productos));
-      }
-  }
-  
-  
-  public function executeCrear(sfWebRequest $request)
-  {
-    Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
-    if($request->getParameter('id_factura') != null){
-        $this->forward404Unless($factura = Doctrine_Core::getTable('Factura')->find(array($request->getParameter('id_factura'))), sprintf('No se encontro la Factura (%s).', $request->getParameter('id_factura')));
-
-        $this->detalle_activos = Doctrine_Core::getTable('DetalleActivo')
-          ->createQuery('a')
-          ->Where('a.id_factura = ?', $request->getParameter('id_factura'))
-          ->execute();
-        $this->cb = new sfWidgetFormInputCheckbox();
-        $this->it = new sfWidgetFormInputText();
-        $this->form = new NotaCreditoForm();
-    }//FALTA EL ELSE
-  }
+//  public function executeCrear(sfWebRequest $request)
+//  {
+//    Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+//    if($request->getParameter('id_factura') != null){
+//        $this->forward404Unless($factura = Doctrine_Core::getTable('Factura')->find(array($request->getParameter('id_factura'))), sprintf('No se encontro la Factura (%s).', $request->getParameter('id_factura')));
+//
+//        $this->detalle_activos = Doctrine_Core::getTable('DetalleActivo')
+//          ->createQuery('a')
+//          ->Where('a.id_factura = ?', $request->getParameter('id_factura'))
+//          ->execute();
+//        $this->cb = new sfWidgetFormInputCheckbox();
+//        $this->it = new sfWidgetFormInputText();
+//        $this->form = new NotaCreditoForm();
+//    }//FALTA EL ELSE
+//  }
   
   
   public function executeIngresarNC(sfWebRequest $request)
@@ -308,38 +262,38 @@ class notacreditoActions extends sfActions
   }  
   
   
-  public function executeEmitir(sfWebRequest $request)
-  {
-    $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
-    Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
-//    $request->checkCSRFProtection();
-    $vectordatos = json_decode($request->getParameter('vectordatos'));
-    $id_factura = $request->getParameter('id_factura');    
-    $largo = count($vectordatos);
-    if($largo > 0){
-        $nota_credito = new NotaCredito();
-//        SE COPIAN TODOS LOS VALORES EXCEPTO:
-//        NumeroNotaCredito
-//        NetoNotaCredito
-//        TotalNotaCredito
-        $nota_credito->copiarDeFactura($id_factura);
-    }
-    $neto = 0;
-    for($i=0; $i<$largo; $i+=2){
-        $detalle_activo = Doctrine_Core::getTable('DetalleActivo')->find($vectordatos[$i]);
-        $detalle_activo->setCantidadNotaCredito($vectordatos[$i+1]);
-        $detalle_activo->setNotaCredito($nota_credito);
-        $detalle_activo->save();
-        $neto += $detalle_activo->getCantidadNotaCredito()*$detalle_activo->getPrecioDetalleActivo();
-    }
-    $nota_credito->setNetoNotaCredito($neto);
-    $iva = Doctrine_Core::getTable('Parametro')->findOneByNombreParametro('IVA');
-    $iva = $iva->getValorParametro();
-    $nota_credito->setTotalNotaCredito($neto*(1+$iva));
-    $nota_credito->save();
-    
-    return $this->renderText('ready');
-  }
+//  public function executeEmitir(sfWebRequest $request)
+//  {
+//    $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
+//    Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
+////    $request->checkCSRFProtection();
+//    $vectordatos = json_decode($request->getParameter('vectordatos'));
+//    $id_factura = $request->getParameter('id_factura');    
+//    $largo = count($vectordatos);
+//    if($largo > 0){
+//        $nota_credito = new NotaCredito();
+////        SE COPIAN TODOS LOS VALORES EXCEPTO:
+////        NumeroNotaCredito
+////        NetoNotaCredito
+////        TotalNotaCredito
+//        $nota_credito->copiarDeFactura($id_factura);
+//    }
+//    $neto = 0;
+//    for($i=0; $i<$largo; $i+=2){
+//        $detalle_activo = Doctrine_Core::getTable('DetalleActivo')->find($vectordatos[$i]);
+//        $detalle_activo->setCantidadNotaCredito($vectordatos[$i+1]);
+//        $detalle_activo->setNotaCredito($nota_credito);
+//        $detalle_activo->save();
+//        $neto += $detalle_activo->getCantidadNotaCredito()*$detalle_activo->getPrecioDetalleActivo();
+//    }
+//    $nota_credito->setNetoNotaCredito($neto);
+//    $iva = Doctrine_Core::getTable('Parametro')->findOneByNombreParametro('IVA');
+//    $iva = $iva->getValorParametro();
+//    $nota_credito->setTotalNotaCredito($neto*(1+$iva));
+//    $nota_credito->save();
+//    
+//    return $this->renderText('ready');
+//  }
   
   
   public function executeSearch_documento(sfWebRequest $request){
@@ -382,6 +336,118 @@ class notacreditoActions extends sfActions
 
         return $this->renderPartial('notacredito/listdocumento', array('docs' => $docs, 'tipo' => $tipodoc));
       }
+  }
+  
+  public function executeSearch_producto(sfWebRequest $request){      
+      $query = $request->getParameter('query');
+      $rut_cliente = $request->getParameter('rut_cliente');
+      $tipodoc = $request->getParameter('tipodoc');
+      $empresa = $request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
+      $querys = explode('+',$query);
+      $limit=10;
+
+      if(count($querys) < 2){
+
+          $productos = Doctrine_Query::create()
+                  ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo')
+                  ->from('DetalleActivo a')
+                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$query.'%', '%'.$query.'%', '%'.$query.'%')); 
+      }
+      else{
+          $productos = Doctrine_Query::create()
+                  ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo, a.id_producto')
+                  ->from('DetalleActivo a');
+          for($j=0;$j<count($querys);$j++){
+              $productos = $productos
+                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$querys[$j].'%', '%'.$querys[$j].'%', '%'.$querys[$j].'%')); 
+          }
+      }
+      
+      switch ($tipodoc){
+          case 33:
+              $productos = $productos->innerJoin('a.Factura f')
+                    ->Andwhere('f.rut_factura = ?',$rut_cliente);
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+      
+//      return $this->renderText($productos->getSqlQuery());
+      $productos = $productos->limit($limit)->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+      
+      
+      
+      
+
+      if ($request->isXmlHttpRequest())
+      {
+        if ('' == $query || count($productos)==0)
+        {
+          return $this->renderText('No hay Resultados...');
+        }
+
+        return $this->renderPartial('notacredito/listproducto', array('productos' => $productos));
+      }
+  }
+  
+  public function executeDocumentosByproducto(sfWebRequest $request)
+  {
+      $empresa = 'artelamp_'.$request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
+      $codproducto = $request->getParameter('codproducto');
+      $rut_cliente = $request->getParameter('rut_cliente');
+      $tipodoc = $request->getParameter('tipodoc');
+      
+      switch ($tipodoc){
+          case 33:
+              $docs = Doctrine_Core::getTable('Factura')
+                  ->createQuery('a')
+                  ->select('a.id_factura, a.numero_factura, a.fechaemision_factura')
+                  ->where('a.rut_factura = ?',$rut_cliente)
+                  ->innerJoin('a.DetalleActivo da')
+                  ->Andwhere('da.codigointerno_detalle_activo = ?', $codproducto);
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+      $docs = $docs->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+      return $this->renderText(json_encode($docs));
+  }
+  
+  public function executeProductoBycodigoBydocumento(sfWebRequest $request){
+      $empresa = 'artelamp_'.$request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
+      $codproducto = $request->getParameter('codproducto');
+      $numdoc = $request->getParameter('numdoc');
+      $tipodoc = $request->getParameter('tipodoc');
+      
+      switch ($tipodoc){
+          case 33:
+              $productos = Doctrine_Query::create()
+                  ->select('a.id_detalle_activo, a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo, a.cantidad_detalle_activo, a.precio_detalle_activo')
+                  ->from('DetalleActivo a')
+                  ->where('a.codigointerno_detalle_activo = ?', $codproducto)
+                  ->innerJoin('a.Factura f')
+                  ->AndWhere('f.numero_factura = ?', $numdoc);
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+      $productos = $productos->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+      return $this->renderText(json_encode($productos[0]));
   }
   
   

@@ -24,6 +24,7 @@
  * @property string $comentario_boleta
  * @property string $responsable_boleta
  * @property Doctrine_Collection $DetalleActivo
+ * @property Doctrine_Collection $ReferenciaDocumento
  * @property EstadoBoleta $EstadoBoleta
  * 
  * @method integer             getIdBoleta()             Returns the current record's "id_boleta" value
@@ -45,6 +46,7 @@
  * @method string              getComentarioBoleta()     Returns the current record's "comentario_boleta" value
  * @method string              getResponsableBoleta()    Returns the current record's "responsable_boleta" value
  * @method Doctrine_Collection getDetalleActivo()        Returns the current record's "DetalleActivo" collection
+ * @method Doctrine_Collection getReferenciaDocumento()  Returns the current record's "ReferenciaDocumento" collection
  * @method EstadoBoleta        getEstadoBoleta()         Returns the current record's "EstadoBoleta" value
  * @method Boleta              setIdBoleta()             Sets the current record's "id_boleta" value
  * @method Boleta              setNumeroBoleta()         Sets the current record's "numero_boleta" value
@@ -65,6 +67,7 @@
  * @method Boleta              setComentarioBoleta()     Sets the current record's "comentario_boleta" value
  * @method Boleta              setResponsableBoleta()    Sets the current record's "responsable_boleta" value
  * @method Boleta              setDetalleActivo()        Sets the current record's "DetalleActivo" collection
+ * @method Boleta              setReferenciaDocumento()  Sets the current record's "ReferenciaDocumento" collection
  * @method Boleta              setEstadoBoleta()         Sets the current record's "EstadoBoleta" value
  * 
  * @package    sffacturacion
@@ -244,6 +247,10 @@ abstract class BaseBoleta extends sfDoctrineRecord
     {
         parent::setUp();
         $this->hasMany('DetalleActivo', array(
+             'local' => 'id_boleta',
+             'foreign' => 'id_boleta'));
+
+        $this->hasMany('ReferenciaDocumento', array(
              'local' => 'id_boleta',
              'foreign' => 'id_boleta'));
 

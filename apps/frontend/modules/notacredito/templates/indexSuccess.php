@@ -106,8 +106,34 @@
                 <br />
             </div>
         </div>
+        <div id="divproducto" style="display: none">
+            <div class="triangle3">
+                    <div class="triangleblue">
+                            <div style="margin-left: 15px; padding-top: 3px; padding-bottom: 3px; text-align: left;">
+                                    <span class="headerwhite">
+                                            PRODUCTO
+                                    </span>
+                            </div>
+                    </div>
+            </div>
+            <div class="divmiddle2">
+                <div class="divmiddle1">
+                    <br />
+                    <H2>CODIGO/DESCRIPCION:</H2>
+                    <input type="text" id="search_producto" />
+                    <div id="productos" style="position:absolute" autocomplete="off"></div>
+                    <br />
+                </div>
+            </div>
+        </div>
 
    </div>
+</div>
+
+
+<div id="dialog-form-doc" title="Seleccione el documento">
+    <p class="validateTips">Seleccione el documento</p>
+    <table id="tablaselecdoc" class="display"></table>
 </div>
 
 <script type="text/javascript">
@@ -116,6 +142,38 @@
     var empresa = 1;
     var productos = new Array();
     var documentos = new Array();
+    var codproducto = 0;
+    var tipodocumento = 33;
+    
+    function siguiente(){
+        $("#dialog-form-doc").dialog( "open" );
+        $('#tablaselecdoc').dataTable().fnAdjustColumnSizing();
+        $('#tablaselecdoc').dataTable().fnAddData(['12','12','12','12']);
+    }
+    
+    function abrirdialog(codproducto_){        
+        $("#dialog-form-doc").dialog( "open" );
+        $('#tablaselecdoc').dataTable().fnAdjustColumnSizing();
+        $('#tablaselecdoc').dataTable().fnClearTable();
+        var tipodoc = $('#tipodocchoice').val();
+        tipodocumento = tipodoc
+        codproducto = codproducto_;
+        $.get("<?php echo url_for('notacredito/documentosByproducto') ?>",{codproducto: codproducto_, rut_cliente: rut_cliente, empresa: empresa, tipodoc: tipodoc} ,function(data){
+            switch(tipodoc){
+                case '33':
+                    for(i in data){
+                        $('#tablaselecdoc').dataTable().fnAddData([
+                            '[33]Factura Electronica',
+                            data[i].numero_factura,
+                            data[i].fechaemision_factura,
+                            "<button onclick=selectdoc("+i+")>Selec</button><button onclick=borrarRowselectdoc("+i+")>borrar</button>"                            
+                        ]);
+                    }
+                break;
+            }
+            $('button').button();
+        },"json");
+    }
     
     function ClienteSeleccionado(_rut_cliente, descripcion, _empresa){
         rut_cliente = _rut_cliente;
@@ -163,6 +221,38 @@
         $('#tabladoc').dataTable().fnDeleteRow(index);
         actualizarlistadoc();
     }
+    function borrarRowselectdoc(index){            
+        $('#tablaselecdoc').dataTable().fnDeleteRow(index);
+        actualizarlistaselectdoc();
+    }
+    
+    function actualizarlistaselectdoc(){
+        var aData = $('#tablaselecdoc').dataTable().fnGetData();
+        $('#tablaselecdoc').dataTable().fnClearTable();
+        for(i in aData){
+            $('#tablaselecdoc').dataTable().fnAddData([
+                aData[i][0],
+                aData[i][1],
+                aData[i][2],
+                "<button onclick=selectdoc("+i+")>Selec</button><button onclick=borrarRowselectdoc("+i+")>borrar</button>"                            
+            ]);
+        }
+        $('button').button();
+    }
+    
+    function selectdoc(index){
+        var aData = $('#tablaselecdoc').dataTable().fnGetData(index);
+        $('#tabladoc').dataTable().fnAddData([
+            aData[0],
+            aData[1],
+            aData[2],
+            "<button onclick=borrarRow("+i+")>borrar</button>"
+        ]);
+        $.get("<?php echo url_for('notacredito/productoBycodigoBydocumento') ?>",{codproducto: codproducto, empresa: empresa, numdoc: aData[1], tipodoc: tipodocumento } ,function(data){
+            alert(data.id_detalle_activo);
+        },"json");
+        $('button').button();
+    }
     
     var Documento = function(id, tipodocumento, numdocumento, fecha){
         this.id = id;
@@ -181,7 +271,6 @@
                     },
                     { "sTitle": "FOLIO" },
                     { "sTitle": "FECHA" },
-//                    { "sTitle": "RAZON" },
                     { 
                         "sTitle": "ACCION",
                         "sClass": "center",
@@ -202,6 +291,8 @@
             }
         });
         $("div.tabladoc-toolbar").html('<b>DOCUMENTOS</b>');
+        
+        //============================== 
         $('#tablaprod').dataTable( {
             "aoColumns": [
                     { "sTitle": "CODIGO" },
@@ -231,6 +322,37 @@
         });
         $("div.tablaprod-toolbar").html('<b>PRODUCTOS</b>');
         
+        //======================================
+        $('#tablaselecdoc').dataTable( {
+            "aoColumns": [
+                    { 
+                        "sTitle": "DOCUMENTO",
+                        "sWidth": "30%"
+                    },
+                    { "sTitle": "FOLIO" },
+                    { "sTitle": "FECHA" },
+                    { 
+                        "sTitle": "ACCION",
+                        "sClass": "center",
+                        "sWidth": "130px"
+                    }
+            ],
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+//            "bLengthChange": false,
+            "bInfo": false,
+            "bPaginate": false,
+            "bAutoWidth": false,
+            "aaSorting": [],
+            "sScrollY": 300,
+            "sDom": '<"tablaselectdoc-toolbar fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"F"ip>',
+            "oLanguage": {
+                "sSearch": "Buscar:",
+                "sZeroRecords": "Ningún documento"
+            }
+        });
+        
+        
         $('#search_cliente').keyup(function(key){
             if (this.value.length >= 3){
                 $('#clientes').load(
@@ -257,6 +379,118 @@
             }
             if(this.value.length < 2){
                 $('#tabladocumento').hide();
+            }
+        });
+        $('#search_producto').keyup(function(key){
+            if (this.value.length >= 2){
+                var tipodoc = $('#tipodocchoice').val();
+                $('#productos').load(
+                "<?php echo url_for('notacredito/search_producto') ?>",
+                {query: this.value, empresa: empresa, tipodoc: tipodoc, rut_cliente: rut_cliente},
+                function() { /*$('#loader').hide();*/ }
+                );
+            }
+            if(this.value.length < 2){
+                $('#tablaproducto').hide();
+            }
+        });
+        
+        $('#codrefchoice').live({
+            change: function() {
+                if($(this).val()==3 && !$('#divproducto').is(':visible')){
+                    $('#divproducto').show("slide",{}, 400);
+                    $('#search_producto').val('');
+                }
+                else if($('#divproducto').is(':visible')){
+                    $('#divproducto').hide("slide",{}, 400);
+                    $('#search_producto').val('');
+                }
+            }
+        });
+        
+//        $('#tablaselecdoc tbody tr').live({
+//            click: function(){
+//                var aPos = $('#tablaselecdoc').dataTable().fnGetPosition( this );
+//                alert(aPos);
+//            }
+//        });
+        
+        $("#dialog-form-doc").dialog({
+            autoOpen: false,
+            height: 500,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Emitir Nota": function() {
+//                        var bValid = true;
+//                        allFields.removeClass( "ui-state-error" );
+//                                        
+//
+//                        bValid = bValid && checkLength( numeronc, "numero NC", 1, 10 );
+//                        bValid = bValid && checkLength( rut, "RUT", 8, 12 );
+//                        bValid = bValid && checkLength( nombre, "nombre", 1, 200 );
+//                        bValid = bValid && checkLength( telefono, "telefono", 0, 32 );
+//                        bValid = bValid && checkLength( direccion, "direccion", 1, 512 );
+//                        bValid = bValid && checkLength( comuna, "comuna", 1, 512 );
+//                        bValid = bValid && checkLength( ciudad, "ciudad", 1, 512 );
+//                        bValid = bValid && checkLength( giro, "giro", 1, 512 );
+//                        bValid = bValid && checkLength( condicion, "condicion", 1, 512 );
+//                        bValid = bValid && checkLength( oc, "oc", 0, 512 );
+//                        bValid = bValid && checkLength( responsable, "responsable", 1, 512 );
+//                        bValid = bValid && checkLength( numerofactura, "numero factura", 1, 128 );
+//                        bValid = bValid && checkLength( fechaingreso, "fecha ingreso", 6, 20 );
+//                        bValid = bValid && checkLength( fechaemision, "fecha emision", 9, 11 );
+
+//                        bValid = bValid && checkRegexp( name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter." );
+                        // From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
+//                        bValid = bValid && checkRegexp( email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. ui@jquery.com" );
+//                        bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+//                        bValid = bValid && checkRegexp( numeronc, /^[1-9]\d*$/, "El número de NC es invalido" );
+//                        bValid = bValid && checkRegexp( rut, /^\d{7,10}-(\d|k)$/i, "El RUT debe tener formato 12345678-9" );
+//                        bValid = bValid && checkRut( rut, "El RUT es invalido" );
+//                        bValid = bValid && checkRegexp( telefono, /^\d{1,2}-\d{5,11}$/, "El telefono debe tener formato: codigo-numero, ejemplo 02-6412345" );
+//                        bValid = bValid && checkRegexp( numerofactura, /^\d+(,\d+)*$/, "El número de factura es invalido, si ingresa dos o más el formato es 1111,2222,3333..." );
+//                        bValid = bValid && checkRegexp( fechaemision, /^\d{2}(\/)\d{2}(\/)\d{4}$/, "La fecha debe tener formato dd/mm/yyyy" );
+//                        
+//                        if ( bValid ) {
+//                            var fields  = $("form").serialize();
+//                            fields += '&datos='+JSON.stringify(datos);
+//
+//                            var error = true;
+//                            $.post("", fields ,
+//                               function(data) {
+//                                   if(data == 'true'){
+//                                       alert('Nota de Credito ingresada');
+////                                       $('input[type=checkbox]:checked').each(function(){
+////                                           $(this).parent().parent("tr").remove();
+////                                       });
+//                                       window.location.replace("");
+//                                       $( "#dialog-form" ).dialog("close");
+//                                   }
+//                                   else{
+//                                       alert('Se produjo un error: '+data);
+//                                       error = false;
+//                                   }
+//                               }).error(function() {
+//                                   if(error)
+//                                   alert('Se produjo un error'); 
+//                               });
+//                        }
+                },
+                'Limpiar': function() {
+                    var aData = $('#tablaselecdoc').dataTable().fnGetData();
+                    alert(aData[0][0]);
+//                        $('form input[type=text] , form textarea').each(function() {
+//                            $(this).val('');
+//                        });
+                },
+                'Cancelar': function() {
+//                        $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+//                    allFields.val( "" ).removeClass( "ui-state-error" );
+//                    $('.validateTips').html('Ingrese los datos de la Nota de Credito');
             }
         });
 //        $('#search_cliente').keydown (function(event){

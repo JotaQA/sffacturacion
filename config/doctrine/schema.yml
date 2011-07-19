@@ -273,6 +273,10 @@ Boleta:
       local: id_boleta
       foreign: id_boleta
       type: many
+    ReferenciaDocumento:
+      local: id_boleta
+      foreign: id_boleta
+      type: many
 Categorias:
   connection: artelamp
   tableName: categorias
@@ -997,6 +1001,20 @@ DetalleActivo:
       primary: false
       notnull: false
       autoincrement: false
+    id_nota_credito:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    id_nota_debito:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
     id_salida:
       type: integer(4)
       fixed: false
@@ -1032,35 +1050,7 @@ DetalleActivo:
       primary: false
       notnull: false
       autoincrement: false
-    cantidad_nota_credito:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
-    cantidad_nota_debito:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
     precio_detalle_activo:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
-    precio_nota_credito:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: false
-      notnull: false
-      autoincrement: false
-    precio_nota_debito:
       type: integer(4)
       fixed: false
       unsigned: false
@@ -1096,10 +1086,14 @@ DetalleActivo:
       notnull: false
       autoincrement: false
   relations:
-#    NotaCredito:
-#      local: id_nota_credito
-#      foreign: id_nota_credito
-#      type: one
+    NotaCredito:
+      local: id_nota_credito
+      foreign: id_nota_credito
+      type: one
+    NotaDebito:
+      local: id_nota_debito
+      foreign: id_nota_debito
+      type: one
     Guia:
       local: id_guia
       foreign: id_guia
@@ -1112,13 +1106,13 @@ DetalleActivo:
       local: id_factura
       foreign: id_factura
       type: one
-    NotacreditoDetalle:
+    ReferenciaDetalle:
       local: id_detalle_activo
-      foreign: id_detalle_activo
+      foreign: id_detalle_activo1
       type: many
-    NotadebitoDetalle:
+    ReferenciaDetalle:
       local: id_detalle_activo
-      foreign: id_detalle_activo
+      foreign: id_detalle_activo2
       type: many
 Division:
 #  connection: artelamp_1
@@ -1784,6 +1778,10 @@ Factura:
       local: id_factura
       foreign: id_factura
       type: many
+    ReferenciaDocumento:
+      local: id_factura
+      foreign: id_factura
+      type: many
 FormasPago:
   connection: artelamp
   tableName: formas_pago
@@ -1954,6 +1952,10 @@ Guia:
       foreign: id_estadoguia
       type: one
     DetalleActivo:
+      local: id_guia
+      foreign: id_guia
+      type: many
+    ReferenciaDocumento:
       local: id_guia
       foreign: id_guia
       type: many
@@ -2363,7 +2365,11 @@ NotaCredito:
       local: id_estado_nota_credito
       foreign: id_estado_nota_credito
       type: one
-    NotacreditoDetalle:
+    DetalleActivo:
+      local: id_nota_credito
+      foreign: id_nota_credito
+      type: many
+    ReferenciaDocumento:
       local: id_nota_credito
       foreign: id_nota_credito
       type: many
@@ -2531,7 +2537,11 @@ NotaDebito:
       local: id_estado_nota_debito
       foreign: id_estado_nota_debito
       type: one
-    NotadebitoDetalle:
+    DetalleACtivo:
+      local: id_nota_debito
+      foreign: id_nota_debito
+      type: many
+    ReferenciaDocumento:
       local: id_nota_debito
       foreign: id_nota_debito
       type: many
@@ -2573,56 +2583,56 @@ NotaVenta:
       primary: false
       notnull: true
       autoincrement: false
-NotacreditoDetalle:
-#  connection: artelamp_1
-  tableName: notacredito_detalle
-  columns:
-    id_detalle_activo:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: true
-      autoincrement: false
-    id_nota_credito:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: true
-      autoincrement: false
-  relations:
-    NotaCredito:
-      local: id_nota_credito
-      foreign: id_nota_credito
-      type: one
-    DetalleActivo:
-      local: id_detalle_activo
-      foreign: id_detalle_activo
-      type: one
-NotadebitoDetalle:
-#  connection: artelamp_1
-  tableName: notadebito_detalle
-  columns:
-    id_detalle_activo:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: true
-      autoincrement: false
-    id_nota_debito:
-      type: integer(4)
-      fixed: false
-      unsigned: false
-      primary: true
-      autoincrement: false
-  relations:
-    NotaDebito:
-      local: id_nota_debito
-      foreign: id_nota_debito
-      type: one
-    DetalleActivo:
-      local: id_detalle_activo
-      foreign: id_detalle_activo
-      type: one
+#NotacreditoDetalle:
+##  connection: artelamp_1
+#  tableName: notacredito_detalle
+#  columns:
+#    id_detalle_activo:
+#      type: integer(4)
+#      fixed: false
+#      unsigned: false
+#      primary: true
+#      autoincrement: false
+#    id_nota_credito:
+#      type: integer(4)
+#      fixed: false
+#      unsigned: false
+#      primary: true
+#      autoincrement: false
+#  relations:
+#    NotaCredito:
+#      local: id_nota_credito
+#      foreign: id_nota_credito
+#      type: one
+#    DetalleActivo:
+#      local: id_detalle_activo
+#      foreign: id_detalle_activo
+#      type: one
+#NotadebitoDetalle:
+##  connection: artelamp_1
+#  tableName: notadebito_detalle
+#  columns:
+#    id_detalle_activo:
+#      type: integer(4)
+#      fixed: false
+#      unsigned: false
+#      primary: true
+#      autoincrement: false
+#    id_nota_debito:
+#      type: integer(4)
+#      fixed: false
+#      unsigned: false
+#      primary: true
+#      autoincrement: false
+#  relations:
+#    NotaDebito:
+#      local: id_nota_debito
+#      foreign: id_nota_debito
+#      type: one
+#    DetalleActivo:
+#      local: id_detalle_activo
+#      foreign: id_detalle_activo
+#      type: one
 Pago:
 #  connection: artelamp_1
   tableName: pago
@@ -2837,6 +2847,102 @@ Provincias:
       primary: false
       notnull: true
       autoincrement: false
+ReferenciaDetalle:
+#  connection: artelamp_1
+  tableName: referencia_detalle
+  columns:
+    id_detalle_activo1:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: true
+      autoincrement: false
+    id_detalle_activo2:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: true
+      autoincrement: false
+  relations:
+    DetalleActivo1:
+      class: DetalleActivo
+      local: id_detalle_activo1
+      foreign: id_detalle_activo
+      type: one
+    DetalleActivo2:
+      class: DetalleActivo
+      local: id_detalle_activo2
+      foreign: id_detalle_activo
+      type: one
+ReferenciaDocumento:
+#  connection: artelamp_1
+  tableName: referencia_documento
+  columns:
+    id_referencia_documento:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: true
+      autoincrement: true
+    id_factura:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      autoincrement: false
+    id_guia:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      autoincrement: false
+    id_boleta:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      autoincrement: false
+    id_nota_credito:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      autoincrement: false
+    id_nota_debito:
+      type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      autoincrement: false
+    documento_final:
+      type: integer(1)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+      comment: '1: Factura, 2: Guia, 3: Boleta, 4: NC, 5: ND'
+  relations:
+    Factura:
+      local: id_factura
+      foreign: id_factura
+      type: one
+    Guia:
+      local: id_guia
+      foreign: id_guia
+      type: one
+    Boleta:
+      local: id_boleta
+      foreign: id_boleta
+      type: one
+    NotaCredito:
+      local: id_nota_credito
+      foreign: id_nota_credito
+      type: one
+    NotaDebito:
+      local: id_nota_debito
+      foreign: id_nota_debito
+      type: one
 Regiones:
   connection: artelamp
   tableName: regiones

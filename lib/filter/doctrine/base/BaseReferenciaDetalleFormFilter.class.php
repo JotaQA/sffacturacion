@@ -1,14 +1,14 @@
 <?php
 
 /**
- * NotacreditoDetalle filter form base class.
+ * ReferenciaDetalle filter form base class.
  *
  * @package    sffacturacion
  * @subpackage filter
  * @author     Your name here
  * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseNotacreditoDetalleFormFilter extends BaseFormFilterDoctrine
+abstract class BaseReferenciaDetalleFormFilter extends BaseFormFilterDoctrine
 {
   public function setup()
   {
@@ -18,7 +18,7 @@ abstract class BaseNotacreditoDetalleFormFilter extends BaseFormFilterDoctrine
     $this->setValidators(array(
     ));
 
-    $this->widgetSchema->setNameFormat('notacredito_detalle_filters[%s]');
+    $this->widgetSchema->setNameFormat('referencia_detalle_filters[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
@@ -29,14 +29,14 @@ abstract class BaseNotacreditoDetalleFormFilter extends BaseFormFilterDoctrine
 
   public function getModelName()
   {
-    return 'NotacreditoDetalle';
+    return 'ReferenciaDetalle';
   }
 
   public function getFields()
   {
     return array(
-      'id_detalle_activo' => 'Number',
-      'id_nota_credito'   => 'Number',
+      'id_detalle_activo1' => 'Number',
+      'id_detalle_activo2' => 'Number',
     );
   }
 }

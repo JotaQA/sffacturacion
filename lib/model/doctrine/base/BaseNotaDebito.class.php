@@ -28,7 +28,8 @@
  * @property string $comentarior_nota_debito
  * @property string $tipo_nota_debito
  * @property EstadoNotaDebito $EstadoNotaDebito
- * @property Doctrine_Collection $NotadebitoDetalle
+ * @property Doctrine_Collection $ReferenciaDocumento
+ * @property Doctrine_Collection $DetalleActivo
  * 
  * @method integer             getIdNotaDebito()              Returns the current record's "id_nota_debito" value
  * @method integer             getIdEstadoNotaDebito()        Returns the current record's "id_estado_nota_debito" value
@@ -53,7 +54,8 @@
  * @method string              getComentariorNotaDebito()     Returns the current record's "comentarior_nota_debito" value
  * @method string              getTipoNotaDebito()            Returns the current record's "tipo_nota_debito" value
  * @method EstadoNotaDebito    getEstadoNotaDebito()          Returns the current record's "EstadoNotaDebito" value
- * @method Doctrine_Collection getNotadebitoDetalle()         Returns the current record's "NotadebitoDetalle" collection
+ * @method Doctrine_Collection getReferenciaDocumento()       Returns the current record's "ReferenciaDocumento" collection
+ * @method Doctrine_Collection getDetalleActivo()             Returns the current record's "DetalleActivo" collection
  * @method NotaDebito          setIdNotaDebito()              Sets the current record's "id_nota_debito" value
  * @method NotaDebito          setIdEstadoNotaDebito()        Sets the current record's "id_estado_nota_debito" value
  * @method NotaDebito          setCodrefNotaDebito()          Sets the current record's "codref_nota_debito" value
@@ -77,7 +79,8 @@
  * @method NotaDebito          setComentariorNotaDebito()     Sets the current record's "comentarior_nota_debito" value
  * @method NotaDebito          setTipoNotaDebito()            Sets the current record's "tipo_nota_debito" value
  * @method NotaDebito          setEstadoNotaDebito()          Sets the current record's "EstadoNotaDebito" value
- * @method NotaDebito          setNotadebitoDetalle()         Sets the current record's "NotadebitoDetalle" collection
+ * @method NotaDebito          setReferenciaDocumento()       Sets the current record's "ReferenciaDocumento" collection
+ * @method NotaDebito          setDetalleActivo()             Sets the current record's "DetalleActivo" collection
  * 
  * @package    sffacturacion
  * @subpackage model
@@ -297,7 +300,11 @@ abstract class BaseNotaDebito extends sfDoctrineRecord
              'local' => 'id_estado_nota_debito',
              'foreign' => 'id_estado_nota_debito'));
 
-        $this->hasMany('NotadebitoDetalle', array(
+        $this->hasMany('ReferenciaDocumento', array(
+             'local' => 'id_nota_debito',
+             'foreign' => 'id_nota_debito'));
+
+        $this->hasMany('DetalleActivo', array(
              'local' => 'id_nota_debito',
              'foreign' => 'id_nota_debito'));
     }
