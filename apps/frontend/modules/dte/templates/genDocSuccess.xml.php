@@ -20,20 +20,20 @@ function formatRut($rut){
             </IdDoc>
             <Emisor>
                 <RUTEmisor><?php echo formatRut($RUTEmisor) ?></RUTEmisor>
-                <RznSoc><?php echo $RznSoc ?></RznSoc>
-                <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
+                <RznSoc><?php echo substr($RznSoc,0,100) ?></RznSoc>
+                <GiroEmis><?php echo substr($GiroEmis,0,80) ?></GiroEmis>
                 <Acteco><?php echo $Acteco ?></Acteco>
-                <DirOrigen><?php echo $DirOrigen ?></DirOrigen>
-                <CmnaOrigen><?php echo $CmnaOrigen ?></CmnaOrigen>
-                <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>
+                <DirOrigen><?php echo substr($DirOrigen,0,60) ?></DirOrigen>
+                <CmnaOrigen><?php echo substr($CmnaOrigen,0,20) ?></CmnaOrigen>
+                <CiudadOrigen><?php echo substr($CiudadOrigen,0,20) ?></CiudadOrigen>
             </Emisor>
             <Receptor>
                 <RUTRecep><?php echo formatRut($factura->getRutFactura()) ?></RUTRecep>
-                <RznSocRecep><?php echo $factura->getNombreFactura() ?></RznSocRecep>
-                <GiroRecep><?php echo $factura->getGiroFactura() ?></GiroRecep>
-                <DirRecep><?php echo $factura->getDireccionFactura() ?></DirRecep>
-                <CmnaRecep><?php echo $factura->getComunaFactura() ?></CmnaRecep>
-                <CiudadRecep><?php echo $factura->getCiudadFactura() ?></CiudadRecep>
+                <RznSocRecep><?php echo substr($factura->getNombreFactura(),0,100) ?></RznSocRecep>
+                <GiroRecep><?php echo substr($factura->getGiroFactura(),0,40) ?></GiroRecep>
+                <DirRecep><?php echo substr($factura->getDireccionFactura(),0,60) ?></DirRecep>
+                <CmnaRecep><?php echo substr($factura->getComunaFactura(),0,20) ?></CmnaRecep>
+                <CiudadRecep><?php echo substr($factura->getCiudadFactura(),0,20) ?></CiudadRecep>
             </Receptor>
             <Totales>
                 <?php $NETO = $factura->getNetoCalculado()*(1-$factura->getDescuentoFactura()/100) ?>
@@ -50,9 +50,9 @@ function formatRut($rut){
             <NroLinDet><?php echo $NroLinDet ?></NroLinDet>
             <CdgItem>
                 <TpoCodigo><?php echo $TpoCodigo ?></TpoCodigo>
-                <VlrCodigo><?php echo $detalle->getCodigoexternoDetalleActivo() ?></VlrCodigo>
+                <VlrCodigo><?php echo substr($detalle->getCodigoexternoDetalleActivo(),0,35) ?></VlrCodigo>
             </CdgItem>
-            <NmbItem><?php echo $detalle->getDescripcionexternaDetalleActivo() ?></NmbItem>
+            <NmbItem><?php echo substr($detalle->getDescripcionexternaDetalleActivo(),0,80) ?></NmbItem>
             <QtyItem><?php echo $detalle->getCantidadDetalleActivo() ?></QtyItem>
             <PrcItem><?php echo $detalle->getPrecioDetalleActivo() ?></PrcItem>
             <MontoItem><?php echo ($detalle->getCantidadDetalleActivo() * $detalle->getPrecioDetalleActivo()) ?></MontoItem>
@@ -62,7 +62,7 @@ function formatRut($rut){
         <DscRcgGlobal>
             <NroLinDR>1</NroLinDR>
             <TpoMov>D</TpoMov>
-            <GlosaDR><?php echo $GlosaDR ?></GlosaDR>
+            <GlosaDR><?php echo substr($GlosaDR,0,45) ?></GlosaDR>
             <TpoValor>%</TpoValor>
             <ValorDR><?php echo $factura->getDescuentoFactura() ?></ValorDR>
         </DscRcgGlobal>
@@ -90,20 +90,20 @@ function formatRut($rut){
             </IdDoc>
             <Emisor>
                 <RUTEmisor><?php echo formatRut($RUTEmisor) ?></RUTEmisor>
-                <RznSoc><?php echo $RznSoc ?></RznSoc>
-                <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
-                <Acteco>PENDIENTE</Acteco>
-                <DirOrigen><?php echo $DirOrigen ?></DirOrigen>
-                <CmnaOrigen><?php echo $CmnaOrigen ?></CmnaOrigen>
-                <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>
+                <RznSoc><?php echo substr($RznSoc,0,100) ?></RznSoc>
+                <GiroEmis><?php echo substr($GiroEmis,0,80) ?></GiroEmis>
+                <Acteco><?php echo $Acteco ?></Acteco>
+                <DirOrigen><?php echo substr($DirOrigen,0,60) ?></DirOrigen>
+                <CmnaOrigen><?php echo substr($CmnaOrigen,0,20) ?></CmnaOrigen>
+                <CiudadOrigen><?php echo substr($CiudadOrigen,0,20) ?></CiudadOrigen>
             </Emisor>
             <Receptor>
                 <RUTRecep><?php echo formatRut($boleta->getRutBoleta()) ?></RUTRecep>
-                <RznSocRecep><?php echo $boleta->getNombreBoleta() ?></RznSocRecep>
-                <GiroRecep><?php echo $boleta->getGiroBoleta() ?></GiroRecep>
-                <DirRecep><?php echo $boleta->getDireccionBoleta() ?></DirRecep>
-                <CmnaRecep><?php echo $boleta->getComunaBoleta() ?></CmnaRecep>
-                <CiudadRecep><?php echo $boleta->getCiudadBoleta() ?></CiudadRecep>
+                <RznSocRecep><?php echo substr($boleta->getNombreBoleta(),0,100) ?></RznSocRecep>
+                <GiroRecep><?php echo substr($boleta->getGiroBoleta(),0,40) ?></GiroRecep>
+                <DirRecep><?php echo substr($boleta->getDireccionBoleta(),0,60) ?></DirRecep>
+                <CmnaRecep><?php echo substr($boleta->getComunaBoleta(),0,20) ?></CmnaRecep>
+                <CiudadRecep><?php echo substr($boleta->getCiudadBoleta(),0,20) ?></CiudadRecep>
             </Receptor>
             <Totales>
                 <?php $NETO = $boleta->getNetoCalculado() ?>
@@ -128,20 +128,20 @@ function formatRut($rut){
             </IdDoc>
             <Emisor>
                 <RUTEmisor><?php echo formatRut($RUTEmisor) ?></RUTEmisor>
-                <RznSoc><?php echo $RznSoc ?></RznSoc>
-                <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
-                <Acteco>PENDIENTE</Acteco>
-                <DirOrigen><?php echo $DirOrigen ?></DirOrigen>
-                <CmnaOrigen><?php echo $CmnaOrigen ?></CmnaOrigen>
-                <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>
+                <RznSoc><?php echo substr($RznSoc,0,100) ?></RznSoc>
+                <GiroEmis><?php echo substr($GiroEmis,0,80) ?></GiroEmis>
+                <Acteco><?php echo $Acteco ?></Acteco>
+                <DirOrigen><?php echo substr($DirOrigen,0,60) ?></DirOrigen>
+                <CmnaOrigen><?php echo substr($CmnaOrigen,0,20) ?></CmnaOrigen>
+                <CiudadOrigen><?php echo substr($CiudadOrigen,0,20) ?></CiudadOrigen>
             </Emisor>
             <Receptor>
                 <RUTRecep><?php echo formatRut($guia->getRutGuia()) ?></RUTRecep>
-                <RznSocRecep><?php echo $guia->getNombreGuia() ?></RznSocRecep>
-                <GiroRecep><?php echo $guia->getGiroGuia() ?></GiroRecep>
-                <DirRecep><?php echo $guia->getDireccionGuia() ?></DirRecep>
-                <CmnaRecep><?php echo $guia->getComunaGuia() ?></CmnaRecep>
-                <CiudadRecep><?php echo $guia->getCiudadGuia() ?></CiudadRecep>
+                <RznSocRecep><?php echo substr($guia->getNombreGuia(),0,100) ?></RznSocRecep>
+                <GiroRecep><?php echo substr($guia->getGiroGuia(),0,40) ?></GiroRecep>
+                <DirRecep><?php echo substr($guia->getDireccionGuia(),0,60) ?></DirRecep>
+                <CmnaRecep><?php echo substr($guia->getComunaGuia(),0,20) ?></CmnaRecep>
+                <CiudadRecep><?php echo substr($guia->getCiudadGuia(),0,20) ?></CiudadRecep>
             </Receptor>
             <Totales>
                 <?php $NETO = $guia->getNetoCalculado() ?>
@@ -158,9 +158,9 @@ function formatRut($rut){
             <NroLinDet><?php echo $NroLinDet ?></NroLinDet>
             <CdgItem>
                 <TpoCodigo><?php echo $TpoCodigo ?></TpoCodigo>
-                <VlrCodigo><?php echo $detalle->getCodigoexternoDetalleActivo() ?></VlrCodigo>
+                <VlrCodigo><?php echo substr($detalle->getCodigoexternoDetalleActivo(),0,35) ?></VlrCodigo>
             </CdgItem>
-            <NmbItem><?php echo $detalle->getDescripcionexternaDetalleActivo() ?></NmbItem>
+            <NmbItem><?php echo substr($detalle->getDescripcionexternaDetalleActivo(),0,80) ?></NmbItem>
             <QtyItem><?php echo $detalle->getCantidadDetalleActivo() ?></QtyItem>
             <PrcItem><?php echo $detalle->getPrecioDetalleActivo() ?></PrcItem>
             <MontoItem><?php echo ($detalle->getCantidadDetalleActivo() * $detalle->getPrecioDetalleActivo()) ?></MontoItem>
@@ -192,20 +192,20 @@ function formatRut($rut){
             </IdDoc>
             <Emisor>
                 <RUTEmisor><?php echo formatRut($RUTEmisor) ?></RUTEmisor>
-                <RznSoc><?php echo $RznSoc ?></RznSoc>
-                <GiroEmis><?php echo $GiroEmis ?></GiroEmis>
-                <Acteco>PENDIENTE</Acteco>
-                <DirOrigen><?php echo $DirOrigen ?></DirOrigen>
-                <CmnaOrigen><?php echo $CmnaOrigen ?></CmnaOrigen>
-                <CiudadOrigen><?php echo $CiudadOrigen ?></CiudadOrigen>
+                <RznSoc><?php echo substr($RznSoc,0,100) ?></RznSoc>
+                <GiroEmis><?php echo substr($GiroEmis,0,80) ?></GiroEmis>
+                <Acteco><?php echo $Acteco ?></Acteco>
+                <DirOrigen><?php echo substr($DirOrigen,0,60) ?></DirOrigen>
+                <CmnaOrigen><?php echo substr($CmnaOrigen,0,20) ?></CmnaOrigen>
+                <CiudadOrigen><?php echo substr($CiudadOrigen,0,20) ?></CiudadOrigen>
             </Emisor>
             <Receptor>
                 <RUTRecep><?php echo formatRut($nc->getRutNotaCredito()) ?></RUTRecep>
-                <RznSocRecep><?php echo $nc->getNombreNotaCredito() ?></RznSocRecep>
-                <GiroRecep><?php echo $nc->getGiroNotaCredito() ?></GiroRecep>
-                <DirRecep><?php echo $nc->getDireccionNotaCredito() ?></DirRecep>
-                <CmnaRecep><?php echo $nc->getComunaNotaCredito() ?></CmnaRecep>
-                <CiudadRecep><?php echo $nc->getCiudadNotaCredito() ?></CiudadRecep>
+                <RznSocRecep><?php echo substr($nc->getNombreNotaCredito(),0,100) ?></RznSocRecep>
+                <GiroRecep><?php echo substr($nc->getGiroNotaCredito(),0,40) ?></GiroRecep>
+                <DirRecep><?php echo substr($nc->getDireccionNotaCredito(),0,60) ?></DirRecep>
+                <CmnaRecep><?php echo substr($nc->getComunaNotaCredito(),0,20) ?></CmnaRecep>
+                <CiudadRecep><?php echo substr($nc->getCiudadNotaCredito(),20) ?></CiudadRecep>
             </Receptor>
             <Totales>
                 <?php $NETO = $nc->getNetoCalculado() ?>
@@ -222,9 +222,9 @@ function formatRut($rut){
             <NroLinDet><?php echo $NroLinDet ?></NroLinDet>
             <CdgItem>
                 <TpoCodigo><?php echo $TpoCodigo ?></TpoCodigo>
-                <VlrCodigo><?php echo $ncd->getDetalleActivo()->getCodigoexternoDetalleActivo() ?></VlrCodigo>
+                <VlrCodigo><?php echo substr($ncd->getDetalleActivo()->getCodigoexternoDetalleActivo(),0,35) ?></VlrCodigo>
             </CdgItem>
-            <NmbItem><?php echo $ncd->getDetalleActivo()->getDescripcionexternaDetalleActivo() ?></NmbItem>
+            <NmbItem><?php echo substr($ncd->getDetalleActivo()->getDescripcionexternaDetalleActivo(),0,80) ?></NmbItem>
             <QtyItem><?php echo $ncd->getDetalleActivo()->getCantidadDetalleActivo() ?></QtyItem>
             <PrcItem><?php echo $ncd->getDetalleActivo()->getPrecioDetalleActivo() ?></PrcItem>
             <MontoItem><?php echo ($ncd->getDetalleActivo()->getCantidadDetalleActivo() * $ncd->getDetalleActivo()->getPrecioDetalleActivo()) ?></MontoItem>
@@ -239,7 +239,7 @@ function formatRut($rut){
             <FolioRef><?php echo $factura->getNumeroFactura() ?></FolioRef>
             <FchRef><?php echo $factura->getDateTimeObject('fechaemision_factura')->format('Y-m-d') ?></FchRef>
             <CodRef><?php echo $CodRef ?></CodRef>
-            <RazonRef><?php echo $RazonRef ?></RazonRef>
+            <RazonRef><?php echo substr($RazonRef,0,90) ?></RazonRef>
         </Referencia>
         <?php $NroLinRef++ ?>
         <?php endforeach; ?>

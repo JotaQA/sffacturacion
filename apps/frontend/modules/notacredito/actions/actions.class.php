@@ -450,6 +450,35 @@ class notacreditoActions extends sfActions
       return $this->renderText(json_encode($productos[0]));
   }
   
+  public function executeProductoBydocumento(sfWebRequest $request){
+      $empresa = 'artelamp_'.$request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
+      $iddoc = $request->getParameter('iddoc');
+      $tipodoc = $request->getParameter('tipodoc');
+      
+      switch ($tipodoc){
+          case 33:
+              $productos = Doctrine_Query::create()
+                  ->select('a.id_detalle_activo, a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo, a.cantidad_detalle_activo, a.precio_detalle_activo')
+                  ->from('DetalleActivo a')
+                  ->innerJoin('a.Factura f')
+                  ->Where('f.id_factura = ?', $iddoc);
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+      $productos = $productos->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+      return $this->renderText(json_encode($productos));
+  }
+  
+  public function executeEditable(sfWebRequest $request)
+  {
+      return $this->renderText('hola');
+  }
   
   public function executeIndex(sfWebRequest $request)
   {

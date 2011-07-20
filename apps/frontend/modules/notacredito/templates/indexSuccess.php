@@ -2,7 +2,7 @@
     <div class="triangle">
     <div class="triangleblue">
     <div style="margin-left: 15px; padding-top: 3px; padding-bottom: 3px; text-align: left;"><span class="headerwhite">
-    NC_ByDoc <span style="font-size: smaller">v1.0</span>
+    CREAR NOTA CREDITO <span style="font-size: smaller">v1.0</span>
     </span>
     </div>
     </div>
@@ -144,11 +144,14 @@
     var documentos = new Array();
     var codproducto = 0;
     var tipodocumento = 33;
+    var tabladoc;
+    var tablaprod;
+//    var indexdoc = 0;
     
     function siguiente(){
-        $("#dialog-form-doc").dialog( "open" );
-        $('#tablaselecdoc').dataTable().fnAdjustColumnSizing();
-        $('#tablaselecdoc').dataTable().fnAddData(['12','12','12','12']);
+//        $("#dialog-form-doc").dialog( "open" );
+//        $('#tablaselecdoc').dataTable().fnAdjustColumnSizing();
+//        $('#tablaselecdoc').dataTable().fnAddData(['12','12','12','12']);
     }
     
     function abrirdialog(codproducto_){        
@@ -166,7 +169,7 @@
                             '[33]Factura Electronica',
                             data[i].numero_factura,
                             data[i].fechaemision_factura,
-                            "<button onclick=selectdoc("+i+")>Selec</button><button onclick=borrarRowselectdoc("+i+")>borrar</button>"                            
+                            "<button onclick=selectdoc("+i+")>Seleccionar</button>"                            
                         ]);
                     }
                 break;
@@ -196,12 +199,99 @@
             if(documentos[i].id == id) bool = false;
         }
         if(bool) documentos.push(new Documento(id, tipodocumento, numdocumento, fecha));
-        //FALTA VER LOS CASOS DE CODREF
-        if(true && bool){
-            
+        //CASOS DE CODREF
+        var codref = $('#codrefchoice').val();
+        codref = parseInt(codref);
+        //Anula Doc de Referencia
+        if(codref == 1 && bool){
+            var tipodoc = $('#tipodocchoice').val();
+            $.get("<?php echo url_for('notacredito/productoBydocumento') ?>",{empresa: empresa, iddoc: id, tipodoc: tipodoc } ,function(data){
+                for(i in data){
+                    productos.push(new Producto(data[i].id_detalle_activo, data[i].codigointerno_detalle_activo, data[i].descripcionexterna_detalle_activo, data[i].cantidad_detalle_activo, data[i].precio_detalle_activo, 0));
+                }
+                actualizarlistaprod();
+                makeEditablelistaprod();
+            },"json");
         }
-        actualizarlistadoc();
+        actualizarlistadoc();                
     }
+    
+    function actualizarneto_listaprod(aPos){
+        var aData = tablaprod.fnGetData( aPos[0] );
+        var cantidad = aData[2];
+    }
+    
+    function makeEditablelistaprod(){
+        tablaprod.makeEditable({            
+            sUpdateURL: function(value, settings)
+            {
+//                actualizarneto_listaprod();
+                var aPos = tablaprod.fnGetPosition(this);
+                var aData = tablaprod.fnGetData( aPos[0] );
+                actualizarneto_listaprod(aPos)
+                return(value);
+            },
+            "aoColumns": [
+                null,
+                null,
+                {
+//                    fnOnCellUpdated: function(sStatus, sValue, settings){
+////                        var aPos = tablaprod.fnGetPosition(this);
+////                        var aData = tablaprod.fnGetData( aPos[0] );
+//                        alert(this);
+//                    }
+                },
+                {},
+                {},
+                null,
+                null            
+            ]
+//        "aoColumns": [
+//            { 	cssclass: "required" },
+//            {            },
+//            {
+//                indicator: 'Saving platforms...',
+//                tooltip: 'Click to edit platforms',
+//                type: 'textarea',
+//                submit:'Save changes'
+//            },
+//            {
+//                indicator: 'Saving Engine Version...',
+//                tooltip: 'Click to select engine version',
+//                loadtext: 'loading...',
+//                type: 'select',
+//                onblur: 'cancel',
+//                submit: 'Ok',
+//                loadurl: 'EngineVersionList.php',
+//                loadtype: 'GET'
+//            },
+//            {
+//                indicator: 'Saving CSS Grade...',
+//                tooltip: 'Click to select CSS Grade',
+//                loadtext: 'loading...',
+//                type: 'select',
+//                onblur: 'submit',
+//                data: "{'':'Please select...', 'A':'A','B':'B','C':'C'}"
+//            }
+//        ]
+//        oAddNewRowButtonOptions: {	label: "Add...",
+//            icons: {primary:'ui-icon-plus'} 
+//        },
+//        oDeleteRowButtonOptions: {	label: "Remove", 
+//            icons: {primary:'ui-icon-trash'}
+//        },
+//
+//        oAddNewRowFormOptions: { 	
+//            title: 'Add a new browser',
+//            show: "blind",
+//            hide: "explode",
+//            modal: true
+//        }	,
+//        sAddDeleteToolbarSelector: ".dataTables_length"								
+
+        });
+    }
+    
     
     function actualizarlistadoc(){
         $('#tabladoc').dataTable().fnClearTable();
@@ -215,15 +305,31 @@
         }
         $('button').button();
     }
+    function actualizarlistaprod(){
+        $('#tablaprod').dataTable().fnClearTable();
+        for(i in productos){                
+            $('#tablaprod').dataTable().fnAddData( [
+                productos[i].codigo,
+                productos[i].descripcion,
+                productos[i].cantidad,
+                productos[i].precio,
+                productos[i].dcto+'%',
+                productos[i].cantidad*productos[i].precio*(100-productos[i].dcto)/100,
+                "<button onclick=borrarProducto("+i+")>borrar</button>"
+            ]);
+        }
+        $('button').button();
+    }
     
     function borrarRow(index){            
         documentos.splice(index,1);
         $('#tabladoc').dataTable().fnDeleteRow(index);
         actualizarlistadoc();
     }
-    function borrarRowselectdoc(index){            
-        $('#tablaselecdoc').dataTable().fnDeleteRow(index);
-        actualizarlistaselectdoc();
+    function borrarProducto(index){            
+        productos.splice(index,1);
+        $('#tablaprod').dataTable().fnDeleteRow(index);
+        actualizarlistaprod();
     }
     
     function actualizarlistaselectdoc(){
@@ -234,7 +340,7 @@
                 aData[i][0],
                 aData[i][1],
                 aData[i][2],
-                "<button onclick=selectdoc("+i+")>Selec</button><button onclick=borrarRowselectdoc("+i+")>borrar</button>"                            
+                "<button onclick=selectdoc("+i+")>Seleccionar</button>"
             ]);
         }
         $('button').button();
@@ -242,14 +348,11 @@
     
     function selectdoc(index){
         var aData = $('#tablaselecdoc').dataTable().fnGetData(index);
-        $('#tabladoc').dataTable().fnAddData([
-            aData[0],
-            aData[1],
-            aData[2],
-            "<button onclick=borrarRow("+i+")>borrar</button>"
-        ]);
+        documentos.push(new Documento(0, aData[0], aData[1], aData[2]));
+        actualizarlistadoc();
         $.get("<?php echo url_for('notacredito/productoBycodigoBydocumento') ?>",{codproducto: codproducto, empresa: empresa, numdoc: aData[1], tipodoc: tipodocumento } ,function(data){
-            alert(data.id_detalle_activo);
+            productos.push(new Producto(data.id_detalle_activo, data.codigointerno_detalle_activo, data.descripcionexterna_detalle_activo, data.cantidad_detalle_activo, data.precio_detalle_activo, 0));
+            actualizarlistaprod();
         },"json");
         $('button').button();
     }
@@ -260,10 +363,18 @@
         this.numdocumento = numdocumento;
         this.fecha = fecha;
     }
+    var Producto = function(id, codigo, descripcion, cantidad, precio, dcto){
+        this.id = id;
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.dcto = dcto;
+    }
     
     $(document).ready(function(){
         $('input:text , textarea').addClass('ui-widget-content ui-corner-all');
-        $('#tabladoc').dataTable( {
+        tabladoc = $('#tabladoc').dataTable( {
             "aoColumns": [
                     { 
                         "sTitle": "DOCUMENTO",
@@ -293,14 +404,30 @@
         $("div.tabladoc-toolbar").html('<b>DOCUMENTOS</b>');
         
         //============================== 
-        $('#tablaprod').dataTable( {
+        tablaprod = $('#tablaprod').dataTable( {
             "aoColumns": [
-                    { "sTitle": "CODIGO" },
+                    { 
+                        "sTitle": "CODIGO",
+                        "sWidth": "70px"
+                    },
                     { "sTitle": "DESCRIPCION" },
-                    { "sTitle": "CANTIDAD" },
-                    { "sTitle": "PRECIO" },
-                    { "sTitle": "DCTO" },
-                    { "sTitle": "SUBNETO" },
+                    { 
+                        "sTitle": "CANT",
+                        "sWidth": "60px",
+                        "sClass": "center"
+                    },
+                    { 
+                        "sTitle": "PRECIO",
+                        "sWidth": "70px"
+                    },
+                    { 
+                        "sTitle": "DCTO",
+                        "sWidth": "50px"
+                    },
+                    { 
+                        "sTitle": "SUBNETO",
+                        "sWidth": "70px"
+                    },
                     { 
                         "sTitle": "ACCION",
                         "sClass": "center",
@@ -351,6 +478,10 @@
                 "sZeroRecords": "Ningún documento"
             }
         });
+        
+        
+        
+        
         
         
         $('#search_cliente').keyup(function(key){
@@ -408,12 +539,14 @@
             }
         });
         
-//        $('#tablaselecdoc tbody tr').live({
-//            click: function(){
-//                var aPos = $('#tablaselecdoc').dataTable().fnGetPosition( this );
-//                alert(aPos);
-//            }
-//        });
+        $('#tablaprod tbody td').live({
+            change: function() {
+                var aPos = tablaprod.fnGetPosition( this );
+                var aData = tablaprod.fnGetData( aPos[0] );
+                var cantidad = $(this).children().children().val();
+//                alert(cantidad);
+            }
+        });
         
         $("#dialog-form-doc").dialog({
             autoOpen: false,
