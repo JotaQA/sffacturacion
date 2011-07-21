@@ -217,17 +217,17 @@ function formatRut($rut){
             </Totales>
         </Encabezado>
         <?php $NroLinDet = 1 ?>
-        <?php foreach ($nc->getNotacreditoDetalle() as $ncd): ?>
+        <?php foreach ($nc->getDetalleActivo() as $nc): ?>
         <Detalle>
             <NroLinDet><?php echo $NroLinDet ?></NroLinDet>
             <CdgItem>
                 <TpoCodigo><?php echo $TpoCodigo ?></TpoCodigo>
-                <VlrCodigo><?php echo substr($ncd->getDetalleActivo()->getCodigoexternoDetalleActivo(),0,35) ?></VlrCodigo>
+                <VlrCodigo><?php echo substr($nc->getCodigoexternoDetalleActivo(),0,35) ?></VlrCodigo>
             </CdgItem>
-            <NmbItem><?php echo substr($ncd->getDetalleActivo()->getDescripcionexternaDetalleActivo(),0,80) ?></NmbItem>
-            <QtyItem><?php echo $ncd->getDetalleActivo()->getCantidadDetalleActivo() ?></QtyItem>
-            <PrcItem><?php echo $ncd->getDetalleActivo()->getPrecioDetalleActivo() ?></PrcItem>
-            <MontoItem><?php echo ($ncd->getDetalleActivo()->getCantidadDetalleActivo() * $ncd->getDetalleActivo()->getPrecioDetalleActivo()) ?></MontoItem>
+            <NmbItem><?php echo substr($nc->getDescripcionexternaDetalleActivo(),0,80) ?></NmbItem>
+            <QtyItem><?php echo $nc->getCantidadDetalleActivo() ?></QtyItem>
+            <PrcItem><?php echo $nc->getPrecioDetalleActivo() ?></PrcItem>
+            <MontoItem><?php echo ($nc->getCantidadDetalleActivo() * $nc->getPrecioDetalleActivo()) ?></MontoItem>
         </Detalle>
         <?php $NroLinDet++ ?>
         <?php endforeach; ?>

@@ -9,7 +9,7 @@
  * @property integer $id_estado_nota_debito
  * @property integer $codref_nota_debito
  * @property integer $numero_nota_debito
- * @property string $numerofactura_nota_debito
+ * @property string $numero_refdocumento_nota_credito
  * @property timestamp $fechaingreso_nota_debito
  * @property timestamp $fechaemision_nota_debito
  * @property integer $neto_nota_debito
@@ -31,56 +31,56 @@
  * @property Doctrine_Collection $ReferenciaDocumento
  * @property Doctrine_Collection $DetalleActivo
  * 
- * @method integer             getIdNotaDebito()              Returns the current record's "id_nota_debito" value
- * @method integer             getIdEstadoNotaDebito()        Returns the current record's "id_estado_nota_debito" value
- * @method integer             getCodrefNotaDebito()          Returns the current record's "codref_nota_debito" value
- * @method integer             getNumeroNotaDebito()          Returns the current record's "numero_nota_debito" value
- * @method string              getNumerofacturaNotaDebito()   Returns the current record's "numerofactura_nota_debito" value
- * @method timestamp           getFechaingresoNotaDebito()    Returns the current record's "fechaingreso_nota_debito" value
- * @method timestamp           getFechaemisionNotaDebito()    Returns the current record's "fechaemision_nota_debito" value
- * @method integer             getNetoNotaDebito()            Returns the current record's "neto_nota_debito" value
- * @method integer             getTotalNotaDebito()           Returns the current record's "total_nota_debito" value
- * @method integer             getIdNotapedidoNotaDebito()    Returns the current record's "id_notapedido_nota_debito" value
- * @method string              getRutNotaDebito()             Returns the current record's "rut_nota_debito" value
- * @method string              getTelefonoNotaDebito()        Returns the current record's "telefono_nota_debito" value
- * @method string              getNombreNotaDebito()          Returns the current record's "nombre_nota_debito" value
- * @method string              getDireccionNotaDebito()       Returns the current record's "direccion_nota_debito" value
- * @method string              getComunaNotaDebito()          Returns the current record's "comuna_nota_debito" value
- * @method string              getCiudadNotaDebito()          Returns the current record's "ciudad_nota_debito" value
- * @method string              getGiroNotaDebito()            Returns the current record's "giro_nota_debito" value
- * @method string              getOcNotaDebito()              Returns the current record's "oc_nota_debito" value
- * @method string              getCondicionpagoNotaDebito()   Returns the current record's "condicionpago_nota_debito" value
- * @method string              getResponsableNotaDebito()     Returns the current record's "responsable_nota_debito" value
- * @method string              getComentariorNotaDebito()     Returns the current record's "comentarior_nota_debito" value
- * @method string              getTipoNotaDebito()            Returns the current record's "tipo_nota_debito" value
- * @method EstadoNotaDebito    getEstadoNotaDebito()          Returns the current record's "EstadoNotaDebito" value
- * @method Doctrine_Collection getReferenciaDocumento()       Returns the current record's "ReferenciaDocumento" collection
- * @method Doctrine_Collection getDetalleActivo()             Returns the current record's "DetalleActivo" collection
- * @method NotaDebito          setIdNotaDebito()              Sets the current record's "id_nota_debito" value
- * @method NotaDebito          setIdEstadoNotaDebito()        Sets the current record's "id_estado_nota_debito" value
- * @method NotaDebito          setCodrefNotaDebito()          Sets the current record's "codref_nota_debito" value
- * @method NotaDebito          setNumeroNotaDebito()          Sets the current record's "numero_nota_debito" value
- * @method NotaDebito          setNumerofacturaNotaDebito()   Sets the current record's "numerofactura_nota_debito" value
- * @method NotaDebito          setFechaingresoNotaDebito()    Sets the current record's "fechaingreso_nota_debito" value
- * @method NotaDebito          setFechaemisionNotaDebito()    Sets the current record's "fechaemision_nota_debito" value
- * @method NotaDebito          setNetoNotaDebito()            Sets the current record's "neto_nota_debito" value
- * @method NotaDebito          setTotalNotaDebito()           Sets the current record's "total_nota_debito" value
- * @method NotaDebito          setIdNotapedidoNotaDebito()    Sets the current record's "id_notapedido_nota_debito" value
- * @method NotaDebito          setRutNotaDebito()             Sets the current record's "rut_nota_debito" value
- * @method NotaDebito          setTelefonoNotaDebito()        Sets the current record's "telefono_nota_debito" value
- * @method NotaDebito          setNombreNotaDebito()          Sets the current record's "nombre_nota_debito" value
- * @method NotaDebito          setDireccionNotaDebito()       Sets the current record's "direccion_nota_debito" value
- * @method NotaDebito          setComunaNotaDebito()          Sets the current record's "comuna_nota_debito" value
- * @method NotaDebito          setCiudadNotaDebito()          Sets the current record's "ciudad_nota_debito" value
- * @method NotaDebito          setGiroNotaDebito()            Sets the current record's "giro_nota_debito" value
- * @method NotaDebito          setOcNotaDebito()              Sets the current record's "oc_nota_debito" value
- * @method NotaDebito          setCondicionpagoNotaDebito()   Sets the current record's "condicionpago_nota_debito" value
- * @method NotaDebito          setResponsableNotaDebito()     Sets the current record's "responsable_nota_debito" value
- * @method NotaDebito          setComentariorNotaDebito()     Sets the current record's "comentarior_nota_debito" value
- * @method NotaDebito          setTipoNotaDebito()            Sets the current record's "tipo_nota_debito" value
- * @method NotaDebito          setEstadoNotaDebito()          Sets the current record's "EstadoNotaDebito" value
- * @method NotaDebito          setReferenciaDocumento()       Sets the current record's "ReferenciaDocumento" collection
- * @method NotaDebito          setDetalleActivo()             Sets the current record's "DetalleActivo" collection
+ * @method integer             getIdNotaDebito()                     Returns the current record's "id_nota_debito" value
+ * @method integer             getIdEstadoNotaDebito()               Returns the current record's "id_estado_nota_debito" value
+ * @method integer             getCodrefNotaDebito()                 Returns the current record's "codref_nota_debito" value
+ * @method integer             getNumeroNotaDebito()                 Returns the current record's "numero_nota_debito" value
+ * @method string              getNumeroRefdocumentoNotaCredito()    Returns the current record's "numero_refdocumento_nota_credito" value
+ * @method timestamp           getFechaingresoNotaDebito()           Returns the current record's "fechaingreso_nota_debito" value
+ * @method timestamp           getFechaemisionNotaDebito()           Returns the current record's "fechaemision_nota_debito" value
+ * @method integer             getNetoNotaDebito()                   Returns the current record's "neto_nota_debito" value
+ * @method integer             getTotalNotaDebito()                  Returns the current record's "total_nota_debito" value
+ * @method integer             getIdNotapedidoNotaDebito()           Returns the current record's "id_notapedido_nota_debito" value
+ * @method string              getRutNotaDebito()                    Returns the current record's "rut_nota_debito" value
+ * @method string              getTelefonoNotaDebito()               Returns the current record's "telefono_nota_debito" value
+ * @method string              getNombreNotaDebito()                 Returns the current record's "nombre_nota_debito" value
+ * @method string              getDireccionNotaDebito()              Returns the current record's "direccion_nota_debito" value
+ * @method string              getComunaNotaDebito()                 Returns the current record's "comuna_nota_debito" value
+ * @method string              getCiudadNotaDebito()                 Returns the current record's "ciudad_nota_debito" value
+ * @method string              getGiroNotaDebito()                   Returns the current record's "giro_nota_debito" value
+ * @method string              getOcNotaDebito()                     Returns the current record's "oc_nota_debito" value
+ * @method string              getCondicionpagoNotaDebito()          Returns the current record's "condicionpago_nota_debito" value
+ * @method string              getResponsableNotaDebito()            Returns the current record's "responsable_nota_debito" value
+ * @method string              getComentariorNotaDebito()            Returns the current record's "comentarior_nota_debito" value
+ * @method string              getTipoNotaDebito()                   Returns the current record's "tipo_nota_debito" value
+ * @method EstadoNotaDebito    getEstadoNotaDebito()                 Returns the current record's "EstadoNotaDebito" value
+ * @method Doctrine_Collection getReferenciaDocumento()              Returns the current record's "ReferenciaDocumento" collection
+ * @method Doctrine_Collection getDetalleActivo()                    Returns the current record's "DetalleActivo" collection
+ * @method NotaDebito          setIdNotaDebito()                     Sets the current record's "id_nota_debito" value
+ * @method NotaDebito          setIdEstadoNotaDebito()               Sets the current record's "id_estado_nota_debito" value
+ * @method NotaDebito          setCodrefNotaDebito()                 Sets the current record's "codref_nota_debito" value
+ * @method NotaDebito          setNumeroNotaDebito()                 Sets the current record's "numero_nota_debito" value
+ * @method NotaDebito          setNumeroRefdocumentoNotaCredito()    Sets the current record's "numero_refdocumento_nota_credito" value
+ * @method NotaDebito          setFechaingresoNotaDebito()           Sets the current record's "fechaingreso_nota_debito" value
+ * @method NotaDebito          setFechaemisionNotaDebito()           Sets the current record's "fechaemision_nota_debito" value
+ * @method NotaDebito          setNetoNotaDebito()                   Sets the current record's "neto_nota_debito" value
+ * @method NotaDebito          setTotalNotaDebito()                  Sets the current record's "total_nota_debito" value
+ * @method NotaDebito          setIdNotapedidoNotaDebito()           Sets the current record's "id_notapedido_nota_debito" value
+ * @method NotaDebito          setRutNotaDebito()                    Sets the current record's "rut_nota_debito" value
+ * @method NotaDebito          setTelefonoNotaDebito()               Sets the current record's "telefono_nota_debito" value
+ * @method NotaDebito          setNombreNotaDebito()                 Sets the current record's "nombre_nota_debito" value
+ * @method NotaDebito          setDireccionNotaDebito()              Sets the current record's "direccion_nota_debito" value
+ * @method NotaDebito          setComunaNotaDebito()                 Sets the current record's "comuna_nota_debito" value
+ * @method NotaDebito          setCiudadNotaDebito()                 Sets the current record's "ciudad_nota_debito" value
+ * @method NotaDebito          setGiroNotaDebito()                   Sets the current record's "giro_nota_debito" value
+ * @method NotaDebito          setOcNotaDebito()                     Sets the current record's "oc_nota_debito" value
+ * @method NotaDebito          setCondicionpagoNotaDebito()          Sets the current record's "condicionpago_nota_debito" value
+ * @method NotaDebito          setResponsableNotaDebito()            Sets the current record's "responsable_nota_debito" value
+ * @method NotaDebito          setComentariorNotaDebito()            Sets the current record's "comentarior_nota_debito" value
+ * @method NotaDebito          setTipoNotaDebito()                   Sets the current record's "tipo_nota_debito" value
+ * @method NotaDebito          setEstadoNotaDebito()                 Sets the current record's "EstadoNotaDebito" value
+ * @method NotaDebito          setReferenciaDocumento()              Sets the current record's "ReferenciaDocumento" collection
+ * @method NotaDebito          setDetalleActivo()                    Sets the current record's "DetalleActivo" collection
  * 
  * @package    sffacturacion
  * @subpackage model
@@ -128,7 +128,7 @@ abstract class BaseNotaDebito extends sfDoctrineRecord
              'autoincrement' => false,
              'length' => 4,
              ));
-        $this->hasColumn('numerofactura_nota_debito', 'string', 128, array(
+        $this->hasColumn('numero_refdocumento_nota_credito', 'string', 128, array(
              'type' => 'string',
              'fixed' => 0,
              'unsigned' => false,

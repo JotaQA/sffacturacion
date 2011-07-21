@@ -2233,7 +2233,7 @@ NotaCredito:
       primary: false
       notnull: true
       autoincrement: false
-    numerofactura_nota_credito:
+    numero_refdocumento_nota_credito:
       type: string(128)
       fixed: false
       unsigned: false
@@ -2405,7 +2405,7 @@ NotaDebito:
       primary: false
       notnull: true
       autoincrement: false
-    numerofactura_nota_debito:
+    numero_refdocumento_nota_credito:
       type: string(128)
       fixed: false
       unsigned: false

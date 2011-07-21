@@ -29,14 +29,14 @@ class dteActions extends sfActions
 //        61 NOTA DE CREDITO ELECTRONICA
 
 //        $this->forward404Unless($id = $request->getParameter('id'));
-        Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_2');
-        $id = 960;
+        Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+        $id = 11;
         $empresa = Doctrine_Core::getTable('Empresa')->find(1);
-        $this->tipo = 33;
+        $this->tipo = 39;
         $this->RUTEmisor = $empresa->getRutEmpresa();
         $this->RznSoc = $empresa->getRazonSocial();
         $this->GiroEmis = $empresa->getRubro();
-        $this->Acteco = 519000;
+        $this->Acteco = 5190;
         $this->DirOrigen = $empresa->getDireccion();
         $this->CmnaOrigen = $empresa->getComuna();
         $this->CiudadOrigen = $empresa->getCiudad();
@@ -104,26 +104,31 @@ class dteActions extends sfActions
                 break;
             case 61://NOTA DE CREDITO ELECTRONICA
                 $ncs = Doctrine_Query::create()
-                    ->select('nc.*, da.*, ncd.*')
+                    ->select('nc.*, da.*')
                     ->from('NotaCredito nc')
 //                    ->innerJoin('f.EstadoFactura e')
-                    ->innerJoin('nc.NotacreditoDetalle ncd')
-                    ->innerJoin('ncd.DetalleActivo da')
+                    ->innerJoin('nc.DetalleActivo da')
                     ->where('nc.id_nota_credito = ?', $id)
                     ->execute();
                 if(count($ncs) == 0) return $this->renderText('ERROR: NINGUNA NOTA DE CREDITO ENCONTRADA');
                 $this->nc = $ncs[0];
-                $id_facturas = array();
-                foreach ($ncs as $nc){
-                    foreach ($nc->getNotacreditoDetalle() as $ncd){
-                        if(!in_array($ncd->getDetalleActivo()->getIdFactura(), $id_facturas)) $id_facturas[] = $ncd->getDetalleActivo()->getIdFactura();
-                    }
-                }
+//                $id_facturas = array();
+//                foreach ($ncs as $nc){
+//                    foreach ($nc->getNotacreditoDetalle() as $ncd){
+//                        if(!in_array($ncd->getDetalleActivo()->getIdFactura(), $id_facturas)) $id_facturas[] = $ncd->getDetalleActivo()->getIdFactura();
+//                    }
+//                }
+//                $facturas = Doctrine_Query::create()
+//                    ->select('f.*')
+//                    ->from('Factura f')
+////                    ->innerJoin('f.EstadoFactura e')
+//                    ->whereIn('f.id_factura', $id_facturas)
+//                    ->execute();
                 $facturas = Doctrine_Query::create()
                     ->select('f.*')
                     ->from('Factura f')
-//                    ->innerJoin('f.EstadoFactura e')
-                    ->whereIn('f.id_factura', $id_facturas)
+                    ->innerJoin('f.ReferenciaDocumento rd')
+                    ->Where('rd.id_nota_credito = ?', $id)
                     ->execute();
                 $this->facturas = $facturas;
                 //NC PARA FACTURA
@@ -134,7 +139,7 @@ class dteActions extends sfActions
 //                3: Corrige Montos.
                 $this->CodRef = 1;
                 $this->RazonRef = 'Anula Documento Ref.';
-                break;
+            break;
         }
         
     }

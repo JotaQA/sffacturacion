@@ -42,8 +42,8 @@ class NotaCredito extends BaseNotaCredito
     
     public function getNetoCalculado(){
         $neto = 0;
-        foreach ($this->getNotacreditoDetalle() as $ncd){
-            $neto += $ncd->getDetalleActivo()->getPrecioDetalleActivo()*$ncd->getDetalleActivo()->getCantidadDetalleActivo();
+        foreach ($this->getDetalleActivo() as $nc){
+            $neto += $nc->getPrecioDetalleActivo()*$nc->getCantidadDetalleActivo();
         }
         return $neto;
     }

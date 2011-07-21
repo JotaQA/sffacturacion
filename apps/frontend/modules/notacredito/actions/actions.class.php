@@ -230,36 +230,7 @@ class notacreditoActions extends sfActions
 //        $this->it = new sfWidgetFormInputText();
 //        $this->form = new NotaCreditoForm();
 //    }//FALTA EL ELSE
-//  }
-  
-  
-  public function executeIngresarNC(sfWebRequest $request)
-  {
-      $this->forward404Unless($request->isMethod(sfRequest::POST));
-      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
-      $form = new NotaCreditoForm();
-      $id_factura = $request->getParameter('id_factura');
-      $id_detalles = json_decode($request->getParameter('id_detalles'));
-      
-      $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
-      
-      if ($form->isValid() && count($id_detalles)%2==0){          
-          $nota_credito = $form->save();
-          $NCF = new NotacreditoFactura();
-          $NCF->setNotaCredito($nota_credito);
-          $NCF->setIdFactura($id_factura);
-          $NCF->save();
-          while(list(, $id_detalle) = each($id_detalles)) {
-              $detalle_activo = Doctrine_Core::getTable('DetalleActivo')->find($id_detalle);
-              list(, $cantidad) = each($id_detalles);
-              $detalle_activo->setNotaCredito($nota_credito);
-              $detalle_activo->setCantidadNotaCredito($cantidad);
-              $detalle_activo->save();              
-          }
-          return $this->renderText('true');
-      }
-      return $this->renderText('false');
-  }  
+//  } 
   
   
 //  public function executeEmitir(sfWebRequest $request)
@@ -294,6 +265,135 @@ class notacreditoActions extends sfActions
 //    
 //    return $this->renderText('ready');
 //  }
+  
+  
+  public function executeIngresarNC(sfWebRequest $request)
+  {
+      $this->forward404Unless($request->isMethod(sfRequest::POST));
+      $empresa = $request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
+      $form = new NotaCreditoForm();
+
+      
+      $documentos = json_decode($request->getParameter('documentosjson'));
+      $productos = json_decode($request->getParameter('productosjson'));
+      $tipodoc = json_decode($request->getParameter('tipodoc'));
+      $codref = json_decode($request->getParameter('codref'));
+      //SI NO HAY DATOS RETORNA ERROR
+      if($documentos == null || $productos == null || $tipodoc == null || count($documentos) == 0 || count($productos) == 0) return $this->renderText('Datos invalidos o corruptos');
+      //CAMBIAMOS EL FORMATO DE LA FECHA
+      $values = $request->getParameter($form->getName());
+      $fecha = $values['fechaemision_nota_credito'];
+//      return $this->renderText($fecha);
+      list($dia,$mes,$año)=explode("/", $fecha);
+      $fecha = date("Y-m-d",mktime(0,0,0, $mes,$dia,$año));
+      $values['fechaemision_nota_credito'] = $fecha;
+      
+      $form->bind($values, $request->getFiles($form->getName()));
+      
+      if($form->isValid()){
+          //SE PUEDEN PRODUCIR ERRORES, SE USA ROLLBACK
+          $conn = Doctrine_Manager::getInstance()->getCurrentConnection();
+          try{
+              $msgerr = false;
+              //INICIO DE LA TRANSACCION
+              $conn->beginTransaction();
+              
+              //EN EL MODELO SE CONFIGURA LA FECHA ACTUAL Y EL ESTADO
+              $nota_credito = $form->save();
+              
+              switch ($tipodoc){
+                  case 33:
+                      foreach ($documentos as $documento){
+                          $ref_documento = new ReferenciaDocumento();
+                          $ref_documento->setIdFactura($documento->id);
+                          $ref_documento->setIdNotaCredito($nota_credito->getIdNotaCredito());
+                          $ref_documento->setDocumentoFinal(4);
+                          $ref_documento->save();
+                      }
+                  break;
+              }
+              
+              
+              foreach ($productos as $producto){
+                  $detalle_activo = new DetalleActivo();
+                  $detalle_activo->setNotaCredito($nota_credito);
+                  $detalle_activo->setCodigointernoDetalleActivo($producto->codigo);
+                  $detalle_activo->setCodigoexternoDetalleActivo($producto->codigo);
+                  $detalle_activo->setCantidadDetalleActivo($producto->cantidad);
+                  $detalle_activo->setPrecioDetalleActivo($producto->precio);
+                  $detalle_activo->setFechaingresoDetalleActivo(date('Y-m-d'));
+                  $detalle_activo->setDescripcionexternaDetalleActivo($producto->descripcion);
+                  $detalle_activo->setDescripcioninternaDetalleActivo($producto->descripcion);
+                  $detalle_activo->save();
+                  
+                  $ref_detalle = new ReferenciaDetalle();
+                  $ref_detalle->setIdDetalleActivo1($producto->id);
+                  $ref_detalle->setIdDetalleActivo2($detalle_activo->getIdDetalleActivo());
+                  $ref_detalle->save();
+              }
+              
+
+//              while(list(, $codigo) = each($datos)) {
+//                  list(, $id_factura) = each($datos);
+//                  list(, $cantidad) = each($datos);
+//                  //UNIMOS LA NC CON EL DETALLE
+//                  $NCD = new NotacreditoDetalle();
+//                  $NCD->setNotaCredito($nota_credito);
+//                  $detalle_activo = Doctrine_Core::getTable('DetalleActivo')->findOneByCodigointernoDetalleActivoAndIdFactura($codigo, $id_factura);
+//                  //SI HAY ALGUN ERROR...
+//                  if($detalle_activo == null){
+//                      $msgerr = true;
+//                      throw new Exception('detalle nulo');
+//                  }
+//                  if($detalle_activo->getCantidadDetalleActivo() < $cantidad){
+//                      $msgerr = true;
+//                      throw new Exception('superada la cantidad máxima');
+//                  }
+//                  //UNIMOS LA NC CON EL DETALLE
+//                  $NCD->setDetalleActivo($detalle_activo);
+//                  //LA CANTIDAD
+//                  $detalle_activo->setCantidadNotaCredito($cantidad+$detalle_activo->getCantidadNotaCredito());
+//                  //GUARDAMOS
+//                  $detalle_activo->save();
+//                  $NCD->save();
+//              }
+              //SI TODO VA BIEN SE GUARDA
+              $conn->commit();
+              return $this->renderText('true');
+          }          
+          catch (Exception $e){
+              //SI OCURRE UN ERROR NO SE GUARDA NADA
+              $conn->rollBack();
+//              if($msgerr) return $this->renderText('Error al procesar los datos, '.$e->getMessage());
+              return $this->renderText('Error al procesar los datos: '.$e->getMessage());
+          }
+          
+      }
+      return $this->renderText('Formulario invalido');
+  }
+  
+  public function executeGetDocumento(sfWebRequest $request)
+  {
+      $empresa = $request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
+      $id_doc = $request->getParameter('id_doc');
+      $tipodoc = $request->getParameter('tipodoc');
+      
+      switch ($tipodoc){
+          case 33:
+              $docs = Doctrine_Core::getTable('Factura')->find($id_doc);
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+      if($docs != null) return $this->renderText(json_encode($docs->toArray()));
+      else $this->renderText('null');
+  }
   
   
   public function executeSearch_documento(sfWebRequest $request){
@@ -490,6 +590,7 @@ class notacreditoActions extends sfActions
     $this->tipodocchoice  = new sfWidgetFormChoice(array(
         'choices' => Doctrine_Core::getTable('NotaCredito')->getTipoDoc(),
     ));
+    $this->form = new NotaCreditoForm();
   }
 
   public function executeNew(sfWebRequest $request)

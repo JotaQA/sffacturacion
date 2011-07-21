@@ -34,6 +34,10 @@ class NotaCreditoForm extends BaseNotaCreditoForm
           'readonly' => 'readonly'
       ));
       $this->widgetSchema['fechaemision_nota_credito'] = new sfWidgetFormInputText();
+      
+      $this->widgetSchema['codref_nota_credito'] = new sfWidgetFormInputText(array(), array(
+          'readonly' => 'readonly'
+      ));
 
       $this->widgetSchema->setLabels(array(
             'numero_nota_credito' => 'Numero NC',
@@ -48,11 +52,12 @@ class NotaCreditoForm extends BaseNotaCreditoForm
             'oc_nota_credito' => 'O. de Compra',
             'responsable_nota_credito' => 'Vendedor',
             'comentarior_nota_credito' => 'Comentario',
-            'numerofactura_nota_credito' => 'Numero Factura',
+            'numero_refdocumento_nota_credito' => 'Folio docs',
             'fechaemision_nota_credito' => 'Fec. Emision',
             'neto_nota_credito' => 'Neto',
             'total_nota_credito' => 'Total',
             'id_notapedido_nota_credito' => 'NP',
+            'codref_nota_credito' => 'Cód referencia',
         ));      
   }
 }
