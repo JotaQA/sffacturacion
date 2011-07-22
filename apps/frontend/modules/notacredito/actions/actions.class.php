@@ -34,15 +34,7 @@ class notacreditoActions extends sfActions
             ->execute();
       return $this->renderText(json_encode($facturas));
   }
-  public function executeVerificarnumNC(sfWebRequest $request)
-  {
-      $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
-      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
-      $numeroNC = $request->getParameter('numeroNC');
-      $NC = Doctrine_Core::getTable('NotaCredito')->findOneByNumeroNotaCredito($numeroNC);
-      if($NC == null) return $this->renderText('false');
-      else return $this->renderText('true');
-  }
+  
   public function executeGetFactura(sfWebRequest $request)
   {
       $empresa = $this->getUser()->getAttribute('empresa', 'artelamp_1');
@@ -265,6 +257,16 @@ class notacreditoActions extends sfActions
 //    
 //    return $this->renderText('ready');
 //  }
+  
+  public function executeVerificarnumNC(sfWebRequest $request)
+  {
+      $empresa = $request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
+      $numeroNC = $request->getParameter('numeroNC');
+      $NC = Doctrine_Core::getTable('NotaCredito')->findOneByNumeroNotaCredito($numeroNC);
+      if($NC == null) return $this->renderText('false');
+      else return $this->renderText('true');
+  }
   
   
   public function executeIngresarNC(sfWebRequest $request)

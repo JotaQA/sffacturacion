@@ -202,6 +202,7 @@
     }
     
     function actualizar(){
+        actualizarlistadoc(true);
         actualizarlistaprod(false);
     }
     
@@ -250,7 +251,7 @@
         for(i in documentos){
             if(documentos[i].id == id) bool = false;
         }
-        if(bool) documentos.push(new Documento(id, tipodocumento, numdocumento, fecha));
+        if(bool) documentos.push(new Documento(id, tipodocumento, numdocumento, fecha, true));
         //CASOS DE CODREF
         var codref = $('#codrefchoice').val();
         codref = parseInt(codref);
@@ -259,31 +260,30 @@
             var tipodoc = $('#tipodocchoice').val();
             $.get("<?php echo url_for('notacredito/productoBydocumento') ?>",{empresa: empresa, iddoc: id, tipodoc: tipodoc } ,function(data){
                 for(i in data){
-                    productos.push(new Producto(data[i].id_detalle_activo, data[i].codigointerno_detalle_activo, data[i].descripcionexterna_detalle_activo, data[i].cantidad_detalle_activo, data[i].precio_detalle_activo, 0, id));
+                    productos.push(new Producto(data[i].id_detalle_activo, data[i].codigointerno_detalle_activo, data[i].descripcionexterna_detalle_activo, data[i].cantidad_detalle_activo, data[i].precio_detalle_activo, 0, id, false));
                 }
-                actualizarlistaprod(false);
-//                makeEditablelistaprod();
+                actualizarlistaprod();
             },"json");
-            actualizarlistadoc(true);
+            actualizarlistadoc();
         }
         //Corrige Texto Doc de Ref
         if(codref == 2 && bool){
             var tipodoc = $('#tipodocchoice').val();
             var descripcion = $('#glosa').val();
-            productos.push(new Producto(0, 0, descripcion, 0, 0, 0, id));
-            actualizarlistaprod(false);
-            actualizarlistadoc(true);
+            productos.push(new Producto(0, 0, descripcion, 0, 0, 0, id, false));
+            actualizarlistaprod();
+            actualizarlistadoc();
         }
         if(codref == 3 && bool){
             var tipodoc = $('#tipodocchoice').val();
             $.get("<?php echo url_for('notacredito/productoBydocumento') ?>",{empresa: empresa, iddoc: id, tipodoc: tipodoc } ,function(data){
                 for(i in data){
-                    productos.push(new Producto(data[i].id_detalle_activo, data[i].codigointerno_detalle_activo, data[i].descripcionexterna_detalle_activo, data[i].cantidad_detalle_activo, data[i].precio_detalle_activo, 0, id));
+                    productos.push(new Producto(data[i].id_detalle_activo, data[i].codigointerno_detalle_activo, data[i].descripcionexterna_detalle_activo, data[i].cantidad_detalle_activo, data[i].precio_detalle_activo, 0, id, true));
                 }
-                actualizarlistaprod(true);
+                actualizarlistaprod();
                 makeEditablelistaprod();
             },"json");
-            actualizarlistadoc(true);
+            actualizarlistadoc();
         }
     }
     
@@ -339,10 +339,10 @@
     }
     
     
-    function actualizarlistadoc(borrarproductos){
+    function actualizarlistadoc(){
         $('#tabladoc').dataTable().fnClearTable();
-        if(borrarproductos){
-            for(i in documentos){                
+        for(i in documentos){
+            if(documentos[i].botonDocyProd){
                 $('#tabladoc').dataTable().fnAddData( [
                     documentos[i].tipodocumento,
                     documentos[i].numdocumento,
@@ -351,9 +351,7 @@
                     documentos[i].id
                 ]);
             }
-        }
-        else{
-            for(i in documentos){                
+            else{
                 $('#tabladoc').dataTable().fnAddData( [
                     documentos[i].tipodocumento,
                     documentos[i].numdocumento,
@@ -361,15 +359,14 @@
                     "<button onclick=borrarDoc("+i+")>borrar</button>",
                     documentos[i].id
                 ]);
-            }
+            }            
         }
-        
         $('button').button();
     }
-    function actualizarlistaprod(boton){
+    function actualizarlistaprod(){
         $('#tablaprod').dataTable().fnClearTable();
-        if(boton){
-            for(i in productos){                
+        for(i in productos){
+            if(productos[i].botonborrar){
                 $('#tablaprod').dataTable().fnAddData( [
                     productos[i].codigo,
                     productos[i].descripcion,
@@ -380,9 +377,7 @@
                     "<button onclick=borrarProducto("+i+")>borrar</button>"
                 ]);
             }
-        }
-        else{
-            for(i in productos){                
+            else{
                 $('#tablaprod').dataTable().fnAddData( [
                     productos[i].codigo,
                     productos[i].descripcion,
@@ -393,6 +388,7 @@
                     "<button disabled onclick=borrarProducto("+i+")>borrar</button>"
                 ]);
             }
+            
         }
         
         $('button').button();
@@ -443,15 +439,20 @@
     
     function selectdoc(index){
         var aData = $('#tablaselecdoc').dataTable().fnGetData(index);
-        documentos.push(new Documento(aData[4], aData[0], aData[1], aData[2]));
-        actualizarlistadoc(true);
-        $.get("<?php echo url_for('notacredito/productoBycodigoBydocumento') ?>",{codproducto: codproducto, empresa: empresa, numdoc: aData[1], tipodoc: tipodocumento } ,function(data){
-            productos.push(new Producto(data.id_detalle_activo, data.codigointerno_detalle_activo, data.descripcionexterna_detalle_activo, data.cantidad_detalle_activo, data.precio_detalle_activo, 0, aData[4]));
-//            alert('ingresado iddoc' + aData[3]);
-            actualizarlistaprod(true);
-            makeEditablelistaprod();
-        },"json");
-        $('button').button();
+        var bool = true;
+        for(i in documentos){
+            if(documentos[i].id == aData[4]) bool = false;
+        }
+        if(bool){
+            documentos.push(new Documento(aData[4], aData[0], aData[1], aData[2], true));
+            actualizarlistadoc();
+            $.get("<?php echo url_for('notacredito/productoBycodigoBydocumento') ?>",{codproducto: codproducto, empresa: empresa, numdoc: aData[1], tipodoc: tipodocumento } ,function(data){
+                productos.push(new Producto(data.id_detalle_activo, data.codigointerno_detalle_activo, data.descripcionexterna_detalle_activo, data.cantidad_detalle_activo, data.precio_detalle_activo, 0, aData[4], false));
+                actualizarlistaprod();
+                makeEditablelistaprod();
+            },"json");
+            $('button').button();
+        }
     }
     
     function limpiar_tablas(){
@@ -461,13 +462,14 @@
         documentos = new Array();
     }
     
-    var Documento = function(id, tipodocumento, numdocumento, fecha){
+    var Documento = function(id, tipodocumento, numdocumento, fecha, botonDocyProd){
         this.id = id;
         this.tipodocumento = tipodocumento;
         this.numdocumento = numdocumento;
         this.fecha = fecha;
+        this.botonDocyProd = botonDocyProd;
     }
-    var Producto = function(id, codigo, descripcion, cantidad, precio, dcto, id_doc){
+    var Producto = function(id, codigo, descripcion, cantidad, precio, dcto, id_doc, botonborrar){
         this.id = id;
         this.codigo = codigo;
         this.descripcion = descripcion;
@@ -475,6 +477,7 @@
         this.precio = precio;
         this.dcto = dcto;
         this.id_doc = id_doc;
+        this.botonborrar = botonborrar;
     }
     
     $(document).ready(function(){
@@ -706,6 +709,47 @@
             }
         });
         
+        
+        //VERIFICAMOS SI EL NUM NC EXISTE
+        $("#nota_credito_numero_nota_credito").live({
+            blur: function(){
+                var numeroNC = $(this).val();
+                if(!isNaN(parseInt(numeroNC, 10)) && parseInt(numeroNC, 10) > 0){
+                    $.get("<?php echo url_for('notacredito/verificarnumNC') ?>", {numeroNC:numeroNC, empresa: empresa}, function(data){
+                        if(data == 'true'){
+                            var tabletitle = $('.validateTips');
+                            var input = $("#nota_credito_numero_nota_credito");
+                            var textoantiguo = tabletitle.html();
+                            tabletitle.html('EL número de NC ya existe');
+                            tabletitle.addClass("ui-state-highlight");
+                            input.addClass( "ui-state-error" );
+                            input.val('0');
+                            setTimeout(function() {
+                                tabletitle.removeClass( "ui-state-highlight");
+                                tabletitle.html(textoantiguo);
+                                input.removeClass( "ui-state-error" );
+                            }, 1500);
+                        }
+                    });
+                }
+                else{
+                    var tabletitle = $('.validateTips');
+                    var input = $("#nota_credito_numero_nota_credito");
+                    var textoantiguo = tabletitle.html();
+                    tabletitle.html('EL número de NC no es valido');
+                    tabletitle.addClass("ui-state-highlight");
+                    input.addClass( "ui-state-error" );
+                    input.val('0');
+                    setTimeout(function() {
+                        tabletitle.removeClass( "ui-state-highlight");
+                        tabletitle.html(textoantiguo);
+                        input.removeClass( "ui-state-error" );
+                    }, 1500);
+                }
+            }
+        });
+        
+        
         $( "#nota_credito_fechaemision_nota_credito" ).datepicker($.datepicker.regional[ "es" ]);
         
         $("#dialog-form-doc").dialog({
@@ -931,11 +975,11 @@
                             });
                         }
                 },
-                'Limpiar': function() {
-//                        $('form input[type=text] , form textarea').each(function() {
-//                            $(this).val('');
-//                        });
-                },
+//                'Limpiar': function() {
+////                        $('form input[type=text] , form textarea').each(function() {
+////                            $(this).val('');
+////                        });
+//                },
                 'Cancelar': function() {
                         $( this ).dialog( "close" );
                 }
