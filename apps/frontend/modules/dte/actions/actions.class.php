@@ -143,5 +143,35 @@ class dteActions extends sfActions
         }
         
     }
+    
+    
+    public function executeTest(sfWebRequest $request) {
+//        $client = new SoapClient("http://netpub.cstudies.ubc.ca/dotnet/WebServices/FuelCalculator.asmx?wsdl");
+//        $parametros=array();
+//        $parametros['Kilometres_Travelled']=1;
+//        $parametros['Litres_Consumed']=12;
+//        $this->r = $client->FuelCalculator($parametros)->FuelCalculatorResult;
+//        $this->r = $client->__getFunctions();
+        ini_set('default_socket_timeout', 5);
+        $client = new SoapClient("http://www.webservicex.net/globalweather.asmx?wsdl", array(
+//            'connection_timeout' => 1, 
+//            'timeout' => 10, 
+//            "features" => SOAP_SINGLE_ELEMENT_ARRAYS,
+            'trace'=>1
+            ));
+        $parametros=array();
+        $parametros['CountryName']='Chile';
+//        $parametros['CityName']='Santiago';
+        try {
+//            $this->r = $client->GetCitiesByCountry($parametros)->GetCitiesByCountryResult;
+            $xml = $client->GetCitiesByCountry($parametros)->GetCitiesByCountryResult;
+            $xml = preg_replace('/(<\?xml[^?]+?)utf-16/i', '$1utf-8', $xml);
+            $sxmle = new SimpleXMLElement($xml);
+            $this->r = $sxmle;
+
+        } catch (SoapFault $fault) {
+            $this->r = "Sorry, returned the following ERROR: ".$fault->faultcode."-".$fault->faultstring;
+        }
+    }
 
 }
