@@ -34,6 +34,10 @@ class NotaDebitoForm extends BaseNotaDebitoForm
           'readonly' => 'readonly'
       ));
       $this->widgetSchema['fechaemision_nota_debito'] = new sfWidgetFormInputText();
+      
+      $this->widgetSchema['codref_nota_debito'] = new sfWidgetFormInputText(array(), array(
+          'readonly' => 'readonly'
+      ));
 
       $this->widgetSchema->setLabels(array(
             'numero_nota_debito' => 'Numero ND',
@@ -53,6 +57,7 @@ class NotaDebitoForm extends BaseNotaDebitoForm
             'neto_nota_debito' => 'Neto',
             'total_nota_debito' => 'Total',
             'id_notapedido_nota_debito' => 'NP',
+            'codref_nota_debito' => 'Cód referencia',
         ));
   }
 }

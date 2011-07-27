@@ -1,4 +1,4 @@
-<form>
+<form id="ingresoNDpopup">
     <fieldset>
         <table class="popupform">
         <tr>
@@ -86,16 +86,17 @@
             </td>
         </tr>
         <tr>
+            <th><?php echo $form['codref_nota_debito']->renderLabel() ?></th>
+            <td>
+                <?php echo $form['codref_nota_debito']->renderError() ?>
+                <?php echo $form['codref_nota_debito']->render(array('size' => 6)) ?>
+            </td>
             <th><?php echo $form['neto_nota_debito']->renderLabel() ?></th>
             <td>
                 <?php echo $form['neto_nota_debito']->renderError() ?>
                 <?php echo $form['neto_nota_debito']->render() ?>
             </td>            
-            <th><?php echo $form['total_nota_debito']->renderLabel() ?></th>
-            <td>
-                <?php echo $form['total_nota_debito']->renderError() ?>
-                <?php echo $form['total_nota_debito']->render() ?>
-            </td>
+            
         </tr>
         <tr>
             <th><?php echo $form['id_notapedido_nota_debito']->renderLabel() ?></th>
@@ -103,6 +104,11 @@
                 <?php echo $form['id_notapedido_nota_debito']->renderError() ?>
                 <?php echo $form['id_notapedido_nota_debito']->render() ?>
                 <?php echo $form->renderHiddenFields(true) ?>
+            </td>
+            <th><?php echo $form['total_nota_debito']->renderLabel() ?></th>
+            <td>
+                <?php echo $form['total_nota_debito']->renderError() ?>
+                <?php echo $form['total_nota_debito']->render() ?>
             </td>
         </tr>
     </table>

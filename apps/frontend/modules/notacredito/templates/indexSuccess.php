@@ -155,7 +155,7 @@
     function siguiente(){
 //        $( "#dialog-form" ).dialog( "open" );
         if(documentos.length == 0){
-            alert('Al menos debe elegir una factura');
+            alert('Al menos debe elegir un documento');
             return false;
         }
         //OBTENEMOS DATOS DEL CLIENTE DEL DOCUMENTO DE REFERENCIA
