@@ -43,7 +43,7 @@
   <tbody>
     <?php foreach ($pager->getResults() as $cuota): ?>
       <?php if($cuota->getMontoCuota() == $cuota->getMontopagadoCuota()){ ?>
-      <?php $cuota->ValidarEstado() ?>
+      <?php //$cuota->ValidarEstado() ?>
       <tr class="<?php echo 'cuota'.$cuota->getIdCuota()?>" style="cursor: pointer; background: rgb(235,235,235)" onclick="mostrar_pagos(<?php echo $cuota->getIdCuota() ?>)">
               <td title="<?php echo $cuota->getFactura()->getDatosCliente()?>"><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
   'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'))).$cuota->getFactura()->getNumeroFactura() ?></td>

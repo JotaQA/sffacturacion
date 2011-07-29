@@ -14,6 +14,7 @@
  * @property timestamp $fechaemision_nota_debito
  * @property integer $neto_nota_debito
  * @property integer $total_nota_debito
+ * @property float $descuento_nota_debito
  * @property integer $id_notapedido_nota_debito
  * @property string $rut_nota_debito
  * @property string $telefono_nota_debito
@@ -40,6 +41,7 @@
  * @method timestamp           getFechaemisionNotaDebito()           Returns the current record's "fechaemision_nota_debito" value
  * @method integer             getNetoNotaDebito()                   Returns the current record's "neto_nota_debito" value
  * @method integer             getTotalNotaDebito()                  Returns the current record's "total_nota_debito" value
+ * @method float               getDescuentoNotaDebito()              Returns the current record's "descuento_nota_debito" value
  * @method integer             getIdNotapedidoNotaDebito()           Returns the current record's "id_notapedido_nota_debito" value
  * @method string              getRutNotaDebito()                    Returns the current record's "rut_nota_debito" value
  * @method string              getTelefonoNotaDebito()               Returns the current record's "telefono_nota_debito" value
@@ -65,6 +67,7 @@
  * @method NotaDebito          setFechaemisionNotaDebito()           Sets the current record's "fechaemision_nota_debito" value
  * @method NotaDebito          setNetoNotaDebito()                   Sets the current record's "neto_nota_debito" value
  * @method NotaDebito          setTotalNotaDebito()                  Sets the current record's "total_nota_debito" value
+ * @method NotaDebito          setDescuentoNotaDebito()              Sets the current record's "descuento_nota_debito" value
  * @method NotaDebito          setIdNotapedidoNotaDebito()           Sets the current record's "id_notapedido_nota_debito" value
  * @method NotaDebito          setRutNotaDebito()                    Sets the current record's "rut_nota_debito" value
  * @method NotaDebito          setTelefonoNotaDebito()               Sets the current record's "telefono_nota_debito" value
@@ -172,6 +175,16 @@ abstract class BaseNotaDebito extends sfDoctrineRecord
              'notnull' => false,
              'autoincrement' => false,
              'length' => 4,
+             ));
+        $this->hasColumn('descuento_nota_debito', 'float', null, array(
+             'type' => 'float',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'default' => '0',
+             'notnull' => true,
+             'autoincrement' => false,
+             'length' => '',
              ));
         $this->hasColumn('id_notapedido_nota_debito', 'integer', 4, array(
              'type' => 'integer',

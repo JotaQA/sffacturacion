@@ -20,7 +20,7 @@
                           <li><div class="menuheader" id="menuheader"><img alt="" src="/images1/info_16.png"/>Menu Facturacion</div></li>
 						  <li><a href="/artelamp/sffacturacion/web/pago" >Pagos</a></li>
 						  <li><a href="/artelamp/sffacturacion/web/factura" >Facturas</a></li>
-						  <li><a href="/artelamp/sffacturacion/web/notacredito/crear2" >Notas Credito</a></li>
+						  <li><a href="/artelamp/sffacturacion/web/notacredito" >Notas Credito</a></li>
 						  <li><a href="/artelamp/index1.php?id=VmtaYVJrOVdRbEpRVkRBOStQ" >Volver al Sistema</a></li>
                       </ul>
                   </div>

@@ -2268,6 +2268,14 @@ NotaCredito:
       primary: false
       notnull: false
       autoincrement: false
+    descuento_nota_credito:
+      type: float()
+      fixed: false
+      unsigned: false
+      primary: false
+      default: '0'
+      notnull: true
+      autoincrement: false
     id_notapedido_nota_credito:
       type: integer(4)
       fixed: false
@@ -2440,6 +2448,14 @@ NotaDebito:
       primary: false
       notnull: false
       autoincrement: false
+    descuento_nota_debito:
+      type: float()
+      fixed: false
+      unsigned: false
+      primary: false
+      default: '0'
+      notnull: true
+      autoincrement: false
     id_notapedido_nota_debito:
       type: integer(4)
       fixed: false
@@ -2583,56 +2599,6 @@ NotaVenta:
       primary: false
       notnull: true
       autoincrement: false
-#NotacreditoDetalle:
-##  connection: artelamp_1
-#  tableName: notacredito_detalle
-#  columns:
-#    id_detalle_activo:
-#      type: integer(4)
-#      fixed: false
-#      unsigned: false
-#      primary: true
-#      autoincrement: false
-#    id_nota_credito:
-#      type: integer(4)
-#      fixed: false
-#      unsigned: false
-#      primary: true
-#      autoincrement: false
-#  relations:
-#    NotaCredito:
-#      local: id_nota_credito
-#      foreign: id_nota_credito
-#      type: one
-#    DetalleActivo:
-#      local: id_detalle_activo
-#      foreign: id_detalle_activo
-#      type: one
-#NotadebitoDetalle:
-##  connection: artelamp_1
-#  tableName: notadebito_detalle
-#  columns:
-#    id_detalle_activo:
-#      type: integer(4)
-#      fixed: false
-#      unsigned: false
-#      primary: true
-#      autoincrement: false
-#    id_nota_debito:
-#      type: integer(4)
-#      fixed: false
-#      unsigned: false
-#      primary: true
-#      autoincrement: false
-#  relations:
-#    NotaDebito:
-#      local: id_nota_debito
-#      foreign: id_nota_debito
-#      type: one
-#    DetalleActivo:
-#      local: id_detalle_activo
-#      foreign: id_detalle_activo
-#      type: one
 Pago:
 #  connection: artelamp_1
   tableName: pago

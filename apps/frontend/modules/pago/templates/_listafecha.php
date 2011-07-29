@@ -22,9 +22,8 @@
   </thead>
   <tbody>
     <?php foreach ($pager->getResults() as $cuota): ?>
-      <?php $ncs = $cuota->getFactura()->getNotasCredito() ?>
       <?php if($cuota->getMontoCuota() == $cuota->getMontopagadoCuota()){ ?>
-      <?php $cuota->ValidarEstado() ?>      
+      <?php //$cuota->ValidarEstado() ?>      
       <tr class="<?php echo 'cuota'.$cuota->getIdCuota()?>" style="cursor: pointer; background: rgb(235,235,235)" onclick="mostrar_pagos(<?php echo $cuota->getIdCuota() ?>)">
               <td><?php echo link_to($cuota->getFactura()->getFacturaTipo(ESC_RAW), 'factura/cambiartipo?id_factura='.$cuota->getFactura()->getIdFactura(), array(
   'popup' => array('popupWindow', 'width=750,height=400,left=320,top=100'), 'title' => $cuota->getFactura()->getDatosCliente(), 'class' => 'qtip')).$cuota->getFactura()->getNumeroFactura().(($cuota->getFactura()->getCountNCS()->getRaw('COUNT') > 0)?'<b class="qtip" title="Numero de NC: '.$cuota->getFactura()->getNumNCbyFac().'" style="background: #6666ff; color: black; padding: 1px 2px; font-size: 120%">NC</b>':"") ?></td>

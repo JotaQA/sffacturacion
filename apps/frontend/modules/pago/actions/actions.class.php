@@ -422,10 +422,8 @@ class pagoActions extends sfActions
         $ncs = Doctrine_Query::create()
             ->select('DISTINCT nc.id_nota_credito, nc.total_nota_credito')
             ->from('NotaCredito nc')
-            ->innerJoin('nc.NotacreditoDetalle ncd')
-            ->innerJoin('ncd.DetalleActivo da')
-            ->innerJoin('da.Factura f')
-            ->whereIn('f.id_factura', $id_facturas)
+            ->innerJoin('nc.ReferenciaDocumento rd')
+            ->whereIn('rd.id_factura', $id_facturas)
             ->execute();
     }
     
@@ -550,12 +548,99 @@ class pagoActions extends sfActions
          }      
     }
   }
-
-
-  public function executeShow(sfWebRequest $request)
+  
+  public function executeActualizarpagos(sfWebRequest $request)
   {
-    $this->cliente = Doctrine_Core::getTable('Cliente')->find(array($request->getParameter('id_cliente')));
-    $this->forward404Unless($this->cliente);
+      $empresa = $request->getParameter('empresa');
+      if($empresa == null) return $this->renderText('Error, por favor seleccione una empresa');
+      $this->empresa = $empresa;
+      $rd = $request->getParameter('rd');
+      if($rd != null) $this->rd = $rd;
+      else $this->rd = 'no';
+      $tiempo = $request->getParameter('tiempo');
+      if($tiempo != null) $this->tiempo = $tiempo;
+      else $this->tiempo = 2;
+  }
+  public function executeActualizarpagos2(sfWebRequest $request)
+  {
+      $empresa = $request->getParameter('empresa');
+      if($empresa == null) return $this->renderText('Error, por favor seleccione una empresa');
+      if($empresa == 'artelamp') Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_1');
+      if($empresa == 'artretail') Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_2');
+      $tiempo = $request->getParameter('tiempo');
+      if($tiempo == null) return $this->renderText('No existe tiempo');
+      
+      $accion = $request->getParameter('accion');
+      switch ($accion){
+          case 'cargar':
+              
+              $facturas = Doctrine_Query::create()
+                      ->select('f.id_factura, f.numero_factura, f.fechaemision_factura, ef.nombre_estadofactura')
+                      ->from('Factura f')
+                      ->innerJoin('f.EstadoFactura ef')
+                      ->Where('DATE(f.fechaemision_factura) > DATE_SUB(CURDATE(),INTERVAL '.$tiempo.' MONTH)')
+                      ->orderby('f.fechaemision_factura');
+
+              $datos = $facturas->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+          break;
+          case 'actualizar':
+              $id = $request->getParameter('id');
+              $cuotas = Doctrine_Query::create()
+                      ->select('c.monto_cuota, c.montopagado_cuota, DATE(c.fechavencimiento_cuota) as fechavencimiento_cuota, ec.nombre_estado_cuota')
+                      ->from('Cuota c')
+                      ->innerJoin('c.EstadoCuota ec')
+                      ->Where('c.id_factura = ?', $id)
+                      ->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+              $saldototal = 0;
+              $fechanow = time();
+              $row_actualizadas = 0;
+              foreach ($cuotas as $cuota){
+                  $saldo = $cuota['monto_cuota'] - $cuota['montopagado_cuota'];
+                  
+                  $saldototal += $saldo;
+                  $fechavenc = strtotime($cuota['fechavencimiento_cuota']);
+                  
+                  if($saldo > 0 && $fechavenc < $fechanow && $cuota['EstadoCuota']['nombre_estado_cuota'] != 'Vencida' && $cuota['EstadoCuota']['nombre_estado_cuota'] != 'Anulada'){
+                      //LA CUOTA ESTA VENCIDA, SE ACTUALIZA EL ESTADO
+                      $ECVENCIDA = Doctrine::getTable('EstadoCuota')
+                              ->createQuery('ec')
+                              ->select('ec.id_estado_cuota')
+                              ->where('ec.nombre_estado_cuota = ?', 'Vencida')
+                              ->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+                      $q = Doctrine_Query::create()
+                              ->update('Cuota')
+                              ->set('id_estado_cuota', '?', $ECVENCIDA[0]['id_estado_cuota'])
+                              ->where('id_cuota = ?', $cuota['id_cuota'])
+                              ->execute();
+                      $row_actualizadas += $q;
+                  }
+                  if($saldo == 0 && $cuota['EstadoCuota']['nombre_estado_cuota'] != 'Pagada' && $cuota['EstadoCuota']['nombre_estado_cuota'] != 'Anulada'){
+                      //LA CUOTA ESTA PAGADA, SE ACTUALIZA EL ESTADO
+                      $EC = Doctrine::getTable('EstadoCuota')
+                              ->createQuery('ec')
+                              ->select('ec.id_estado_cuota')
+                              ->where('ec.nombre_estado_cuota = ?', 'Pagada')
+                              ->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+                      $q = Doctrine_Query::create()
+                              ->update('Cuota')
+                              ->set('id_estado_cuota', '?', $EC[0]['id_estado_cuota'])
+                              ->where('id_cuota = ?', $cuota['id_cuota'])
+                              ->execute();
+                      $row_actualizadas += $q;
+                  }
+              }
+              //ACTUALIZAMOS EL SALDO DE LA FACTURA
+              $q = Doctrine_Query::create()
+                          ->update('Factura')
+                          ->set('saldo_factura', '?', $saldototal)
+                          ->where('id_factura = ?', $id)
+                          ->execute();
+              $datos = array('saldo' => $saldototal, 'rows' => $row_actualizadas);
+              
+          break;
+      }
+      
+      return $this->renderText(json_encode($datos));
   }
 
   public function executeNew(sfWebRequest $request)

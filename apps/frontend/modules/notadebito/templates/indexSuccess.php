@@ -259,7 +259,7 @@
         //Anula Doc de Referencia
         if(codref == 1 && bool){
             var tipodoc = $('#tipodocchoice').val();
-            $.get("<?php echo url_for('notacredito/productoBydocumento') ?>",{empresa: empresa, iddoc: id, tipodoc: tipodoc } ,function(data){
+            $.get("<?php echo url_for('notadebito/productoBydocumento') ?>",{empresa: empresa, iddoc: id, tipodoc: tipodoc } ,function(data){
                 for(i in data){
                     productos.push(new Producto(data[i].id_detalle_activo, data[i].codigointerno_detalle_activo, data[i].descripcionexterna_detalle_activo, data[i].cantidad_detalle_activo, data[i].precio_detalle_activo, 0, id, false));
                 }
@@ -277,7 +277,7 @@
         }
         if(codref == 3 && bool){
             var tipodoc = $('#tipodocchoice').val();
-            $.get("<?php echo url_for('notacredito/productoBydocumento') ?>",{empresa: empresa, iddoc: id, tipodoc: tipodoc } ,function(data){
+            $.get("<?php echo url_for('notadebito/productoBydocumento') ?>",{empresa: empresa, iddoc: id, tipodoc: tipodoc } ,function(data){
                 for(i in data){
                     productos.push(new Producto(data[i].id_detalle_activo, data[i].codigointerno_detalle_activo, data[i].descripcionexterna_detalle_activo, data[i].cantidad_detalle_activo, data[i].precio_detalle_activo, 0, id, true));
                 }
@@ -328,8 +328,8 @@
                 null,
                 null,
                 {
-                    fnOnCellUpdated: function(sStatus, sValue, settings){
-                    }
+//                    fnOnCellUpdated: function(sStatus, sValue, settings){
+//                    }
                 },
                 {},
                 {},
@@ -447,7 +447,7 @@
         if(bool){
             documentos.push(new Documento(aData[4], aData[0], aData[1], aData[2], true));
             actualizarlistadoc();
-            $.get("<?php echo url_for('notacredito/productoBycodigoBydocumento') ?>",{codproducto: codproducto, empresa: empresa, numdoc: aData[1], tipodoc: tipodocumento } ,function(data){
+            $.get("<?php echo url_for('notadebito/productoBycodigoBydocumento') ?>",{codproducto: codproducto, empresa: empresa, numdoc: aData[1], tipodoc: tipodocumento } ,function(data){
                 productos.push(new Producto(data.id_detalle_activo, data.codigointerno_detalle_activo, data.descripcionexterna_detalle_activo, data.cantidad_detalle_activo, data.precio_detalle_activo, 0, aData[4], false));
                 actualizarlistaprod();
                 makeEditablelistaprod();
@@ -599,7 +599,7 @@
         $('#search_cliente').keyup(function(key){
             if (this.value.length >= 3){
                 $('#clientes').load(
-                "<?php echo url_for('notacredito/search_cliente') ?>",
+                "<?php echo url_for('notadebito/search_cliente') ?>",
                 {query: this.value},
                 function() { /*$('#loader').hide();*/ }
                 );
@@ -615,7 +615,7 @@
             if (this.value.length >= 2){
                 var tipodoc = $('#tipodocchoice').val();
                 $('#documentos').load(
-                "<?php echo url_for('notacredito/search_documento') ?>",
+                "<?php echo url_for('notadebito/search_documento') ?>",
                 {query: this.value, empresa: empresa, tipodoc: tipodoc, rut_cliente: rut_cliente},
                 function() { /*$('#loader').hide();*/ }
                 );
@@ -628,7 +628,7 @@
             if (this.value.length >= 2){
                 var tipodoc = $('#tipodocchoice').val();
                 $('#productos').load(
-                "<?php echo url_for('notacredito/search_producto') ?>",
+                "<?php echo url_for('notadebito/search_producto') ?>",
                 {query: this.value, empresa: empresa, tipodoc: tipodoc, rut_cliente: rut_cliente},
                 function() { /*$('#loader').hide();*/ }
                 );
@@ -712,16 +712,16 @@
         
         
         //VERIFICAMOS SI EL NUM NC EXISTE
-        $("#nota_credito_numero_nota_credito").live({
+        $("#nota_debito_numero_nota_debito").live({
             blur: function(){
-                var numeroNC = $(this).val();
+                var numeroND = $(this).val();
                 if(!isNaN(parseInt(numeroNC, 10)) && parseInt(numeroNC, 10) > 0){
-                    $.get("<?php echo url_for('notacredito/verificarnumNC') ?>", {numeroNC:numeroNC, empresa: empresa}, function(data){
+                    $.get("<?php echo url_for('notadebito/verificarnumND') ?>", {numeroND:numeroND, empresa: empresa}, function(data){
                         if(data == 'true'){
                             var tabletitle = $('.validateTips');
-                            var input = $("#nota_credito_numero_nota_credito");
+                            var input = $("#nota_debito_numero_nota_debito");
                             var textoantiguo = tabletitle.html();
-                            tabletitle.html('EL número de NC ya existe');
+                            tabletitle.html('EL número de ND ya existe');
                             tabletitle.addClass("ui-state-highlight");
                             input.addClass( "ui-state-error" );
                             input.val('0');
@@ -735,9 +735,9 @@
                 }
                 else{
                     var tabletitle = $('.validateTips');
-                    var input = $("#nota_credito_numero_nota_credito");
+                    var input = $("#nota_debito_numero_nota_debito");
                     var textoantiguo = tabletitle.html();
-                    tabletitle.html('EL número de NC no es valido');
+                    tabletitle.html('EL número de ND no es valido');
                     tabletitle.addClass("ui-state-highlight");
                     input.addClass( "ui-state-error" );
                     input.val('0');
@@ -751,7 +751,7 @@
         });
         
         
-        $( "#nota_credito_fechaemision_nota_credito" ).datepicker($.datepicker.regional[ "es" ]);
+        $( "#nota_debito_fechaemision_nota_debito" ).datepicker($.datepicker.regional[ "es" ]);
         
         $("#dialog-form-doc").dialog({
             autoOpen: false,
@@ -837,20 +837,20 @@
         //====================================================================
         
         
-        var numeronc = $( "#nota_credito_numero_nota_credito" ),
-            rut = $( "#nota_credito_rut_nota_credito" ),
-            nombre = $( "#nota_credito_nombre_nota_credito" ),
-            telefono = $( "#nota_credito_telefono_nota_credito" ),
-            direccion = $( "#nota_credito_direccion_nota_credito" ),
-            comuna = $( "#nota_credito_comuna_nota_credito" ),
-            ciudad = $( "#nota_credito_ciudad_nota_credito" ),
-            giro = $( "#nota_credito_giro_nota_credito" ),
-            condicion = $( "#nota_credito_condicionpago_nota_credito" ),
-            oc = $( "#nota_credito_oc_nota_credito" ),
-            responsable = $( "#nota_credito_responsable_nota_credito" ),
-            numerodoc = $( "#nota_credito_numero_refdocumento_nota_credito" ),
+        var numeronc = $( "#nota_debito_numero_nota_debito" ),
+            rut = $( "#nota_debito_rut_nota_debito" ),
+            nombre = $( "#nota_debito_nombre_nota_debito" ),
+            telefono = $( "#nota_debito_telefono_nota_debito" ),
+            direccion = $( "#nota_debito_direccion_nota_debito" ),
+            comuna = $( "#nota_debito_comuna_nota_debito" ),
+            ciudad = $( "#nota_debito_ciudad_nota_debito" ),
+            giro = $( "#nota_debito_giro_nota_debito" ),
+            condicion = $( "#nota_debito_condicionpago_nota_debito" ),
+            oc = $( "#nota_debito_oc_nota_debito" ),
+            responsable = $( "#nota_debito_responsable_nota_debito" ),
+            numerodoc = $( "#nota_debito_numero_refdocumento_nota_debito" ),
 //            fechaingreso = $( "#nota_credito_fechaingreso_nota_credito" ),
-            fechaemision = $( "#nota_credito_fechaemision_nota_credito" ),
+            fechaemision = $( "#nota_debito_fechaemision_nota_debito" ),
             allFields = $( [] )
             .add( numeronc )
             .add( rut )
@@ -897,7 +897,7 @@
                     }
         }
         
-        $( "#nota_credito_rut_nota_credito" ).Rut({
+        $( "#nota_debito_rut_nota_debito" ).Rut({
             on_error: function(){ alert('Rut incorrecto'); },
             format_on: 'keyup'
         });

@@ -24,9 +24,8 @@ class Factura extends BaseFactura
         $ncs = Doctrine_Query::create()
           ->select('nc.*')
           ->from('NotaCredito nc')
-          ->innerJoin('nc.NotacreditoDetalle ncd')
-          ->innerJoin('ncd.DetalleActivo da')
-          ->where('da.id_factura = ?',  $this->getIdFactura())
+          ->innerJoin('nc.ReferenciaDocumento rd')
+          ->where('rd.id_factura = ?',  $this->getIdFactura())
           ->execute();
         return $ncs;
     }
@@ -35,9 +34,8 @@ class Factura extends BaseFactura
         $ncs = Doctrine_Query::create()
           ->select('COUNT(nc.id_nota_credito)')
           ->from('NotaCredito nc')
-          ->innerJoin('nc.NotacreditoDetalle ncd')
-          ->innerJoin('ncd.DetalleActivo da')
-          ->where('da.id_factura = ?',  $this->getIdFactura())
+          ->innerJoin('nc.ReferenciaDocumento rd')
+          ->where('rd.id_factura = ?',  $this->getIdFactura())
           ->setHydrationMode(Doctrine::HYDRATE_ARRAY)
           ->execute();
         return $ncs[0];
@@ -47,9 +45,8 @@ class Factura extends BaseFactura
         $ncs = Doctrine_Query::create()
           ->select('nc.numero_nota_credito')
           ->from('NotaCredito nc')
-          ->innerJoin('nc.NotacreditoDetalle ncd')
-          ->innerJoin('ncd.DetalleActivo da')
-          ->where('da.id_factura = ?',  $this->getIdFactura())
+          ->innerJoin('nc.ReferenciaDocumento rd')
+          ->where('rd.id_factura = ?',  $this->getIdFactura())
           ->execute();
         $numNC = "";
         foreach ($ncs as $nc){

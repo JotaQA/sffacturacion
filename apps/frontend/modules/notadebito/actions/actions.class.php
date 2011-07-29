@@ -72,4 +72,201 @@ class notadebitoActions extends sfActions
       $docs = $docs->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
       return $this->renderText(json_encode($docs));
   }
+  
+  public function executeProductoBydocumento(sfWebRequest $request){
+      $empresa = 'artelamp_'.$request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
+      $iddoc = $request->getParameter('iddoc');
+      $tipodoc = $request->getParameter('tipodoc');
+      
+      switch ($tipodoc){
+          case 33:
+              $productos = Doctrine_Query::create()
+                  ->select('a.id_detalle_activo, a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo, a.cantidad_detalle_activo, a.precio_detalle_activo')
+                  ->from('DetalleActivo a')
+                  ->innerJoin('a.Factura f')
+                  ->Where('f.id_factura = ?', $iddoc);
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+      $productos = $productos->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+      return $this->renderText(json_encode($productos));
+  }
+  
+  public function executeProductoBycodigoBydocumento(sfWebRequest $request){
+      $empresa = 'artelamp_'.$request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection($empresa);
+      $codproducto = $request->getParameter('codproducto');
+      $numdoc = $request->getParameter('numdoc');
+      $tipodoc = $request->getParameter('tipodoc');
+      
+      switch ($tipodoc){
+          case 33:
+              $productos = Doctrine_Query::create()
+                  ->select('a.id_detalle_activo, a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo, a.cantidad_detalle_activo, a.precio_detalle_activo')
+                  ->from('DetalleActivo a')
+                  ->where('a.codigointerno_detalle_activo = ?', $codproducto)
+                  ->innerJoin('a.Factura f')
+                  ->AndWhere('f.numero_factura = ?', $numdoc);
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+      $productos = $productos->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+      return $this->renderText(json_encode($productos[0]));
+  }
+  
+  public function executeSearch_cliente(sfWebRequest $request){
+      $query = $request->getParameter('query');
+      $querys = explode('+',$query);
+      $limit=20;
+
+      if(count($querys) < 2){
+
+          $clientes = Doctrine_Core::getTable('Cliente')
+                  ->createQuery('a')
+                  ->select('a.rut_cliente, a.id_empresa')
+                  ->where('a.nombre_cliente LIKE ?','%'.$query.'%')
+                  ->orWhere('a.descripcion_cliente LIKE ?','%'.$query.'%')
+                  ->orWhere('a.rut_cliente LIKE ?','%'.$query.'%');
+
+      }
+      else{
+          $clientes = Doctrine_Core::getTable('Cliente')
+                  ->createQuery('a')
+                  ->select('a.rut_cliente, a.id_empresa');
+          for($j=0;$j<count($querys);$j++){
+                    $clientes = $clientes
+                  ->orwhere('a.nombre_cliente LIKE ?','%'.$query[$j].'%')
+                  ->orWhere('a.descripcion_cliente LIKE ?','%'.$query[$j].'%')
+                  ->orWhere('a.rut_cliente LIKE ?','%'.$query[$j].'%');
+          }
+      }
+
+      $clientes = $clientes->limit($limit)->execute();
+
+      if ($request->isXmlHttpRequest())
+      {
+        if ('' == $query || count($clientes)==0)
+        {
+          return $this->renderText('No hay Resultados...');
+        }
+        return $this->renderPartial('notadebito/listcliente', array('clientes' => $clientes));
+      }
+  }
+  
+  public function executeSearch_documento(sfWebRequest $request){
+      $query = $request->getParameter('query');
+      $empresa = $request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
+      $tipodoc = $request->getParameter('tipodoc');
+      $rut_cliente = $request->getParameter('rut_cliente');
+      
+      $limit=10;
+
+      switch ($tipodoc){
+          case 33:
+              $docs = Doctrine_Core::getTable('Factura')
+                  ->createQuery('a')
+                  ->select('a.id_factura, a.numero_factura, a.fechaemision_factura, a.monto_factura')
+                  ->where('a.rut_factura = ?',$rut_cliente)
+                  ->andWhere('a.numero_factura LIKE ? OR a.id_notapedido_factura LIKE ?',array('%'.$query.'%', '%'.$query.'%'));
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+
+      $docs = $docs->limit($limit)->setHydrationMode(Doctrine::HYDRATE_ARRAY)->execute();
+
+      if ($request->isXmlHttpRequest())
+      {
+        if ('' == $query || count($docs)==0)
+        {
+          return $this->renderText('No hay Resultados...');
+        }
+
+        return $this->renderPartial('notadebito/listdocumento', array('docs' => $docs, 'tipo' => $tipodoc));
+      }
+  }
+  
+  public function executeSearch_producto(sfWebRequest $request){      
+      $query = $request->getParameter('query');
+      $rut_cliente = $request->getParameter('rut_cliente');
+      $tipodoc = $request->getParameter('tipodoc');
+      $empresa = $request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
+      $querys = explode('+',$query);
+      $limit=10;
+
+      if(count($querys) < 2){
+
+          $productos = Doctrine_Query::create()
+                  ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo')
+                  ->from('DetalleActivo a')
+                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$query.'%', '%'.$query.'%', '%'.$query.'%')); 
+      }
+      else{
+          $productos = Doctrine_Query::create()
+                  ->select('DISTINCT a.codigointerno_detalle_activo, a.descripcionexterna_detalle_activo, a.id_producto')
+                  ->from('DetalleActivo a');
+          for($j=0;$j<count($querys);$j++){
+              $productos = $productos
+                  ->where('a.codigointerno_detalle_activo LIKE ? OR a.descripcionexterna_detalle_activo LIKE ? OR a.id_producto LIKE ?',array('%'.$querys[$j].'%', '%'.$querys[$j].'%', '%'.$querys[$j].'%')); 
+          }
+      }
+      
+      switch ($tipodoc){
+          case 33:
+              $productos = $productos->innerJoin('a.Factura f')
+                    ->Andwhere('f.rut_factura = ?',$rut_cliente);
+              break;
+          case 39:
+//              $tipodoc = 'Boleta';
+              break;
+          case 56:
+//              $tipodoc = 'NotaDebito';
+              break;
+      }
+      
+//      return $this->renderText($productos->getSqlQuery());
+      $productos = $productos->limit($limit)->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+      
+      
+      
+      
+
+      if ($request->isXmlHttpRequest())
+      {
+        if ('' == $query || count($productos)==0)
+        {
+          return $this->renderText('No hay Resultados...');
+        }
+
+        return $this->renderPartial('notadebito/listproducto', array('productos' => $productos));
+      }
+  }
+  
+  public function executeVerificarnumND(sfWebRequest $request)
+  {
+      $empresa = $request->getParameter('empresa');
+      Doctrine_Manager::getInstance()->setCurrentConnection('artelamp_'.$empresa);
+      $numeroND = $request->getParameter('numeroND');
+      $ND = Doctrine_Core::getTable('NotaDebito')->findOneByNumeroNotaDebito($numeroND);
+      if($ND == null) return $this->renderText('false');
+      else return $this->renderText('true');
+  }
+  
 }
