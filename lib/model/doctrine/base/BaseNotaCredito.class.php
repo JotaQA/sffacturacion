@@ -16,6 +16,8 @@
  * @property integer $total_nota_credito
  * @property float $descuento_nota_credito
  * @property integer $id_notapedido_nota_credito
+ * @property string $razon_nota_credito
+ * @property string $glosa_nota_credito
  * @property string $rut_nota_credito
  * @property string $telefono_nota_credito
  * @property string $nombre_nota_credito
@@ -43,6 +45,8 @@
  * @method integer             getTotalNotaCredito()                 Returns the current record's "total_nota_credito" value
  * @method float               getDescuentoNotaCredito()             Returns the current record's "descuento_nota_credito" value
  * @method integer             getIdNotapedidoNotaCredito()          Returns the current record's "id_notapedido_nota_credito" value
+ * @method string              getRazonNotaCredito()                 Returns the current record's "razon_nota_credito" value
+ * @method string              getGlosaNotaCredito()                 Returns the current record's "glosa_nota_credito" value
  * @method string              getRutNotaCredito()                   Returns the current record's "rut_nota_credito" value
  * @method string              getTelefonoNotaCredito()              Returns the current record's "telefono_nota_credito" value
  * @method string              getNombreNotaCredito()                Returns the current record's "nombre_nota_credito" value
@@ -69,6 +73,8 @@
  * @method NotaCredito         setTotalNotaCredito()                 Sets the current record's "total_nota_credito" value
  * @method NotaCredito         setDescuentoNotaCredito()             Sets the current record's "descuento_nota_credito" value
  * @method NotaCredito         setIdNotapedidoNotaCredito()          Sets the current record's "id_notapedido_nota_credito" value
+ * @method NotaCredito         setRazonNotaCredito()                 Sets the current record's "razon_nota_credito" value
+ * @method NotaCredito         setGlosaNotaCredito()                 Sets the current record's "glosa_nota_credito" value
  * @method NotaCredito         setRutNotaCredito()                   Sets the current record's "rut_nota_credito" value
  * @method NotaCredito         setTelefonoNotaCredito()              Sets the current record's "telefono_nota_credito" value
  * @method NotaCredito         setNombreNotaCredito()                Sets the current record's "nombre_nota_credito" value
@@ -194,6 +200,24 @@ abstract class BaseNotaCredito extends sfDoctrineRecord
              'notnull' => false,
              'autoincrement' => false,
              'length' => 4,
+             ));
+        $this->hasColumn('razon_nota_credito', 'string', 90, array(
+             'type' => 'string',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => false,
+             'autoincrement' => false,
+             'length' => 90,
+             ));
+        $this->hasColumn('glosa_nota_credito', 'string', 80, array(
+             'type' => 'string',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => false,
+             'autoincrement' => false,
+             'length' => 80,
              ));
         $this->hasColumn('rut_nota_credito', 'string', 15, array(
              'type' => 'string',

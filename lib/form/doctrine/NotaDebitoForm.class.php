@@ -38,6 +38,9 @@ class NotaDebitoForm extends BaseNotaDebitoForm
       $this->widgetSchema['codref_nota_debito'] = new sfWidgetFormInputText(array(), array(
           'readonly' => 'readonly'
       ));
+      $this->widgetSchema['numero_refdocumento_nota_debito'] = new sfWidgetFormInputText(array(), array(
+          'readonly' => 'readonly'
+      ));
 
       $this->widgetSchema->setLabels(array(
             'numero_nota_debito' => 'Numero ND',
@@ -52,7 +55,7 @@ class NotaDebitoForm extends BaseNotaDebitoForm
             'oc_nota_debito' => 'O. de Compra',
             'responsable_nota_debito' => 'Vendedor',
             'comentarior_nota_debito' => 'Comentario',
-            'numerofactura_nota_debito' => 'Numero Factura',
+            'numero_refdocumento_nota_debito' => 'Numero Referencia',
             'fechaemision_nota_debito' => 'Fec. Emision',
             'neto_nota_debito' => 'Neto',
             'total_nota_debito' => 'Total',

@@ -67,10 +67,10 @@
                 <?php echo $form['responsable_nota_debito']->renderError() ?>
                 <?php echo $form['responsable_nota_debito'] ?>
             </td>
-            <th><?php echo $form['numerofactura_nota_debito']->renderLabel() ?></th>
+            <th><?php echo $form['numero_refdocumento_nota_debito']->renderLabel() ?></th>
             <td>
-                <?php echo $form['numerofactura_nota_debito']->renderError() ?>
-                <?php echo $form['numerofactura_nota_debito'] ?>
+                <?php echo $form['numero_refdocumento_nota_debito']->renderError() ?>
+                <?php echo $form['numero_refdocumento_nota_debito'] ?>
             </td>
         </tr>
         <tr>

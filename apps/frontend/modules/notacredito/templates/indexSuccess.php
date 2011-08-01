@@ -1,3 +1,4 @@
+<?php slot('title', 'ARTELAMP NC') ?>
 <div id="divmid">
     <div class="triangle">
     <div class="triangleblue">
@@ -158,13 +159,22 @@
             alert('Al menos debe elegir un documento');
             return false;
         }
+        if($('#razon').val() == ''){            
+            $('#razon').addClass( "ui-state-error" );
+            alert('Escriba una razón para generar la Nota de Debito');
+            setTimeout(function() {
+                    $('#razon').removeClass( "ui-state-error", 1500);
+            }, 2000 );
+            return false;
+        }
         //OBTENEMOS DATOS DEL CLIENTE DEL DOCUMENTO DE REFERENCIA
         var id_doc = documentos[0].id;
         var tipodoc = $('#tipodocchoice').val();
         var codref = $('#codrefchoice').val();
         var numdoc = "";
         for(i in documentos){
-            numdoc += documentos[i].numdocumento + ',';
+            if(i == documentos.length-1) numdoc += documentos[i].numdocumento;
+            else numdoc += documentos[i].numdocumento + ',';
         }
         var neto = 0;
         for(i in productos){
@@ -250,8 +260,7 @@
         var bool = true;
         for(i in documentos){
             if(documentos[i].id == id) bool = false;
-        }
-        if(bool) documentos.push(new Documento(id, tipodocumento, numdocumento, fecha, true));
+        }        
         //CASOS DE CODREF
         var codref = $('#codrefchoice').val();
         codref = parseInt(codref);
@@ -264,15 +273,23 @@
                 }
                 actualizarlistaprod();
             },"json");
-            actualizarlistadoc();
         }
         //Corrige Texto Doc de Ref
         if(codref == 2 && bool){
             var tipodoc = $('#tipodocchoice').val();
             var descripcion = $('#glosa').val();
+            if(descripcion == '' || descripcion == 'DONDE DICE ... DEBE DECIR ...'){
+                bool = false;
+                $('#glosa').addClass( "ui-state-error" );
+                $('#glosa').val('DONDE DICE ... DEBE DECIR ...');
+                alert('Escriba una glosa valida');
+                setTimeout(function() {
+                        $('#glosa').removeClass( "ui-state-error", 1500);
+                }, 2000 );
+                return false;
+            }
             productos.push(new Producto(0, 0, descripcion, 0, 0, 0, id, false));
             actualizarlistaprod();
-            actualizarlistadoc();
         }
         if(codref == 3 && bool){
             var tipodoc = $('#tipodocchoice').val();
@@ -283,8 +300,9 @@
                 actualizarlistaprod();
                 makeEditablelistaprod();
             },"json");
-            actualizarlistadoc();
         }
+        if(bool) documentos.push(new Documento(id, tipodocumento, numdocumento, fecha, true));
+        actualizarlistadoc();
     }
     
     function actualizarneto_listaprod(aPos, value){
@@ -460,6 +478,22 @@
         tablaprod.fnClearTable();
         productos = new Array();
         documentos = new Array();
+    }
+    
+    function limpiar_todo(){
+        limpiar_tablas();
+        $('#search_cliente').val('');
+        $('#razon').val('');
+        $('#glosa').val('');
+        $('#search_documento').val('');
+        $('#search_producto').val('');
+        $('#productos').hide();
+        $('#documentos').hide();
+        //LIMPIAR CLIENTE
+        rut_cliente = "";
+        $('#search_cliente').css('border-color','#A6C9E2');
+        $('#search_cliente').css('border-width','1px');
+        $('#tablacliente').hide();
     }
     
     var Documento = function(id, tipodocumento, numdocumento, fecha, botonDocyProd){
@@ -723,7 +757,7 @@
                             tabletitle.html('EL número de NC ya existe');
                             tabletitle.addClass("ui-state-highlight");
                             input.addClass( "ui-state-error" );
-                            input.val('0');
+                            input.val('');
                             setTimeout(function() {
                                 tabletitle.removeClass( "ui-state-highlight");
                                 tabletitle.html(textoantiguo);
@@ -758,76 +792,11 @@
             width: 600,
             modal: true,
             buttons: {
-                "Emitir Nota": function() {
-//                        var bValid = true;
-//                        allFields.removeClass( "ui-state-error" );
-//                                        
-//
-//                        bValid = bValid && checkLength( numeronc, "numero NC", 1, 10 );
-//                        bValid = bValid && checkLength( rut, "RUT", 8, 12 );
-//                        bValid = bValid && checkLength( nombre, "nombre", 1, 200 );
-//                        bValid = bValid && checkLength( telefono, "telefono", 0, 32 );
-//                        bValid = bValid && checkLength( direccion, "direccion", 1, 512 );
-//                        bValid = bValid && checkLength( comuna, "comuna", 1, 512 );
-//                        bValid = bValid && checkLength( ciudad, "ciudad", 1, 512 );
-//                        bValid = bValid && checkLength( giro, "giro", 1, 512 );
-//                        bValid = bValid && checkLength( condicion, "condicion", 1, 512 );
-//                        bValid = bValid && checkLength( oc, "oc", 0, 512 );
-//                        bValid = bValid && checkLength( responsable, "responsable", 1, 512 );
-//                        bValid = bValid && checkLength( numerofactura, "numero factura", 1, 128 );
-//                        bValid = bValid && checkLength( fechaingreso, "fecha ingreso", 6, 20 );
-//                        bValid = bValid && checkLength( fechaemision, "fecha emision", 9, 11 );
-
-//                        bValid = bValid && checkRegexp( name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter." );
-                        // From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
-//                        bValid = bValid && checkRegexp( email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. ui@jquery.com" );
-//                        bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
-//                        bValid = bValid && checkRegexp( numeronc, /^[1-9]\d*$/, "El número de NC es invalido" );
-//                        bValid = bValid && checkRegexp( rut, /^\d{7,10}-(\d|k)$/i, "El RUT debe tener formato 12345678-9" );
-//                        bValid = bValid && checkRut( rut, "El RUT es invalido" );
-//                        bValid = bValid && checkRegexp( telefono, /^\d{1,2}-\d{5,11}$/, "El telefono debe tener formato: codigo-numero, ejemplo 02-6412345" );
-//                        bValid = bValid && checkRegexp( numerofactura, /^\d+(,\d+)*$/, "El número de factura es invalido, si ingresa dos o más el formato es 1111,2222,3333..." );
-//                        bValid = bValid && checkRegexp( fechaemision, /^\d{2}(\/)\d{2}(\/)\d{4}$/, "La fecha debe tener formato dd/mm/yyyy" );
-//                        
-//                        if ( bValid ) {
-//                            var fields  = $("form").serialize();
-//                            fields += '&datos='+JSON.stringify(datos);
-//
-//                            var error = true;
-//                            $.post("", fields ,
-//                               function(data) {
-//                                   if(data == 'true'){
-//                                       alert('Nota de Credito ingresada');
-////                                       $('input[type=checkbox]:checked').each(function(){
-////                                           $(this).parent().parent("tr").remove();
-////                                       });
-//                                       window.location.replace("");
-//                                       $( "#dialog-form" ).dialog("close");
-//                                   }
-//                                   else{
-//                                       alert('Se produjo un error: '+data);
-//                                       error = false;
-//                                   }
-//                               }).error(function() {
-//                                   if(error)
-//                                   alert('Se produjo un error'); 
-//                               });
-//                        }
-                },
-//                'Limpiar': function() {
-//                    var aData = $('#tablaselecdoc').dataTable().fnGetData();
-//                    alert(aData[0][0]);
-////                        $('form input[type=text] , form textarea').each(function() {
-////                            $(this).val('');
-////                        });
-//                },
                 'Cancelar': function() {
                         $( this ).dialog( "close" );
                 }
             },
             close: function() {
-//                    allFields.val( "" ).removeClass( "ui-state-error" );
-//                    $('.validateTips').html('Ingrese los datos de la Nota de Credito');
             }
         });
         
@@ -964,6 +933,7 @@
                                if(data == 'true'){
                                    alert('Nota de Credito ingresada');
                                    $( "#dialog-form" ).dialog("close");
+                                   limpiar_todo();
                                }
                                else{
                                    alert('Se produjo un error: '+data);
@@ -975,11 +945,6 @@
                             });
                         }
                 },
-//                'Limpiar': function() {
-////                        $('form input[type=text] , form textarea').each(function() {
-////                            $(this).val('');
-////                        });
-//                },
                 'Cancelar': function() {
                         $( this ).dialog( "close" );
                 }

@@ -38,6 +38,9 @@ class NotaCreditoForm extends BaseNotaCreditoForm
       $this->widgetSchema['codref_nota_credito'] = new sfWidgetFormInputText(array(), array(
           'readonly' => 'readonly'
       ));
+      $this->widgetSchema['numero_refdocumento_nota_credito'] = new sfWidgetFormInputText(array(), array(
+          'readonly' => 'readonly'
+      ));
 
       $this->widgetSchema->setLabels(array(
             'numero_nota_credito' => 'Numero NC',
@@ -52,7 +55,7 @@ class NotaCreditoForm extends BaseNotaCreditoForm
             'oc_nota_credito' => 'O. de Compra',
             'responsable_nota_credito' => 'Vendedor',
             'comentarior_nota_credito' => 'Comentario',
-            'numero_refdocumento_nota_credito' => 'Folio docs',
+            'numero_refdocumento_nota_credito' => 'Numero Referencia',
             'fechaemision_nota_credito' => 'Fec. Emision',
             'neto_nota_credito' => 'Neto',
             'total_nota_credito' => 'Total',

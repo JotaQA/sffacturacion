@@ -2283,6 +2283,20 @@ NotaCredito:
       primary: false
       notnull: false
       autoincrement: false
+    razon_nota_credito:
+      type: string(90)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    glosa_nota_credito:
+      type: string(80)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
     rut_nota_credito:
       type: string(15)
       fixed: true
@@ -2413,7 +2427,7 @@ NotaDebito:
       primary: false
       notnull: true
       autoincrement: false
-    numero_refdocumento_nota_credito:
+    numero_refdocumento_nota_debito:
       type: string(128)
       fixed: false
       unsigned: false
@@ -2458,6 +2472,20 @@ NotaDebito:
       autoincrement: false
     id_notapedido_nota_debito:
       type: integer(4)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    razon_nota_debito:
+      type: string(90)
+      fixed: false
+      unsigned: false
+      primary: false
+      notnull: false
+      autoincrement: false
+    glosa_nota_debito:
+      type: string(80)
       fixed: false
       unsigned: false
       primary: false

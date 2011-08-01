@@ -21,6 +21,7 @@ class NotaDebito extends BaseNotaDebito
             $this->setEstadoNotaDebito($EEMITIDA);
             $this->setTipoNotaDebito('FISICA');
         }
+        if($this->getGlosaNotaDebito() == '') $this->setGlosaNotaDebito (null);
 
         return parent::save($conn);
     }
